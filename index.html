@@ -1,0 +1,1318 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Historia — Encyclopédie Historique</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;0,900;1,400&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box;}
+:root{
+  --bg:#eef4fd;--bg2:#ffffff;--bg3:#deeaf8;
+  --gold:#2563eb;--gold2:#3b82f6;
+  --text:#1a2845;--muted:#5878a0;
+  --red:#dc3545;--blue:#0ea5e9;--green:#0d9488;
+  --border:#c8daf4;
+  --shadow:0 4px 20px rgba(37,99,235,0.08);
+}
+html{scroll-behavior:smooth;}
+body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;overflow-x:hidden;}
+
+/* ===== HEADER ===== */
+header{position:fixed;top:0;left:0;right:0;z-index:1000;background:rgba(255,255,255,0.92);backdrop-filter:blur(12px);border-bottom:1px solid var(--border);padding:0 2rem;box-shadow:0 1px 12px rgba(37,99,235,0.07);}
+.header-inner{max-width:1400px;margin:0 auto;display:flex;align-items:center;justify-content:space-between;height:64px;}
+.logo{font-family:'Playfair Display',serif;font-size:1.6rem;font-weight:900;color:var(--gold);letter-spacing:2px;cursor:pointer;}
+.logo span{color:var(--text);font-weight:400;}
+nav{display:flex;gap:0.3rem;}
+nav button{background:none;border:none;color:var(--muted);font-family:'Inter',sans-serif;font-size:0.82rem;font-weight:500;padding:0.45rem 0.9rem;border-radius:8px;cursor:pointer;transition:all 0.2s;letter-spacing:0.3px;text-transform:uppercase;}
+nav button:hover{color:var(--gold);background:rgba(37,99,235,0.08);}
+nav button.active{color:var(--gold);background:rgba(37,99,235,0.12);font-weight:600;}
+
+/* ===== SECTIONS ===== */
+section{display:none;min-height:100vh;padding:88px 2rem 4rem;}
+section.active{display:block;}
+.container{max-width:1300px;margin:0 auto;}
+
+/* ===== HOME ===== */
+#home{background:radial-gradient(ellipse at 50% 0%, rgba(37,99,235,0.06) 0%, transparent 65%);}
+.hero{text-align:center;padding:5rem 0 4rem;}
+.hero h1{font-family:'Playfair Display',serif;font-size:4rem;font-weight:900;line-height:1.1;margin-bottom:1.5rem;color:var(--text);}
+.hero h1 em{color:var(--gold);font-style:italic;}
+.hero p{font-size:1.15rem;color:var(--muted);max-width:600px;margin:0 auto 3rem;line-height:1.8;}
+.categories{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:1.5rem;margin-top:2rem;}
+.cat-card{background:var(--bg2);border:1px solid var(--border);border-radius:16px;padding:2rem;cursor:pointer;transition:all 0.3s;position:relative;overflow:hidden;box-shadow:var(--shadow);}
+.cat-card::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;background:linear-gradient(90deg,var(--gold),var(--blue));}
+.cat-card:hover{transform:translateY(-4px);border-color:var(--gold);box-shadow:0 12px 32px rgba(37,99,235,0.14);}
+.cat-icon{font-size:2.5rem;margin-bottom:1rem;display:block;}
+.cat-card h3{font-family:'Playfair Display',serif;font-size:1.3rem;margin-bottom:0.5rem;color:var(--gold);}
+.cat-card p{color:var(--muted);font-size:0.9rem;line-height:1.6;}
+.cat-tag{display:inline-block;margin-top:1rem;font-size:0.72rem;color:var(--gold);background:rgba(37,99,235,0.08);border:1px solid rgba(37,99,235,0.2);padding:0.2rem 0.7rem;border-radius:20px;font-weight:500;}
+
+/* ===== SECTION HEADER ===== */
+.section-header{padding:3rem 0 2rem;border-bottom:1px solid var(--border);margin-bottom:3rem;}
+.section-header h2{font-family:'Playfair Display',serif;font-size:2.8rem;color:var(--gold);}
+.section-header p{color:var(--muted);margin-top:0.5rem;font-size:1rem;}
+.back-btn{background:var(--bg2);border:1px solid var(--border);color:var(--muted);padding:0.4rem 1rem;border-radius:8px;cursor:pointer;font-family:'Inter',sans-serif;font-size:0.8rem;margin-bottom:1.5rem;transition:all 0.2s;box-shadow:0 1px 4px rgba(37,99,235,0.05);}
+.back-btn:hover{border-color:var(--gold);color:var(--gold);background:rgba(37,99,235,0.05);}
+
+/* ===== TIMELINE ===== */
+.timeline-wrapper{position:relative;}
+.timeline-controls{display:flex;gap:0.5rem;flex-wrap:wrap;margin-bottom:2rem;}
+.era-btn{background:var(--bg2);border:1px solid var(--border);color:var(--muted);padding:0.4rem 1rem;border-radius:20px;cursor:pointer;font-size:0.8rem;transition:all 0.2s;box-shadow:0 1px 4px rgba(37,99,235,0.05);}
+.era-btn:hover,.era-btn.active{background:rgba(37,99,235,0.1);border-color:var(--gold);color:var(--gold);font-weight:500;}
+.timeline{position:relative;padding-left:40px;}
+.timeline::before{content:'';position:absolute;left:12px;top:0;bottom:0;width:2px;background:linear-gradient(to bottom,var(--gold),rgba(37,99,235,0.1));}
+.timeline-era{margin-bottom:1rem;}
+.era-title{font-family:'Playfair Display',serif;font-size:1.4rem;color:var(--gold);margin-bottom:1.5rem;display:flex;align-items:center;gap:1rem;}
+.era-title::after{content:'';flex:1;height:1px;background:linear-gradient(90deg,rgba(37,99,235,0.25),transparent);}
+.timeline-item{position:relative;margin-bottom:1.2rem;}
+.timeline-dot{position:absolute;left:-34px;top:14px;width:12px;height:12px;border-radius:50%;background:var(--gold);border:2px solid var(--bg);box-shadow:0 0 8px rgba(37,99,235,0.35);}
+.timeline-dot.major{width:16px;height:16px;left:-36px;background:var(--red);box-shadow:0 0 12px rgba(220,53,69,0.4);}
+.timeline-card{background:var(--bg2);border:1px solid var(--border);border-radius:12px;padding:1rem 1.2rem;cursor:pointer;transition:all 0.25s;box-shadow:0 2px 8px rgba(37,99,235,0.04);}
+.timeline-card:hover{border-color:var(--gold);background:var(--bg3);transform:translateX(4px);box-shadow:0 4px 16px rgba(37,99,235,0.1);}
+.timeline-card.expanded{border-color:var(--gold);background:#f5f9ff;}
+.tc-header{display:flex;align-items:flex-start;justify-content:space-between;gap:1rem;}
+.tc-dates{font-size:0.75rem;color:var(--gold);font-weight:600;white-space:nowrap;margin-top:3px;}
+.tc-title{font-family:'Playfair Display',serif;font-size:1rem;font-weight:700;line-height:1.3;color:var(--text);}
+.tc-subtitle{font-size:0.8rem;color:var(--muted);margin-top:0.2rem;}
+.tc-expand{font-size:0.7rem;color:var(--muted);transition:transform 0.2s;}
+.timeline-card.expanded .tc-expand{transform:rotate(180deg);}
+.tc-body{display:none;margin-top:1rem;padding-top:1rem;border-top:1px solid var(--border);}
+.timeline-card.expanded .tc-body{display:block;}
+.tc-body p{color:var(--muted);font-size:0.88rem;line-height:1.7;margin-bottom:0.8rem;}
+.tc-body p:last-child{margin-bottom:0;}
+
+/* ===== ANECDOTES ===== */
+.anecdote{display:inline;position:relative;}
+.anec-trigger{display:inline-flex;align-items:center;justify-content:center;width:18px;height:18px;background:rgba(37,99,235,0.12);border:1px solid var(--gold);border-radius:50%;font-size:0.65rem;color:var(--gold);cursor:pointer;margin-left:4px;vertical-align:middle;transition:all 0.2s;}
+.anec-trigger:hover{background:var(--gold);color:#fff;}
+.anec-bubble{display:none;position:absolute;left:50%;transform:translateX(-50%);bottom:calc(100% + 8px);width:260px;background:#fff;border:1px solid var(--border);border-radius:10px;padding:0.8rem;font-size:0.8rem;color:var(--text);line-height:1.5;z-index:100;box-shadow:0 8px 28px rgba(37,99,235,0.15);}
+.anec-bubble::after{content:'';position:absolute;top:100%;left:50%;transform:translateX(-50%);border:6px solid transparent;border-top-color:var(--border);}
+.anecdote:hover .anec-bubble,.anecdote.open .anec-bubble{display:block;}
+.anec-label{font-weight:600;color:var(--gold);margin-bottom:0.3rem;font-size:0.75rem;text-transform:uppercase;letter-spacing:0.5px;}
+
+/* ===== RULERS GRID ===== */
+.rulers-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:1rem;margin-top:1.5rem;}
+.ruler-card{background:var(--bg);border:1px solid var(--border);border-radius:10px;padding:1rem;cursor:pointer;transition:all 0.2s;}
+.ruler-card:hover{border-color:var(--gold);background:var(--bg2);}
+.ruler-dates{font-size:0.7rem;color:var(--gold);font-weight:600;}
+.ruler-name{font-family:'Playfair Display',serif;font-size:1rem;margin:0.3rem 0;}
+.ruler-role{font-size:0.75rem;color:var(--muted);}
+
+/* ===== MODAL ===== */
+.modal-overlay{display:none;position:fixed;inset:0;background:rgba(20,40,100,0.4);backdrop-filter:blur(4px);z-index:2000;align-items:center;justify-content:center;padding:2rem;}
+.modal-overlay.open{display:flex;}
+.modal{background:var(--bg2);border:1px solid var(--border);border-radius:20px;max-width:700px;width:100%;max-height:85vh;overflow-y:auto;position:relative;box-shadow:0 20px 60px rgba(37,99,235,0.15);}
+.modal-header{padding:2rem 2rem 1rem;border-bottom:1px solid var(--border);position:sticky;top:0;background:var(--bg2);z-index:1;}
+.modal-header h2{font-family:'Playfair Display',serif;font-size:1.8rem;color:var(--gold);}
+.modal-dates{font-size:0.85rem;color:var(--muted);margin-top:0.3rem;}
+.modal-close{position:absolute;top:1.5rem;right:1.5rem;background:var(--bg);border:1px solid var(--border);color:var(--muted);font-size:1.2rem;cursor:pointer;line-height:1;padding:0.35rem 0.5rem;border-radius:8px;transition:all 0.2s;}
+.modal-close:hover{color:var(--text);border-color:var(--muted);}
+.modal-body{padding:1.5rem 2rem 2rem;}
+.modal-body p{color:var(--muted);line-height:1.8;margin-bottom:1rem;font-size:0.92rem;}
+.modal-body h4{font-family:'Playfair Display',serif;color:var(--text);margin:1.5rem 0 0.5rem;font-size:1.1rem;}
+.fact-list{list-style:none;margin:0.5rem 0 1rem;}
+.fact-list li{padding:0.5rem 0;border-bottom:1px solid var(--border);color:var(--muted);font-size:0.88rem;padding-left:1rem;position:relative;}
+.fact-list li::before{content:'▸';position:absolute;left:0;color:var(--gold);}
+.anec-box{background:rgba(37,99,235,0.05);border-left:3px solid var(--gold);border-radius:0 8px 8px 0;padding:1rem;margin:1rem 0;}
+.anec-box .anec-label{margin-bottom:0.4rem;}
+.anec-box p{margin:0;font-size:0.85rem;}
+
+/* ===== GUERRES SECTION ===== */
+.wars-grid{display:grid;gap:1.5rem;}
+.war-card{background:var(--bg2);border:1px solid var(--border);border-radius:14px;padding:1.5rem;cursor:pointer;transition:all 0.25s;display:grid;grid-template-columns:120px 1fr;gap:1.5rem;align-items:start;box-shadow:var(--shadow);}
+.war-card:hover{border-color:var(--red);transform:translateY(-2px);box-shadow:0 8px 24px rgba(220,53,69,0.1);}
+.war-period{text-align:center;}
+.war-year{font-family:'Playfair Display',serif;font-size:1.4rem;color:var(--red);font-weight:900;}
+.war-duration{font-size:0.7rem;color:var(--muted);margin-top:0.2rem;}
+.war-title{font-family:'Playfair Display',serif;font-size:1.3rem;margin-bottom:0.5rem;color:var(--text);}
+.war-desc{color:var(--muted);font-size:0.88rem;line-height:1.6;}
+.war-tags{display:flex;flex-wrap:wrap;gap:0.4rem;margin-top:0.8rem;}
+.war-tag{font-size:0.7rem;padding:0.2rem 0.6rem;border-radius:20px;border:1px solid;}
+.war-tag.europe{border-color:#3b82f6;color:#2563eb;}
+.war-tag.monde{border-color:#ef4444;color:#dc2626;}
+.war-tag.france{border-color:var(--gold);color:var(--gold);}
+
+/* ===== RELIGIONS ===== */
+.religion-timeline{display:flex;flex-direction:column;gap:1rem;}
+.rel-item{background:var(--bg2);border:1px solid var(--border);border-radius:12px;padding:1.2rem;display:grid;grid-template-columns:140px 1fr;gap:1.5rem;cursor:pointer;transition:all 0.2s;box-shadow:var(--shadow);}
+.rel-item:hover{border-color:var(--blue);box-shadow:0 4px 16px rgba(14,165,233,0.1);}
+.rel-year{font-size:0.85rem;color:var(--blue);font-weight:600;}
+.rel-name{font-family:'Playfair Display',serif;font-size:1.1rem;margin-bottom:0.3rem;color:var(--text);}
+.rel-desc{font-size:0.85rem;color:var(--muted);line-height:1.5;}
+
+/* ===== ANTIQUITE ===== */
+.antiq-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:1.5rem;}
+.antiq-card{background:var(--bg2);border:1px solid var(--border);border-radius:14px;padding:1.5rem;cursor:pointer;transition:all 0.25s;box-shadow:var(--shadow);}
+.antiq-card:hover{transform:translateY(-4px);border-color:var(--green);box-shadow:0 8px 24px rgba(13,148,136,0.12);}
+.antiq-card h3{font-family:'Playfair Display',serif;font-size:1.2rem;color:var(--green);margin-bottom:0.5rem;}
+.antiq-dates{font-size:0.75rem;color:var(--muted);margin-bottom:0.8rem;}
+.antiq-card p{font-size:0.85rem;color:var(--muted);line-height:1.6;}
+
+/* ===== GRANDES FIGURES ===== */
+.figures-filters{display:flex;gap:0.5rem;flex-wrap:wrap;margin-bottom:2rem;}
+.fig-filter-btn{background:var(--bg2);border:1px solid var(--border);color:var(--muted);padding:0.4rem 1rem;border-radius:20px;cursor:pointer;font-size:0.8rem;transition:all 0.2s;box-shadow:0 1px 4px rgba(37,99,235,0.05);}
+.fig-filter-btn:hover,.fig-filter-btn.active{background:rgba(37,99,235,0.1);border-color:var(--gold);color:var(--gold);font-weight:500;}
+.figures-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:1.5rem;}
+.figure-card{background:var(--bg2);border:1px solid var(--border);border-radius:16px;padding:1.5rem;cursor:pointer;transition:all 0.3s;position:relative;overflow:hidden;box-shadow:var(--shadow);}
+.figure-card::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;}
+.figure-card:hover{transform:translateY(-4px);box-shadow:0 12px 36px rgba(37,99,235,0.12);}
+.fig-emoji{font-size:2.8rem;margin-bottom:0.8rem;display:block;line-height:1;}
+.fig-dates{font-size:0.72rem;font-weight:600;margin-bottom:0.4rem;}
+.figure-card h3{font-family:'Playfair Display',serif;font-size:1.2rem;margin-bottom:0.3rem;color:var(--text);}
+.fig-role{font-size:0.78rem;color:var(--muted);margin-bottom:0.8rem;font-style:italic;}
+.fig-desc{font-size:0.83rem;color:var(--muted);line-height:1.6;}
+.fig-tag{display:inline-block;margin-top:0.8rem;font-size:0.7rem;border:1px solid;padding:0.15rem 0.6rem;border-radius:20px;}
+.fig-tag.conquerant{border-color:#e53170;color:#e53170;}
+.fig-tag.dirigeant{border-color:var(--gold);color:var(--gold);}
+.fig-tag.penseur{border-color:#3b82f6;color:#2563eb;}
+.fig-tag.resistant{border-color:#0d9488;color:#0d9488;}
+.fig-tag.explorateur{border-color:#9333ea;color:#9333ea;}
+.fig-tag.revolutionnaire{border-color:#f97316;color:#ea580c;}
+
+/* ===== SCROLLBAR ===== */
+::-webkit-scrollbar{width:6px;}
+::-webkit-scrollbar-track{background:var(--bg);}
+::-webkit-scrollbar-thumb{background:var(--border);border-radius:3px;}
+::-webkit-scrollbar-thumb:hover{background:var(--muted);}
+
+/* ===== RESPONSIVE ===== */
+@media(max-width:768px){
+  .hero h1{font-size:2.4rem;}
+  .war-card{grid-template-columns:1fr;}
+  .rel-item{grid-template-columns:1fr;}
+  nav{display:none;}
+}
+</style>
+</head>
+<body>
+
+<header>
+  <div class="header-inner">
+    <div class="logo" onclick="showSection('home')">HISTO<span>RIA</span></div>
+    <nav>
+      <button onclick="showSection('home')" id="nav-home" class="active">Accueil</button>
+      <button onclick="showSection('france')" id="nav-france">🇫🇷 Histoire de France</button>
+      <button onclick="showSection('guerres')" id="nav-guerres">⚔️ Guerres</button>
+      <button onclick="showSection('religions')" id="nav-religions">✝️ Religions</button>
+      <button onclick="showSection('antiquite')" id="nav-antiquite">🏛️ Antiquité</button>
+      <button onclick="showSection('figures')" id="nav-figures">👑 Grandes Figures</button>
+      <button onclick="showSection('monde')" id="nav-monde">🌍 Histoire du Monde</button>
+    </nav>
+  </div>
+</header>
+
+<!-- =================== HOME =================== -->
+<section id="home" class="active">
+  <div class="container">
+    <div class="hero">
+      <h1>Explorez<br><em>l'Histoire</em> du Monde</h1>
+      <p>Une encyclopédie interactive pour voyager à travers les siècles, les civilisations et les grandes épopées humaines.</p>
+    </div>
+    <div class="categories">
+      <div class="cat-card" onclick="showSection('france')">
+        <span class="cat-icon">🇫🇷</span>
+        <h3>Histoire de France</h3>
+        <p>De la Gaule romaine à la Ve République, 2000 ans d'histoire sur une frise chronologique interactive.</p>
+        <span class="cat-tag">Frise interactive</span>
+      </div>
+      <div class="cat-card" onclick="showSection('guerres')">
+        <span class="cat-icon">⚔️</span>
+        <h3>Guerres & Conflits</h3>
+        <p>Des guerres puniques aux conflits modernes, explorez les grandes batailles qui ont façonné le monde.</p>
+        <span class="cat-tag">20+ conflits</span>
+      </div>
+      <div class="cat-card" onclick="showSection('religions')">
+        <span class="cat-icon">🕌</span>
+        <h3>Histoire des Religions</h3>
+        <p>Animisme, polythéisme, monothéisme — suivez l'évolution des croyances humaines sur 5000 ans.</p>
+        <span class="cat-tag">Chronologie</span>
+      </div>
+      <div class="cat-card" onclick="showSection('antiquite')">
+        <span class="cat-icon">🏛️</span>
+        <h3>Antiquité</h3>
+        <p>Égypte, Grèce, Rome, Perse, Chine... les grandes civilisations du monde antique.</p>
+        <span class="cat-tag">Civilisations</span>
+      </div>
+      <div class="cat-card" onclick="showSection('monde')">
+        <span class="cat-icon">🌍</span>
+        <h3>Histoire du Monde</h3>
+        <p>Vue globale de l'histoire mondiale, des premières migrations humaines à nos jours.</p>
+        <span class="cat-tag">Chronologie mondiale</span>
+      </div>
+      <div class="cat-card" onclick="showSection('figures')">
+        <span class="cat-icon">👑</span>
+        <h3>Grandes Figures</h3>
+        <p>César, Napoléon, Cléopâtre, Alexandre... les personnages qui ont changé le cours de l'Histoire.</p>
+        <span class="cat-tag">12 personnages</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- =================== FRANCE =================== -->
+<section id="france">
+  <div class="container">
+    <button class="back-btn" onclick="showSection('home')">← Accueil</button>
+    <div class="section-header">
+      <h2>Histoire de France</h2>
+      <p>2000 ans d'histoire — de la Gaule romaine à la République moderne. Cliquez sur chaque période pour en savoir plus.</p>
+    </div>
+    <div class="timeline-controls">
+      <button class="era-btn active" onclick="filterEra('all',this)">Toutes les périodes</button>
+      <button class="era-btn" onclick="filterEra('antiquite',this)">Antiquité</button>
+      <button class="era-btn" onclick="filterEra('medieval',this)">Moyen Âge</button>
+      <button class="era-btn" onclick="filterEra('moderne',this)">Époque moderne</button>
+      <button class="era-btn" onclick="filterEra('contemporain',this)">Époque contemporaine</button>
+    </div>
+    <div class="timeline" id="france-timeline"></div>
+  </div>
+</section>
+
+<!-- =================== GUERRES =================== -->
+<section id="guerres">
+  <div class="container">
+    <button class="back-btn" onclick="showSection('home')">← Accueil</button>
+    <div class="section-header">
+      <h2>Guerres & Conflits</h2>
+      <p>Les grands conflits qui ont redessiné la carte du monde.</p>
+    </div>
+    <div class="wars-grid" id="wars-list"></div>
+  </div>
+</section>
+
+<!-- =================== RELIGIONS =================== -->
+<section id="religions">
+  <div class="container">
+    <button class="back-btn" onclick="showSection('home')">← Accueil</button>
+    <div class="section-header">
+      <h2>Histoire des Religions</h2>
+      <p>5000 ans de spiritualité humaine — des premières croyances animistes aux grands monothéismes.</p>
+    </div>
+    <div class="religion-timeline" id="religion-list"></div>
+  </div>
+</section>
+
+<!-- =================== ANTIQUITE =================== -->
+<section id="antiquite">
+  <div class="container">
+    <button class="back-btn" onclick="showSection('home')">← Accueil</button>
+    <div class="section-header">
+      <h2>Antiquité</h2>
+      <p>Les grandes civilisations du monde antique, de -3000 à 476 ap. J.-C.</p>
+    </div>
+    <div class="antiq-grid" id="antiq-list"></div>
+  </div>
+</section>
+
+<!-- =================== GRANDES FIGURES =================== -->
+<section id="figures">
+  <div class="container">
+    <button class="back-btn" onclick="showSection('home')">← Accueil</button>
+    <div class="section-header">
+      <h2>Grandes Figures</h2>
+      <p>Les hommes et femmes qui ont changé le cours de l'Histoire — conquérants, penseurs, révolutionnaires.</p>
+    </div>
+    <div class="figures-filters">
+      <button class="fig-filter-btn active" onclick="filterFigures('all',this)">Tous</button>
+      <button class="fig-filter-btn" onclick="filterFigures('conquerant',this)">⚔️ Conquérants</button>
+      <button class="fig-filter-btn" onclick="filterFigures('dirigeant',this)">👑 Dirigeants</button>
+      <button class="fig-filter-btn" onclick="filterFigures('penseur',this)">🧠 Penseurs</button>
+      <button class="fig-filter-btn" onclick="filterFigures('revolutionnaire',this)">🔥 Révolutionnaires</button>
+      <button class="fig-filter-btn" onclick="filterFigures('resistant',this)">✊ Résistants</button>
+    </div>
+    <div class="figures-grid" id="figures-grid"></div>
+  </div>
+</section>
+
+<!-- =================== HISTOIRE DU MONDE =================== -->
+<section id="monde">
+  <div class="container">
+    <button class="back-btn" onclick="showSection('home')">← Accueil</button>
+    <div class="section-header">
+      <h2>Histoire du Monde</h2>
+      <p>Des premières migrations humaines à nos jours — 300 000 ans d'aventure humaine sur tous les continents.</p>
+    </div>
+    <div class="timeline-controls">
+      <button class="era-btn active" onclick="filterMondeEra('all',this)">Toutes les périodes</button>
+      <button class="era-btn" onclick="filterMondeEra('prehistoire',this)">🌿 Préhistoire</button>
+      <button class="era-btn" onclick="filterMondeEra('antiquite',this)">🏺 Premières civilisations</button>
+      <button class="era-btn" onclick="filterMondeEra('classique',this)">🏛️ Antiquité classique</button>
+      <button class="era-btn" onclick="filterMondeEra('medieval',this)">⚔️ Moyen Âge mondial</button>
+      <button class="era-btn" onclick="filterMondeEra('moderne',this)">🌊 Grandes découvertes</button>
+      <button class="era-btn" onclick="filterMondeEra('industriel',this)">🏭 Révolutions & guerres</button>
+      <button class="era-btn" onclick="filterMondeEra('contemporain',this)">🌐 Monde contemporain</button>
+    </div>
+    <div class="timeline" id="monde-timeline"></div>
+  </div>
+</section>
+
+<!-- =================== MODAL =================== -->
+<div class="modal-overlay" id="modal" onclick="closeModal(event)">
+  <div class="modal">
+    <div class="modal-header">
+      <h2 id="modal-title"></h2>
+      <div class="modal-dates" id="modal-dates"></div>
+      <button class="modal-close" onclick="closeModalBtn()">✕</button>
+    </div>
+    <div class="modal-body" id="modal-body"></div>
+  </div>
+</div>
+
+<script>
+// ===================== NAVIGATION =====================
+function showSection(id){
+  document.querySelectorAll('section').forEach(s=>s.classList.remove('active'));
+  document.querySelectorAll('nav button').forEach(b=>b.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+  const nb=document.getElementById('nav-'+id);
+  if(nb)nb.classList.add('active');
+  window.scrollTo(0,0);
+}
+
+// ===================== MODAL =====================
+function openModal(title,dates,bodyHtml){
+  document.getElementById('modal-title').textContent=title;
+  document.getElementById('modal-dates').textContent=dates;
+  document.getElementById('modal-body').innerHTML=bodyHtml;
+  document.getElementById('modal').classList.add('open');
+  document.body.style.overflow='hidden';
+}
+function closeModal(e){if(e.target===document.getElementById('modal'))closeModalBtn();}
+function closeModalBtn(){document.getElementById('modal').classList.remove('open');document.body.style.overflow='';}
+
+// ===================== ANECDOTE =====================
+function anec(label,text){
+  return `<span class="anecdote">
+    <span class="anec-trigger" onclick="this.parentElement.classList.toggle('open')">💡</span>
+    <span class="anec-bubble"><div class="anec-label">Le saviez-vous ?</div>${text}</span>
+  </span>`;
+}
+
+// ===================== TIMELINE TOGGLE =====================
+function toggleCard(el){
+  el.classList.toggle('expanded');
+}
+
+// ===================== ERA FILTER =====================
+function filterEra(era,btn){
+  document.querySelectorAll('.era-btn').forEach(b=>b.classList.remove('active'));
+  btn.classList.add('active');
+  document.querySelectorAll('.timeline-era').forEach(e=>{
+    if(era==='all'||e.dataset.era===era)e.style.display='block';
+    else e.style.display='none';
+  });
+}
+
+// ===================== FRANCE DATA =====================
+const francePeriodes=[
+  {era:'antiquite',eraLabel:'Antiquité & Gaule',couleur:'#4a7c59',items:[
+    {dates:'v. 500 – 58 av. J.-C.',titre:'La Gaule préromaine',subtitle:'Les peuples celtes',major:false,
+     resume:'La Gaule est habitée par des peuples celtes organisés en tribus rivales — Arvernes, Éduens, Séquanes... gouvernés par des druides et des guerriers.',
+     detail:`<p>La Gaule pré-romaine est un territoire vaste peuplé de peuples celtes. Ces sociétés sont structurées autour de trois castes : les <strong>druides</strong> (prêtres-philosophes qui détiennent le savoir), les <strong>chevaliers</strong> (guerriers aristocrates) et le peuple.</p>
+     <p>Les Gaulois ne forment pas une nation unifiée mais un ensemble de tribus souvent en conflit. Leur religion est polythéiste, centrée sur la nature, et les sacrifices rituels sont pratiqués.</p>
+     <h4>Quelques tribus majeures</h4>
+     <ul class="fact-list">
+       <li>Les <strong>Arvernes</strong> (Auvergne) — peuple de Vercingétorix</li>
+       <li>Les <strong>Éduens</strong> (Bourgogne) — alliés de Rome</li>
+       <li>Les <strong>Parisii</strong> — habitent une île sur la Seine, future Paris</li>
+       <li>Les <strong>Belges</strong> — tribus du nord, réputées les plus belliqueuses</li>
+     </ul>
+     <div class="anec-box"><div class="anec-label">Le saviez-vous ?</div><p>Les druides transmettaient leur savoir <strong>uniquement à l'oral</strong>, en vers mémorisés. Certains étudiants passaient 20 ans à tout apprendre par cœur. Ils interdisaient l'écriture pour que le savoir reste secret.</p></div>`,
+     anecdotes:[]},
+    {dates:'52 av. J.-C.',titre:'Vercingétorix & la bataille d\'Alésia',subtitle:'La résistance gauloise',major:true,
+     resume:'Vercingétorix unifie les tribus gauloises contre Jules César. Malgré une résistance héroïque à Alésia, la Gaule tombe sous domination romaine.',
+     detail:`<p>En <strong>58 av. J.-C.</strong>, Jules César entame la conquête de la Gaule. Pendant 7 ans, il défait les tribus une par une. En 52 av. J.-C., un jeune chef arverne, <strong>Vercingétorix</strong>, réussit l'impensable : unifier les tribus gauloises rivales contre l'ennemi commun.</p>
+     <p>Sa stratégie de la terre brûlée est efficace, jusqu'à la <strong>bataille d'Alésia</strong> (en Bourgogne actuelle). César assiège la ville et construit en un temps record deux lignes de fortifications — une interne (contre Vercingétorix) et une externe (contre l'armée de secours gauloise).</p>
+     <p>Piégé entre les deux, Vercingétorix se rend à César. Il sera emprisonné 6 ans à Rome avant d'être exécuté lors du triomphe de César.</p>
+     <div class="anec-box"><div class="anec-label">Le saviez-vous ?</div><p>César a construit en <strong>seulement 3 semaines</strong> près de 40 km de fortifications autour d'Alésia, avec des fossés, des palissades, des tours et des pièges. Un exploit d'ingénierie militaire extraordinaire avec ~50 000 légionnaires.</p></div>
+     <div class="anec-box"><div class="anec-label">Les chiffres</div><p>Une légion romaine comptait environ <strong>4 800 fantassins</strong> + cavalerie et auxiliaires. César avait 10 légions en Gaule, soit ~80 000 hommes au total. L'armée de secours gauloise était estimée à 250 000 guerriers.</p></div>`,
+     anecdotes:[]},
+    {dates:'50 av. J.-C. – 486 ap. J.-C.',titre:'La Gaule romaine',subtitle:'Provincia Gallia',major:false,
+     resume:'Pendant 5 siècles, la Gaule est romanisée : latin, routes, villes, thermes, amphithéâtres. Lugdunum (Lyon) devient la capitale des Gaules.',
+     detail:`<p>La romanisation de la Gaule est profonde et durable. Les élites gauloises adoptent la langue, la culture et les institutions romaines. Des villes surgissent : <strong>Lugdunum</strong> (Lyon), <strong>Nemausus</strong> (Nîmes), <strong>Burdigala</strong> (Bordeaux), <strong>Lutetia</strong> (Paris).</p>
+     <p>Le réseau routier romain — plusieurs milliers de kilomètres de voies pavées — révolutionne le commerce et l'administration. Des aqueducs, des thermes et des amphithéâtres témoignent encore aujourd'hui de cette présence.</p>
+     <h4>Héritage romain en France</h4>
+     <ul class="fact-list">
+       <li>Le <strong>Pont du Gard</strong> — aqueduc de 50 km alimentant Nîmes</li>
+       <li>Les <strong>arènes de Nîmes et d'Arles</strong> — encore utilisées aujourd'hui</li>
+       <li>La <strong>Maison Carrée</strong> à Nîmes — temple romain parfaitement conservé</li>
+       <li>La <strong>langue française</strong> — dérivée directement du latin populaire</li>
+     </ul>
+     <div class="anec-box"><div class="anec-label">Le saviez-vous ?</div><p>Le mot <strong>"France"</strong> ne vient pas de la Gaule, mais des <em>Francs</em>, un peuple germanique qui conquiert la région au Ve siècle. Et le mot <em>Francs</em> signifiait "libres" en vieux germanique.</p></div>`,
+     anecdotes:[]},
+  ]},
+  {era:'medieval',eraLabel:'Moyen Âge (476 – 1492)',couleur:'#7c4a7c',items:[
+    {dates:'481 – 511',titre:'Clovis Ier',subtitle:'Fondateur du royaume franc',major:true,
+     resume:'Clovis unifie les tribus franques, conquiert la quasi-totalité de la Gaule et se convertit au christianisme — acte fondateur de la France.',
+     detail:`<p><strong>Clovis Ier</strong> devient roi des Francs Saliens à 15 ans, en 481. En 30 ans de règne, il bâtit le premier grand royaume de France : il bat les Wisigoths à Vouillé (507), s'empare de la quasi-totalité de la Gaule et unifie les tribus franques sous son autorité.</p>
+     <p>Son acte le plus décisif : le <strong>baptême de Reims</strong> (vers 496). En se convertissant au catholicisme — contrairement aux autres chefs barbares qui sont ariens — Clovis s'allie l'Église catholique et les populations gallo-romaines. L'alliance du trône et de l'Église durera jusqu'en 1905.</p>
+     <div class="anec-box"><div class="anec-label">Le saviez-vous ?</div><p>Lors de la bataille de Tolbiac contre les Alamans (496), Clovis — qui perdait la bataille — aurait promis à la divinité de sa femme Clotilde de se convertir s'il remportait la victoire. Il gagna. C'est cette "promesse" qui aurait déclenché son baptême.</p></div>`,anecdotes:[]},
+    {dates:'768 – 814',titre:'Charlemagne',subtitle:'Roi des Francs, Empereur d\'Occident',major:true,
+     resume:'Charlemagne bâtit un empire couvrant la France, l\'Allemagne, l\'Italie du nord et l\'Espagne du nord. Il est couronné Empereur d\'Occident en l\'an 800.',
+     detail:`<p><strong>Charlemagne</strong> ("Charles le Grand") hérite du royaume franc en 768 et passe son règne à l'agrandir par la guerre : il soumet les Saxons (après 30 ans de guerre), les Lombards, les Avars, et pousse en Espagne musulmane.</p>
+     <p>Le <strong>25 décembre 800</strong>, à Rome, le pape Léon III le couronne "Empereur des Romains". Un titre qui relance l'idée d'empire universel chrétien en Europe occidentale.</p>
+     <p>Il crée des <strong>écoles dans les monastères</strong>, unifie l'écriture (minuscule caroline), et attire les savants à sa cour d'Aix-la-Chapelle — une première renaissance intellectuelle.</p>
+     <div class="anec-box"><div class="anec-label">Le saviez-vous ?</div><p>Charlemagne ne savait <strong>pas écrire</strong>. Il gardait des tablettes de cire sous son oreiller pour s'exercer la nuit, mais n'y parvint jamais. En revanche, il parlait couramment le latin, comprenait le grec, et maîtrisait plusieurs langues germaniques.</p></div>
+     <div class="anec-box"><div class="anec-label">Taille de l'empire</div><p>L'empire de Charlemagne couvrait environ <strong>1,2 million de km²</strong> et regroupait une population estimée à 15 millions d'habitants — soit à peu près la France, l'Allemagne, les Pays-Bas, la Belgique, la Suisse et le nord de l'Italie réunis.</p></div>`,anecdotes:[]},
+    {dates:'843',titre:'Traité de Verdun',subtitle:'Naissance de la France',major:true,
+     resume:'À la mort de Louis le Pieux, ses trois fils se partagent l\'empire de Charlemagne. La "Francie Occidentale" attribuée à Charles le Chauve est l\'ancêtre direct de la France.',
+     detail:`<p>Le <strong>traité de Verdun</strong> (843) divise l'empire carolingien entre les trois fils de Louis le Pieux : <strong>Lothaire</strong> (Empire du Milieu), <strong>Louis le Germanique</strong> (Francie Orientale, future Allemagne), et <strong>Charles le Chauve</strong> (Francie Occidentale, future France).</p>
+     <p>Ce traité est considéré comme <strong>l'acte de naissance symbolique de la France</strong> — un territoire distinct se formant à l'ouest, avec sa propre langue qui deviendra le français.</p>
+     <div class="anec-box"><div class="anec-label">Le saviez-vous ?</div><p>Les <strong>Serments de Strasbourg</strong> (842), prononcés juste avant le traité, sont le plus ancien texte connu en langue romane (ancêtre du français) et en vieux haut-allemand. C'est le premier document officiel en "proto-français".</p></div>`,anecdotes:[]},
+    {dates:'987 – 1328',titre:'Les Capétiens directs',subtitle:'Hugues Capet & ses successeurs',major:false,
+     resume:'La dynastie capétienne règne 341 ans sur la France. Elle transforme un royaume faible en une monarchie puissante et centralisée.',
+     detail:`<p>En <strong>987</strong>, les grands seigneurs du royaume élisent <strong>Hugues Capet</strong> roi, fondant la dynastie capétienne. Au départ, le domaine royal est minuscule (île-de-France) et les grands vassaux sont souvent plus puissants que le roi.</p>
+     <p>Mais par mariages, guerres et héritage, les Capétiens agrandissent progressivement leur domaine :</p>
+     <ul class="fact-list">
+       <li><strong>Philippe II Auguste</strong> (1180-1223) — triple le domaine royal, bat une coalition européenne à Bouvines (1214)</li>
+       <li><strong>Louis IX / Saint Louis</strong> (1226-1270) — réforme la justice, croisades, modèle du roi chrétien</li>
+       <li><strong>Philippe IV le Bel</strong> (1285-1314) — détruit l'ordre des Templiers, soumet la papauté</li>
+     </ul>
+     <div class="anec-box"><div class="anec-label">L'affaire des Templiers</div><p>En 1307, Philippe IV le Bel fait arrêter d'un coup <strong>tous les Templiers de France</strong> (environ 5 000 hommes) pour s'emparer de leurs richesses. Torturés, beaucoup avouèrent des crimes inventés. Le Grand Maître Jacques de Molay fut brûlé vif en 1314, maudissant le roi depuis les flammes.</p></div>`,anecdotes:[]},
+    {dates:'1337 – 1453',titre:'La Guerre de Cent Ans',subtitle:'France vs Angleterre',major:true,
+     resume:'116 ans de conflits entre la France et l\'Angleterre pour le trône de France. La guerre failli éliminer la monarchie française avant qu\'une jeune paysanne de 17 ans change le cours de l\'histoire.',
+     detail:`<p>La <strong>Guerre de Cent Ans</strong> (1337-1453) n'est pas une guerre continue mais une série de conflits entre la France et l'Angleterre autour de la succession du trône de France et des territoires français.</p>
+     <p>Les désastres s'accumulent : <strong>Crécy (1346)</strong>, <strong>Poitiers (1356)</strong>, <strong>Azincourt (1415)</strong> — trois défaites catastrophiques où la chevalerie française est massacrée par les archers anglais. En 1420, le traité de Troyes donne la France aux Anglais.</p>
+     <p>C'est alors qu'apparaît <strong>Jeanne d'Arc</strong> (1412-1431) : une jeune paysanne lorraine de 17 ans qui convainc le dauphin Charles de lui confier une armée. Elle lève le siège d'Orléans (1429), fait sacrer Charles VII à Reims, puis est capturée et brûlée vive à Rouen en 1431.</p>
+     <p>Mais l'élan est donné. Charles VII reconquiert la France, et en 1453, seule Calais reste anglaise.</p>
+     <div class="anec-box"><div class="anec-label">Le saviez-vous ?</div><p>Jeanne d'Arc a été condamnée par un tribunal ecclésiastique français (favorable aux Anglais) pour <strong>hérésie et port du vêtement masculin</strong>. Elle a été réhabilitée 25 ans après sa mort. Et canonisée... en <strong>1920</strong> — soit 489 ans après son exécution.</p></div>
+     <div class="anec-box"><div class="anec-label">Azincourt (1415)</div><p>À Azincourt, environ <strong>6 000 Anglais</strong> écrasent une armée française de 25 000 hommes. Les chevaliers français, en armures lourdes, s'enlisent dans la boue et sont massacrés par les flèches anglaises. Plus de 6 000 Français meurent, dont la fleur de la noblesse.</p></div>`,anecdotes:[]},
+    {dates:'1515 – 1547',titre:'François Ier',subtitle:'Le roi de la Renaissance',major:false,
+     resume:'François Ier ouvre la France à la Renaissance italienne, fait venir Léonard de Vinci, crée le Collège de France et remporte la bataille de Marignan.',
+     detail:`<p><strong>François Ier</strong> incarne le roi humaniste de la Renaissance. Grand, cultivé, mécène, il transforme la France culturellement :</p>
+     <ul class="fact-list">
+       <li>Il fait venir <strong>Léonard de Vinci</strong> en France en 1516 — la Joconde arrive ainsi en France</li>
+       <li>Il fonde le <strong>Collège de France</strong> (1530), encore existant</li>
+       <li>Il ordonne l'<strong>ordonnance de Villers-Cotterêts</strong> (1539) — le français devient langue officielle de l'administration</li>
+       <li><strong>Marignan, 1515</strong> — victoire mémorable contre les Suisses en Italie</li>
+     </ul>
+     <div class="anec-box"><div class="anec-label">Léonard de Vinci en France</div><p>Léonard de Vinci s'installe au château du Clos Lucé, à Amboise, en 1516, à 64 ans. François Ier lui verse une pension royale et passe des heures à converser avec lui. Léonard y mourra en 1519. La Joconde reste en France — et finit au Louvre.</p></div>`,anecdotes:[]},
+  ]},
+  {era:'moderne',eraLabel:'Époque moderne (1492 – 1789)',couleur:'#7c6a1e',items:[
+    {dates:'1589 – 1610',titre:'Henri IV',subtitle:'Le Vert-Galant',major:true,
+     resume:'Henri IV met fin aux guerres de religion par l\'Édit de Nantes (1598), qui accorde la liberté de culte aux protestants. Il est assassiné par Ravaillac en 1610.',
+     detail:`<p>Après les terribles <strong>guerres de Religion</strong> (1562-1598) qui déchirent la France, <strong>Henri IV</strong> impose la paix. Protestant converti au catholicisme ("Paris vaut bien une messe"), il signe l'<strong>Édit de Nantes</strong> en 1598 — premier acte de tolérance religieuse en Europe.</p>
+     <p>Il reconstruit une France épuisée par 35 ans de guerre civile, avec l'aide de son ministre <strong>Sully</strong> : désendettement, agriculture, commerce. Sa popularité est immense — il reste "le bon roi Henri" dans la mémoire populaire.</p>
+     <p>Le <strong>14 mai 1610</strong>, alors que son carrosse est coincé dans la rue de la Ferronnerie à Paris, <strong>François Ravaillac</strong> lui plante un couteau dans la poitrine. Henri IV meurt sur le coup.</p>
+     <div class="anec-box"><div class="anec-label">Le saviez-vous ?</div><p>Henri IV est réputé pour son appétit amoureux : on lui prête <strong>56 maîtresses officielles</strong>. Sa devise aurait été "un poulet dans chaque pot" — mais sa vraie préoccupation était que chaque paysan puisse manger de la viande le dimanche, ce qui était un luxe rare.</p></div>`,anecdotes:[]},
+    {dates:'1643 – 1715',titre:'Louis XIV',subtitle:'Le Roi-Soleil',major:true,
+     resume:'72 ans de règne — le plus long de l\'histoire de France. Louis XIV centralise le pouvoir absolu, construit Versailles et fait de la France la première puissance européenne.',
+     detail:`<p><strong>Louis XIV</strong> règne 72 ans (record absolu en Europe) et incarne la monarchie absolue à son apogée. Sa devise : <em>Nec pluribus impar</em> ("Seul contre tous"). Son surnom : le Roi-Soleil.</p>
+     <p>Après la Fronde (1648-1653) qui l'a traumatisé enfant, il décide d'avoir un pouvoir sans partage. Il transfère la cour à <strong>Versailles</strong> (1682), transformant les nobles en courtisans dépendants de ses faveurs, coupés de leurs fiefs.</p>
+     <p>Son règne voit des guerres constantes pour étendre les frontières, la révocation de l'<strong>Édit de Nantes</strong> (1685) qui chasse 200 000 protestants de France, et le développement des arts et des lettres (Molière, Racine, La Fontaine, Lully).</p>
+     <div class="anec-box"><div class="anec-label">Le Lever du Roi</div><p>Chaque matin, le réveil de Louis XIV était un <strong>cérémonial public</strong> de 2 heures. Plusieurs dizaines de courtisans y participaient, avec des rôles précis : l'un apportait la chemise, l'autre les chaussures... C'était un honneur immense d'assister au "Grand Lever". Louis XIV gérait ainsi les ego et la hiérarchie de sa cour.</p></div>
+     <div class="anec-box"><div class="anec-label">Versailles en chiffres</div><p>Le château de Versailles a mobilisé jusqu'à <strong>36 000 ouvriers</strong> simultanément. Le parc compte 1 400 fontaines. La galerie des Glaces mesure 73 mètres de long. Coût total estimé : l'équivalent de <strong>2 milliards d'euros</strong> actuels.</p></div>`,anecdotes:[]},
+    {dates:'1774 – 1792',titre:'Louis XVI',subtitle:'Le dernier roi de France',major:false,
+     resume:'Louis XVI monte sur un trône en crise financière grave. Il convoque les États généraux en 1789, déclenchant une révolution qui le mènera à la guillotine.',
+     detail:`<p><strong>Louis XVI</strong> hérite d'un royaume au bord de la faillite, épuisé par les dépenses de Louis XIV et Louis XV, et l'aide à la Révolution américaine. Timide et indécis, il est mal préparé à affronter la crise.</p>
+     <p>En mai 1789, il convoque les <strong>États généraux</strong> — première réunion depuis 1614. C'est l'étincelle : le Tiers État se proclame <strong>Assemblée nationale</strong>, les Parisiens prennent la Bastille le 14 juillet 1789.</p>
+     <p>Louis XVI accepte la monarchie constitutionnelle, mais tente de fuir en juin 1791 (<strong>fuite à Varennes</strong>). Arrêté, il perd toute crédibilité. Jugé et condamné pour trahison, il est guillotiné le <strong>21 janvier 1793</strong>.</p>
+     <div class="anec-box"><div class="anec-label">Le saviez-vous ?</div><p>Louis XVI était un excellent <strong>serrurier</strong> — il aimait fabriquer des serrures dans son atelier personnel et était réputé très habile. Il était aussi passionné de géographie et avait annoté les journaux de bord de l'expédition de La Pérouse... dont il attendait encore des nouvelles le jour de son arrestation.</p></div>`,anecdotes:[]},
+    {dates:'1789 – 1799',titre:'La Révolution française',subtitle:'Liberté, Égalité, Fraternité',major:true,
+     resume:'La Révolution renverse la monarchie, abolit les privilèges, proclame les droits de l\'homme et plonge la France dans 10 ans de chaos, de terreur et de renouveau.',
+     detail:`<p>La <strong>Révolution française</strong> est l'un des événements les plus importants de l'histoire mondiale. En 10 ans, elle renverse 1000 ans de monarchie, détruit l'ordre féodal, proclame les droits de l'homme et invente des notions politiques qui structurent encore le monde.</p>
+     <h4>Les grandes étapes</h4>
+     <ul class="fact-list">
+       <li><strong>1789</strong> — Prise de la Bastille (14 juillet), nuit du 4 août (abolition des privilèges), Déclaration des droits de l'homme</li>
+       <li><strong>1792</strong> — Proclamation de la République. La France déclare la guerre à l'Autriche</li>
+       <li><strong>1793-1794</strong> — La Terreur : Robespierre et le Comité de Salut Public envoient 16 000 personnes à la guillotine</li>
+       <li><strong>1795-1799</strong> — Le Directoire : régime instable, corruption, guerres extérieures</li>
+       <li><strong>1799</strong> — Coup d'état de Napoléon Bonaparte (18 brumaire)</li>
+     </ul>
+     <div class="anec-box"><div class="anec-label">La guillotine</div><p>Le Dr Guillotin a proposé la guillotine comme méthode d'exécution <strong>égalitaire et humaine</strong> — avant, les nobles étaient décapités à l'épée, les roturiers pendus. La guillotine offrait la même mort à tous. Ironiquement, elle est devenue le symbole de la Terreur.</p></div>
+     <div class="anec-box"><div class="anec-label">Les chiffres de la Terreur</div><p>Entre 1793 et 1794, environ <strong>40 000 personnes</strong> sont exécutées ou meurent en prison dans toute la France. Paris seule compte 2 700 exécutions en 13 mois. Robespierre lui-même finira guillotiné le 27 juillet 1794 (9 thermidor).</p></div>`,anecdotes:[]},
+  ]},
+  {era:'contemporain',eraLabel:'Époque contemporaine (1789 – aujourd\'hui)',couleur:'#1e507c',items:[
+    {dates:'1804 – 1815',titre:'Napoléon Bonaparte',subtitle:'Consul, puis Empereur des Français',major:true,
+     resume:'Napoléon réorganise la France (Code civil, lycées, Banque de France) et conquiert l\'Europe. Son empire s\'étend de Madrid à Moscou avant l\'effondrement final.',
+     detail:`<p><strong>Napoléon Bonaparte</strong> (1769-1821) est l'une des figures les plus fascinantes de l'histoire. Général corse prodige, il prend le pouvoir par le coup d'état du 18 Brumaire (1799), se fait nommer Premier Consul, puis <strong>Empereur</strong> en 1804.</p>
+     <p>Son œuvre intérieure est immense :</p>
+     <ul class="fact-list">
+       <li>Le <strong>Code civil</strong> (1804) — encore en vigueur dans ses grandes lignes</li>
+       <li>La <strong>Banque de France</strong>, les lycées, le Conseil d'État</li>
+       <li>La <strong>Légion d'honneur</strong></li>
+       <li>La réconciliation avec l'Église (Concordat de 1801)</li>
+     </ul>
+     <p>Ses campagnes militaires sont légendaires : Austerlitz (1805), Iéna (1806), Wagram (1809). Mais la campagne de <strong>Russie (1812)</strong> tourne au désastre : 600 000 hommes entrent, moins de 100 000 en reviennent. Suivent la défaite de Leipzig (1813) et Waterloo (1815).</p>
+     <div class="anec-box"><div class="anec-label">Napoléon n'était pas petit !</div><p>Napoléon mesurait <strong>1,69 m</strong> — la taille moyenne d'un Français de l'époque. La légende de sa petite taille vient d'une confusion entre le pouce français (2,7 cm) et le pouce anglais (2,54 cm). Les Anglais ont propagé cette caricature de "Petit Caporal" à des fins de propagande.</p></div>
+     <div class="anec-box"><div class="anec-label">La campagne de Russie</div><p>En 1812, la Grande Armée de Napoléon entre en Russie avec environ <strong>685 000 hommes</strong>. Elle prend Moscou... mais la ville est incendiée. À la retraite dans le froid, la faim et les attaques cosaques, il ne revient que <strong>70 000 à 100 000 soldats</strong>. La plus grande catastrophe militaire de l'histoire jusqu'à la Première Guerre mondiale.</p></div>`,anecdotes:[]},
+    {dates:'1814 – 1870',titre:'Restaurations & Monarchies (1814-1870)',subtitle:'Louis XVIII, Charles X, Louis-Philippe, Napoléon III',major:false,
+     resume:'Une période de régimes successifs : deux Restaurations, une Monarchie de Juillet, deux Républiques et un Second Empire — la France cherche son équilibre politique.',
+     detail:`<p>Après Napoléon, la France peine à trouver un régime stable. En 56 ans, elle connaît 7 régimes différents :</p>
+     <ul class="fact-list">
+       <li><strong>Louis XVIII</strong> (1814-1824) — Restauration modérée, Charte constitutionnelle</li>
+       <li><strong>Charles X</strong> (1824-1830) — trop réactionnaire, renversé par la Révolution de Juillet</li>
+       <li><strong>Louis-Philippe</strong> (1830-1848) — "roi des Français", règne bourgeois, industrialisation</li>
+       <li><strong>IIe République</strong> (1848-1851) — suffrage universel masculin, abolition de l'esclavage</li>
+       <li><strong>Napoléon III</strong> (1851-1870) — coup d'état, Second Empire, modernisation de Paris avec Haussmann</li>
+     </ul>
+     <div class="anec-box"><div class="anec-label">Paris transformé</div><p>Le baron <strong>Haussmann</strong>, préfet de Napoléon III, démolira <strong>20 000 immeubles</strong> et construira 40 000 autres pour créer les grands boulevards parisiens. Objectifs officiels : hygiène, circulation. Objectif réel : rendre impossible les barricades révolutionnaires. Les rues étroites permettaient aux insurgés de bloquer l'armée.</p></div>`,anecdotes:[]},
+    {dates:'1870 – 1914',titre:'La IIIe République & la Belle Époque',subtitle:'De la défaite à la guerre',major:false,
+     resume:'La IIIe République s\'installe après la défaite contre la Prusse et la Commune de Paris. Elle dure 70 ans — le régime le plus long de France — porté par la Belle Époque et l\'affaire Dreyfus.',
+     detail:`<p>La <strong>IIIe République</strong> naît dans le chaos de la défaite face à la Prusse (1870), la perte de l'Alsace-Lorraine, et l'écrasement sanglant de la <strong>Commune de Paris</strong> (1871 — 10 000 à 30 000 morts en une semaine).</p>
+     <p>Elle se consolide et dure 70 ans, portée par des avancées majeures :</p>
+     <ul class="fact-list">
+       <li><strong>1881-1882</strong> — Jules Ferry : école gratuite, laïque et obligatoire</li>
+       <li><strong>1894-1906</strong> — Affaire Dreyfus : le capitaine juif accusé à tort de trahison divise la France</li>
+       <li><strong>1905</strong> — Séparation de l'Église et de l'État</li>
+       <li><strong>Belle Époque (1871-1914)</strong> — Eiffel (1889), métro, cinéma, impressionnisme, Pasteur...</li>
+     </ul>
+     <div class="anec-box"><div class="anec-label">L'Affaire Dreyfus</div><p>En 1894, le capitaine Alfred Dreyfus, juif alsacien, est condamné à tort pour espionnage au profit de l'Allemagne. Il est déporté à l'île du Diable. Émile Zola publie <strong>"J'Accuse"</strong> (1898) pour dénoncer le complot militaire. Dreyfus ne sera réhabilité qu'en 1906. L'affaire révèle l'antisémitisme profond dans l'armée et la société françaises.</p></div>`,anecdotes:[]},
+    {dates:'1914 – 1918',titre:'La Grande Guerre',subtitle:'La der des ders',major:true,
+     resume:'4 ans de guerre totale. La France perd 1,4 million de soldats, soit 4% de sa population. Les tranchées du nord et de l\'est du pays deviennent le symbole de l\'horreur moderne.',
+     detail:`<p>La <strong>Première Guerre mondiale</strong> (1914-1918) est une rupture absolue dans l'histoire humaine. Pour la France, c'est une saignée démographique sans précédent.</p>
+     <h4>Les chiffres français</h4>
+     <ul class="fact-list">
+       <li><strong>1,4 million</strong> de soldats français morts (+ 400 000 civils)</li>
+       <li><strong>4,3 millions</strong> de blessés dont beaucoup mutilés à vie ("gueules cassées")</li>
+       <li>La bataille de <strong>Verdun</strong> (1916) : 10 mois, 300 000 morts des deux côtés</li>
+       <li>La bataille de la <strong>Somme</strong> (1916) : 60 000 morts britanniques le premier jour</li>
+     </ul>
+     <div class="anec-box"><div class="anec-label">Verdun</div><p>À Verdun, on a tiré <strong>40 millions d'obus</strong> en 10 mois. Le sol y est encore si saturé en métal, en explosifs non détonés et en arsenic que la zone reste "<strong>Zone Rouge</strong>" — inhabitable et inconstructible. Des cadavres y sont encore découverts chaque année.</p></div>
+     <div class="anec-box"><div class="anec-label">Les mutineries de 1917</div><p>En avril-mai 1917, après l'offensive désastreuse du Chemin des Dames (40 000 morts en quelques jours), <strong>54 divisions françaises</strong> se mutinent — refusant de repartir à l'assaut. Le général Pétain rétablit l'ordre en combinant punitions ciblées et amélioration des conditions : 49 exécutions, mais aussi permission, nourriture correcte, et fin des assauts suicidaires.</p></div>`,anecdotes:[]},
+    {dates:'1939 – 1945',titre:'La Seconde Guerre mondiale',subtitle:'L\'Occupation & la Résistance',major:true,
+     resume:'La France est écrasée en 6 semaines (mai-juin 1940), divisée entre zone occupée et zone libre sous Pétain. De Gaulle lance l\'appel du 18 juin depuis Londres.',
+     detail:`<p>Le <strong>10 mai 1940</strong>, l'Allemagne attaque à l'ouest. En 6 semaines, la Wehrmacht contourne la ligne Maginot par les Ardennes et encercle les armées alliées. Le <strong>22 juin 1940</strong>, la France signe l'armistice.</p>
+     <p>Le pays est divisé : une <strong>zone occupée</strong> (nord et ouest, sous contrôle allemand) et une <strong>zone libre</strong> gouvernée par le maréchal <strong>Pétain</strong> depuis Vichy. Le régime de Vichy collabore activement avec les Nazis, notamment dans la déportation des Juifs.</p>
+     <p>Depuis Londres, le général <strong>de Gaulle</strong> lance l'<strong>Appel du 18 juin 1940</strong> sur la BBC — "La France a perdu une bataille ! Mais la France n'a pas perdu la guerre !" — et organise la France Libre et la Résistance.</p>
+     <p>Le <strong>6 juin 1944</strong> (D-Day), les Alliés débarquent en Normandie. Paris est libéré le 25 août 1944.</p>
+     <div class="anec-box"><div class="anec-label">La Rafle du Vel d'Hiv</div><p>Les 16 et 17 juillet 1942, la police française (pas allemande) arrête <strong>13 152 Juifs</strong> à Paris, dont 4 000 enfants. Ils sont parqués au Vélodrome d'Hiver dans des conditions atroces, puis déportés vers Auschwitz. Moins de 100 survivront. C'est la France qui a organisé cette rafle — ce n'est reconnu officiellement qu'en 1995 par Chirac.</p></div>
+     <div class="anec-box"><div class="anec-label">Les chiffres du D-Day</div><p>Le 6 juin 1944, c'est la plus grande opération amphibie de l'histoire : <strong>156 000 soldats</strong> débarquent sur 5 plages normandes, transportés par 5 000 navires et 11 000 avions. Les pertes alliées ce seul jour : environ <strong>10 000 morts, blessés et disparus</strong>.</p></div>`,anecdotes:[]},
+    {dates:'1958 – aujourd\'hui',titre:'La Ve République',subtitle:'De Gaulle à Macron',major:false,
+     resume:'De Gaulle crée la Ve République en 1958, donnant au président des pouvoirs forts. 8 présidents se succèdent jusqu\'à aujourd\'hui.',
+     detail:`<p>La <strong>Ve République</strong> est créée en 1958 par de Gaulle pour mettre fin à l'instabilité de la IVe République (21 gouvernements en 12 ans). Sa Constitution renforce considérablement le pouvoir exécutif.</p>
+     <h4>Les présidents de la Ve République</h4>
+     <ul class="fact-list">
+       <li><strong>Charles de Gaulle</strong> (1959-1969) — fondateur, Mai 68, démission après référendum</li>
+       <li><strong>Georges Pompidou</strong> (1969-1974) — meurt en fonction, modernisation économique</li>
+       <li><strong>Valéry Giscard d'Estaing</strong> (1974-1981) — majorité à 18 ans, IVG, divorce par consentement mutuel</li>
+       <li><strong>François Mitterrand</strong> (1981-1995) — premier président socialiste, abolition de la peine de mort, 35h</li>
+       <li><strong>Jacques Chirac</strong> (1995-2007) — deux septennats, reconnaissance de Vichy, non à la guerre en Irak</li>
+       <li><strong>Nicolas Sarkozy</strong> (2007-2012) — crise financière de 2008, traité de Lisbonne</li>
+       <li><strong>François Hollande</strong> (2012-2017) — mariage pour tous, attentats de 2015</li>
+       <li><strong>Emmanuel Macron</strong> (2017-présent) — En Marche, retraites, COVID, guerre en Ukraine</li>
+     </ul>
+     <div class="anec-box"><div class="anec-label">Mai 68</div><p>En mai 1968, étudiants et ouvriers paralysent la France : <strong>10 millions de grévistes</strong>, les universités occupées, les barricades dans Paris. De Gaulle disparaît mystérieusement 24h (il est allé consulter ses généraux en Allemagne), puis revient, dissout l'Assemblée et remporte les élections. Il démissionnera un an plus tard après un référendum perdu.</p></div>`,anecdotes:[]},
+  ]},
+];
+
+function buildFranceTimeline(){
+  const container=document.getElementById('france-timeline');
+  container.innerHTML='';
+  francePeriodes.forEach(periode=>{
+    const eraDiv=document.createElement('div');
+    eraDiv.className='timeline-era';
+    eraDiv.dataset.era=periode.era;
+    eraDiv.innerHTML=`<div class="era-title">${periode.eraLabel}</div>`;
+    periode.items.forEach((item,i)=>{
+      const div=document.createElement('div');
+      div.className='timeline-item';
+      div.innerHTML=`
+        <div class="timeline-dot ${item.major?'major':''}"></div>
+        <div class="timeline-card" onclick="toggleCard(this)">
+          <div class="tc-header">
+            <div>
+              <div class="tc-title">${item.titre}</div>
+              <div class="tc-subtitle">${item.subtitle}</div>
+            </div>
+            <div style="display:flex;flex-direction:column;align-items:flex-end;gap:4px">
+              <div class="tc-dates">${item.dates}</div>
+              <div class="tc-expand">▼</div>
+            </div>
+          </div>
+          <div class="tc-body">
+            <p>${item.resume}</p>
+            <button onclick="event.stopPropagation();openItemModal(${JSON.stringify(i)},${JSON.stringify(periode.era)})" style="background:rgba(201,162,39,0.15);border:1px solid var(--gold);color:var(--gold);padding:0.4rem 1rem;border-radius:6px;cursor:pointer;font-size:0.8rem;margin-top:0.5rem;">En savoir plus →</button>
+          </div>
+        </div>`;
+      eraDiv.appendChild(div);
+    });
+    container.appendChild(eraDiv);
+  });
+}
+
+function openItemModal(itemIndex, eraKey){
+  const periode=francePeriodes.find(p=>p.era===eraKey);
+  const item=periode.items[itemIndex];
+  openModal(item.titre, item.dates, item.detail);
+}
+
+// ===================== GUERRES DATA =====================
+const guerresData=[
+  {year:'264 – 146 av. J.-C.',titre:'Les Guerres Puniques',desc:'Rome contre Carthage — trois guerres pour la domination de la Méditerranée. Hannibal traverse les Alpes avec des éléphants. Rome finit par raser Carthage.',tags:['monde'],
+   detail:`<p>Les trois guerres puniques opposent <strong>Rome</strong> à <strong>Carthage</strong> (actuelle Tunisie) pour la domination de la Méditerranée occidentale.</p><p>La IIe guerre punique voit <strong>Hannibal Barca</strong> accomplir l'impensable : traverser les Alpes avec une armée de 50 000 hommes et 37 éléphants en plein hiver. Il remporte les victoires de Trébie, du lac Trasimène et surtout de <strong>Cannes (216 av. J.-C.)</strong> — où 50 000 Romains sont tués en une journée.</p><div class="anec-box"><div class="anec-label">Le saviez-vous ?</div><p>À Cannes, Hannibal encercle une armée deux fois plus grande avec une <strong>manœuvre en tenaille</strong> (double enveloppement) encore étudiée dans les académies militaires du monde entier. Malgré ses victoires, il ne marche jamais sur Rome — une décision que certains historiens considèrent comme l'erreur fatale de sa campagne.</p></div>`},
+  {year:'1095 – 1291',titre:'Les Croisades',desc:'8 croisades en 200 ans pour arracher Jérusalem aux musulmans. Des centaines de milliers de morts, des royaumes créés puis perdus, et des échanges culturels qui changent l\'Europe.',tags:['europe','monde'],
+   detail:`<p>Les <strong>Croisades</strong> sont une série de campagnes militaires lancées par la chrétienté occidentale pour reprendre Jérusalem aux musulmans, à l'appel du pape Urbain II en 1095.</p><p>La <strong>1ère Croisade</strong> (1096-1099) est la seule vraiment victorieuse : Jérusalem est prise, au prix d'un massacre général de la population (musulmans et juifs). Des royaumes croisés sont fondés au Levant.</p><p>La <strong>3e Croisade</strong> (1189-1192) voit s'affronter <strong>Saladin</strong> et <strong>Richard Cœur de Lion</strong> — un duel légendaire entre deux adversaires qui se respectent.</p><div class="anec-box"><div class="anec-label">Le saviez-vous ?</div><p>La <strong>4e Croisade</strong> (1204) ne parvient jamais en Terre sainte. Les croisés, incapables de payer leurs dettes aux Vénitiens, détournent l'expédition et saccagent... <strong>Constantinople</strong>, la capitale chrétienne byzantine. Un des plus grands paradoxes de l'histoire des croisades.</p></div>`},
+  {year:'1337 – 1453',titre:'Guerre de Cent Ans',desc:'France contre Angleterre. 116 ans de conflits, Azincourt, Jeanne d\'Arc, et la reconquête finale qui forge l\'identité nationale française.',tags:['france','europe'],
+   detail:`<p>Déjà couverte dans la section Histoire de France. Cette guerre forge l'identité nationale française et marque la fin du Moyen Âge féodal.</p><div class="anec-box"><div class="anec-label">Jeanne d'Arc</div><p>Une paysanne de 17 ans qui convainc un roi, libère une ville assiégée, fait sacrer un roi à Reims, est capturée, jugée et brûlée vive — le tout en <strong>2 ans</strong> (1429-1431). Peu de destins dans l'histoire humaine sont aussi extraordinaires.</p></div>`},
+  {year:'1618 – 1648',titre:'Guerre de Trente Ans',desc:'Le plus grand conflit européen avant les guerres mondiales. Ce qui commence comme une guerre de religion protestants/catholiques devient une lutte pour l\'hégémonie européenne. Un tiers de l\'Allemagne meurt.',tags:['europe'],
+   detail:`<p>La <strong>Guerre de Trente Ans</strong> commence en Bohème comme un conflit religieux (protestants vs catholiques) mais se transforme en guerre généralisée impliquant presque toute l'Europe.</p><p>L'Allemagne est dévastée : entre la guerre, la famine et les épidémies, elle perd <strong>25 à 40%</strong> de sa population. Certaines régions perdent les deux tiers de leurs habitants.</p><p>Les traités de <strong>Westphalie</strong> (1648) qui y mettent fin inventent les bases du droit international moderne : souveraineté des États, non-ingérence. La France de Richelieu et Mazarin en sort renforcée comme première puissance européenne.</p><div class="anec-box"><div class="anec-label">Les mercenaires</div><p>Cette guerre est largement menée par des <strong>armées mercenaires</strong> qui se ravitaillent en pillant les populations civiles. Quand ils ne sont pas payés — ce qui arrive souvent — ils pillent les villes de leurs propres alliés. Le sac de Magdebourg (1631) voit 20 000 civils massacrés par l'armée impériale "catholique".</p></div>`},
+  {year:'1803 – 1815',titre:'Guerres napoléoniennes',desc:'Napoléon contre le reste de l\'Europe. Une décennie de guerres ininterrompues qui redessinent l\'Europe, inventent la guerre moderne et se terminent à Waterloo.',tags:['europe','monde'],
+   detail:`<p>Les <strong>guerres napoléoniennes</strong> impliquent presque tous les pays d'Europe, de l'Égypte à la Russie, de l'Espagne à la Pologne. Napoléon remporte des victoires décisives (Austerlitz, Iéna, Wagram) avant de s'épuiser.</p><p>Innovations militaires : corps d'armée autonomes, artillerie mobile, vitesse de manœuvre. Les guerres napoléoniennes font entre <strong>3 et 6 millions de morts militaires</strong> et autant de victimes civiles.</p><div class="anec-box"><div class="anec-label">Waterloo (18 juin 1815)</div><p>À Waterloo, Napoléon perd en grande partie parce que le maréchal Grouchy ne revient pas avec ses 33 000 hommes (il poursuit les Prussiens... qui arrivent sur le flanc de Napoléon). Une décision, une heure de retard dans l'attaque le matin — et l'histoire du monde bascule.</p></div>`},
+  {year:'1914 – 1918',titre:'Première Guerre mondiale',desc:'La "der des ders". 20 millions de morts. Les tranchées, le gaz, les chars — la guerre industrielle à son horreur maximale.',tags:['monde','france'],
+   detail:`<p>Voir la section Histoire de France pour le détail côté français. À l'échelle mondiale :</p><ul class="fact-list"><li><strong>~20 millions de morts</strong> militaires et civils</li><li><strong>21 millions de blessés</strong></li><li>Effondrement de 4 empires : ottoman, austro-hongrois, russe, allemand</li><li>Première utilisation massive du <strong>gaz de combat</strong>, des chars, de l'aviation</li></ul><div class="anec-box"><div class="anec-label">L'attentat de Sarajevo</div><p>Le 28 juin 1914, l'archiduc François-Ferdinand est assassiné à Sarajevo. Le tireur, Gavrilo Princip, rate son premier tir, fait demi-tour, entre dans un café... et se retrouve nez à nez avec le carrosse impérial qui avait pris un mauvais chemin. Il tire à bout portant. Le mécanisme d'alliances entraîne l'Europe entière dans la guerre en <strong>37 jours</strong>.</p></div>`},
+  {year:'1939 – 1945',titre:'Seconde Guerre mondiale',desc:'Le conflit le plus meurtrier de l\'histoire humaine. 70 à 85 millions de morts. La Shoah. Hiroshima. La fin des empires coloniaux.',tags:['monde','france'],
+   detail:`<p>La <strong>Seconde Guerre mondiale</strong> est le conflit le plus dévastateur de l'histoire humaine.</p><ul class="fact-list"><li><strong>70 à 85 millions de morts</strong> — soit 3% de la population mondiale de 1940</li><li><strong>La Shoah</strong> : 6 millions de Juifs systématiquement exterminés</li><li><strong>Front de l'Est</strong> : 26 millions de morts soviétiques</li><li><strong>Hiroshima & Nagasaki</strong> (août 1945) — premières bombes atomiques</li></ul><div class="anec-box"><div class="anec-label">Stalingrad (1942-1943)</div><p>La bataille de Stalingrad est peut-être la plus décisive de la guerre. 200 jours de combats urbains acharnés. La 6e armée allemande de Paulus (300 000 hommes) est encerclée et doit capituler. C'est le tournant : l'Allemagne n'avancera plus jamais à l'Est. Morts des deux côtés : environ <strong>2 millions</strong>.</p></div>`},
+  {year:'1947 – 1991',titre:'La Guerre Froide',desc:'40 ans d\'affrontement indirect entre USA et URSS. Course aux armements, Spoutnik, Cuba, Vietnam, mur de Berlin. Le monde au bord du gouffre nucléaire.',tags:['monde'],
+   detail:`<p>La <strong>Guerre Froide</strong> (1947-1991) oppose les États-Unis et l'URSS dans une confrontation globale sans affrontement direct — chacun possède assez d'armes nucléaires pour détruire la planète plusieurs fois.</p><ul class="fact-list"><li><strong>Crise de Cuba</strong> (1962) — 13 jours au bord de la guerre nucléaire</li><li><strong>Sputnik</strong> (1957) — l'URSS envoie le premier satellite, choc aux USA</li><li><strong>Course à la Lune</strong> — Apollo 11, juillet 1969</li><li><strong>Vietnam</strong> (1955-1975) — guerre par procuration, 3 millions de morts</li><li><strong>Mur de Berlin</strong> (1961-1989)</li></ul><div class="anec-box"><div class="anec-label">Le téléphone rouge</div><p>Après la crise de Cuba, USA et URSS créent une <strong>ligne directe</strong> entre la Maison-Blanche et le Kremlin pour éviter une guerre accidentelle. Contrairement à la légende, ce n'est pas un téléphone rouge mais d'abord un télex, puis un fax sécurisé. La couleur rouge ne vient que du cinéma.</p></div>`},
+];
+
+function buildGuerres(){
+  const container=document.getElementById('wars-list');
+  container.innerHTML='';
+  guerresData.forEach((w,i)=>{
+    const div=document.createElement('div');
+    div.className='war-card';
+    div.onclick=()=>openModal(w.titre,w.year,w.detail);
+    div.innerHTML=`
+      <div class="war-period">
+        <div class="war-year">${w.year.split('–')[0].trim()}</div>
+        <div class="war-duration">${w.year}</div>
+      </div>
+      <div>
+        <div class="war-title">${w.titre}</div>
+        <div class="war-desc">${w.desc}</div>
+        <div class="war-tags">${w.tags.map(t=>`<span class="war-tag ${t}">${t==='france'?'🇫🇷 France':t==='europe'?'🌍 Europe':'🌐 Mondial'}</span>`).join('')}</div>
+      </div>`;
+    container.appendChild(div);
+  });
+}
+
+// ===================== RELIGIONS DATA =====================
+const relData=[
+  {year:'~40 000 av. J.-C.',nom:'Animisme & chamanisme',desc:'Les premières formes de spiritualité humaine : esprits de la nature, ancêtres, totems. Encore présentes dans de nombreuses cultures.',
+   detail:`<p>L'<strong>animisme</strong> est la plus ancienne forme de spiritualité connue. Il attribue une âme ou une force vitale à tous les êtres — animaux, plantes, rivières, montagnes. Les peintures rupestres de Lascaux (~17 000 av. J.-C.) témoignent de pratiques rituelles liées à la chasse et aux esprits animaux.</p><p>Le <strong>chamanisme</strong> — présent sur tous les continents de l'Amérique à la Sibérie — implique des spécialistes (chamans) capables d'entrer en transe pour communiquer avec les esprits et guérir les malades.</p>`},
+  {year:'~3100 av. J.-C.',nom:'Religion égyptienne',desc:'Panthéon de centaines de dieux, pharaon divin, culte des morts, pyramides, Livre des Morts. 3000 ans de continuité religieuse.',
+   detail:`<p>La religion égyptienne est l'une des plus durables de l'histoire humaine — <strong>3 000 ans</strong> de pratique quasi-continue. Elle compte des centaines de dieux, souvent représentés avec des têtes animales : <strong>Rê</strong> (soleil), <strong>Osiris</strong> (mort et renaissance), <strong>Horus</strong> (faucon, pharaon), <strong>Anubis</strong> (chacal, guide des morts).</p><p>Le pharaon est considéré comme un dieu vivant — fils de Rê et incarnation d'Horus. Sa mort et sa momification lui permettent de rejoindre le monde des dieux.</p><div class="anec-box"><div class="anec-label">Le Jugement des âmes</div><p>Selon la croyance égyptienne, après la mort, le cœur du défunt est pesé sur une balance contre une plume de Maât (déesse de la justice). Si le cœur est plus lourd (alourdi par les péchés), le monstre Ammit le dévore. Si équilibré, le défunt entre dans l'Au-delà.</p></div>`},
+  {year:'~2000 av. J.-C.',nom:'Judaïsme',desc:'Premier grand monothéisme de l\'histoire. Abraham, Moïse, la Torah, l\'Exode, le Temple de Jérusalem. Peuple de l\'Alliance avec un Dieu unique.',
+   detail:`<p>Le <strong>judaïsme</strong> est considéré comme le premier monothéisme établi de l'histoire. Il repose sur l'<strong>Alliance (Brit)</strong> entre Dieu et le peuple hébreu, formalisée avec Abraham (~2000 av. J.-C.) et Moïse (~1200 av. J.-C.).</p><p>La <strong>Torah</strong> (les 5 premiers livres de la Bible hébraïque) constitue le cœur de la loi religieuse. Elle est complétée par le Talmud (discussions rabbiniques sur la loi).</p><p>Le judaïsme a survécu à la destruction du Temple de Jérusalem (70 ap. J.-C.), à des siècles de diaspora, aux Croisades, à l'Inquisition et à la Shoah.</p>`},
+  {year:'~500 av. J.-C.',nom:'Bouddhisme',desc:'Siddhartha Gautama, le "Bouddha éveillé", enseigne la voie du milieu pour se libérer de la souffrance. 500 millions de pratiquants aujourd\'hui.',
+   detail:`<p><strong>Siddhartha Gautama</strong> (~563-483 av. J.-C.), prince indien qui renonce à sa richesse, médite sous un figuier et atteint l'<strong>Éveil (Bodhi)</strong>. Ses enseignements : les 4 Nobles Vérités (la souffrance existe, elle a une cause, on peut y mettre fin, il y a un chemin) et le Noble Chemin Octuple.</p><p>Le bouddhisme se répand à travers toute l'Asie, donnant naissance à de nombreuses écoles (Theravada, Mahayana, Zen, Tibétain). Il n'a pas de dieu créateur — c'est davantage une philosophie qu'une religion au sens occidental.</p><div class="anec-box"><div class="anec-label">Le saviez-vous ?</div><p>Le roi indien <strong>Ashoka</strong> (IIIe siècle av. J.-C.), après avoir mené une guerre particulièrement sanglante, est tellement horrifié par le nombre de morts qu'il se convertit au bouddhisme et consacre le reste de son règne à des œuvres pacifiques. Il envoie des missionnaires bouddhistes jusqu'en Grèce et en Égypte.</p></div>`},
+  {year:'~30 ap. J.-C.',nom:'Christianisme',desc:'Jésus de Nazareth, ses apôtres, la crucifixion et la résurrection. De petite secte juive persécutée à religion d\'État romaine en 300 ans. 2,4 milliards de fidèles.',
+   detail:`<p>Le <strong>christianisme</strong> naît en Palestine romaine avec la prédication de <strong>Jésus de Nazareth</strong>, que ses disciples reconnaissent comme le Messie (Christ). Après sa crucifixion (~30 ap. J.-C.), ses apôtres — surtout <strong>Paul de Tarse</strong> — répandent la nouvelle foi dans tout l'Empire romain.</p><p>D'abord persécutée, la religion chrétienne devient légale sous <strong>Constantin</strong> (Édit de Milan, 313) puis religion officielle de l'Empire romain sous <strong>Théodose</strong> (380). Elle se divise progressivement : <strong>orthodoxes / catholiques</strong> (1054), puis <strong>protestants</strong> (1517).</p><div class="anec-box"><div class="anec-label">Le saviez-vous ?</div><p>Les <strong>persécutions de chrétiens</strong> par Rome ont longtemps été considérées comme généralisées et continues. En réalité, elles étaient plutôt sporadiques et locales. La grande persécution de Dioclétien (303-313) est l'une des rares à être vraiment systématique — et elle dure moins de 10 ans avant que Constantin légalise la religion.</p></div>`},
+  {year:'610 – 632 ap. J.-C.',nom:'Islam',desc:'Mahomet reçoit les révélations du Coran en 610. En un siècle, l\'islam s\'étend de l\'Arabie à l\'Espagne et à l\'Inde. Aujourd\'hui 1,9 milliard de fidèles.',
+   detail:`<p><strong>Mahomet</strong> (vers 570-632) reçoit ses premières révélations en 610 dans la grotte d'Hira, près de La Mecque. Ces révélations, compilées après sa mort, forment le <strong>Coran</strong>. L'islam ("soumission à Dieu") est un monothéisme strict, se voyant comme l'achèvement des révélations juive et chrétienne.</p><p>L'expansion de l'islam est foudroyante : en un siècle, il conquiert l'Arabie, la Perse, l'Égypte, l'Afrique du Nord, l'Espagne, et atteint l'Inde. Cet empire est aussi un centre de savoir : mathématiques (algèbre), astronomie, médecine, philosophie — préservant et transmettant le savoir grec à l'Occident médiéval.</p><div class="anec-box"><div class="anec-label">La Maison de la Sagesse</div><p>À Bagdad au IXe siècle, la <strong>Bayt al-Hikma</strong> (Maison de la Sagesse) est la plus grande bibliothèque et académie du monde. Des savants de toutes origines y traduisent Aristote, Platon, Galien en arabe, et font avancer la médecine, les mathématiques et l'astronomie de plusieurs siècles.</p></div>`},
+  {year:'1517',nom:'La Réforme protestante',desc:'Martin Luther affiche ses 95 thèses et brise l\'unité de l\'Église catholique. Lutheranisme, calvinisme, anglicanisme — l\'Europe chrétienne se fracture.',
+   detail:`<p>Le <strong>31 octobre 1517</strong>, le moine augustin <strong>Martin Luther</strong> affiche ses 95 thèses sur la porte de l'église de Wittenberg, contestant la vente des indulgences et l'autorité du pape. La Réforme protestante est lancée.</p><p>En quelques décennies, une partie de l'Europe bascule : <strong>lutheranisme</strong> (Allemagne, Scandinavie), <strong>calvinisme</strong> (Suisse, Pays-Bas, Écosse), <strong>anglicanisme</strong> (Angleterre, sous Henri VIII qui veut divorcer).</p><p>Les conséquences sont terribles : guerres de religion (Trente Ans, Guerres de Religion françaises), massacres des deux côtés. La Nuit de la Saint-Barthélemy (1572) : 3 000 protestants massacrés à Paris en une nuit.</p><div class="anec-box"><div class="anec-label">L'imprimerie change tout</div><p>La Réforme n'aurait pas été possible sans <strong>Gutenberg</strong> (vers 1450). Luther publie ses thèses, et elles sont imprimées et diffusées dans toute l'Allemagne en <strong>deux semaines</strong>. En un mois, elles sont dans toute l'Europe. C'est le premier "viral" de l'histoire de l'information.</p></div>`},
+];
+
+function buildReligions(){
+  const container=document.getElementById('religion-list');
+  container.innerHTML='';
+  relData.forEach((r,i)=>{
+    const div=document.createElement('div');
+    div.className='rel-item';
+    div.onclick=()=>openModal(r.nom,r.year,r.detail);
+    div.innerHTML=`
+      <div><div class="rel-year">${r.year}</div></div>
+      <div>
+        <div class="rel-name">${r.nom}</div>
+        <div class="rel-desc">${r.desc}</div>
+      </div>`;
+    container.appendChild(div);
+  });
+}
+
+// ===================== ANTIQUITE DATA =====================
+const antiqData=[
+  {nom:'Mésopotamie',dates:'~3500 – 539 av. J.-C.',color:'#4a9eff',
+   desc:'Le "croissant fertile" entre Tigre et Euphrate. Les Sumériens inventent l\'écriture cunéiforme. Babylone, Hammurabi, Assyrie. La première civilisation urbaine.',
+   detail:`<p>La <strong>Mésopotamie</strong> (Irak actuel) est le berceau de la civilisation occidentale. Les <strong>Sumériens</strong> (~3500 av. J.-C.) inventent l'écriture cunéiforme, la roue, la charrue, les premières villes.</p><p><strong>Hammurabi</strong> (1792-1750 av. J.-C.) codifie la première loi écrite connue : le <strong>Code Hammurabi</strong> ("œil pour œil, dent pour dent").</p><p><strong>Babylone</strong> atteint sa splendeur sous Nabuchodonosor II (605-562 av. J.-C.) : les <strong>Jardins suspendus</strong>, l'une des 7 merveilles du monde antique.</p><div class="anec-box"><div class="anec-label">L'épopée de Gilgamesh</div><p>Le plus ancien texte littéraire connu (~2100 av. J.-C.) raconte les aventures du roi Gilgamesh. Il contient un récit de <strong>déluge</strong> universel — un grand bateau, des animaux, des eaux qui montent — écrit <strong>1500 ans avant la Bible</strong>.</p></div>`},
+  {nom:'Égypte ancienne',dates:'~3100 – 30 av. J.-C.',color:'#f0c040',
+   desc:'Pharaons, pyramides, hiéroglyphes, Cléopâtre. 3000 ans de la plus longue civilisation cohérente de l\'histoire humaine.',
+   detail:`<p>L'<strong>Égypte ancienne</strong> dure plus de 3 000 ans — de l'unification par Narmer (~3100 av. J.-C.) à la mort de <strong>Cléopâtre VII</strong> (30 av. J.-C.). C'est la civilisation la plus durable de l'histoire humaine.</p><ul class="fact-list"><li>La <strong>pyramide de Khéops</strong> (~2560 av. J.-C.) : 2,3 millions de blocs, 137 m de haut — plus haute construction du monde pendant 3800 ans</li><li><strong>Ramsès II</strong> (1279-1213 av. J.-C.) — le plus célèbre des pharaons, bataille de Qadesh</li><li><strong>Akhénaton</strong> (~1353-1336) — premier monothéisme : il impose le culte unique d'Aton</li></ul><div class="anec-box"><div class="anec-label">La construction des pyramides</div><p>Contrairement aux idées reçues, les pyramides n'ont <strong>pas été construites par des esclaves</strong> — les fouilles archéologiques ont découvert un village ouvrier avec de bonnes conditions : bière, viande, soins médicaux. C'étaient des travailleurs salariés, souvent fiers de leur travail pour le pharaon-dieu.</p></div>`},
+  {nom:'Grèce antique',dates:'~800 – 146 av. J.-C.',color:'#60a0ff',
+   desc:'Athènes, Sparte, démocratie, philosophie, Olympic Games, Alexandre le Grand. Le socle de la civilisation occidentale.',
+   detail:`<p>La <strong>Grèce antique</strong> invente ou perfectionne des concepts qui structurent encore le monde occidental : <strong>démocratie</strong>, philosophie (Socrate, Platon, Aristote), théâtre, Jeux Olympiques, science.</p><p><strong>Athènes au Ve siècle av. J.-C.</strong> — l'Âge d'Or de Périclès — voit fleurir simultanément Sophocle, Euripide, Hérodote, Thucydide, Hippocrate, Socrate, Phidias. Une concentration de génies sans équivalent dans l'histoire.</p><p><strong>Alexandre le Grand</strong> (356-323 av. J.-C.) conquiert en 13 ans un empire de la Grèce à l'Inde, répandant la culture grecque (<em>hellénisme</em>) partout.</p><div class="anec-box"><div class="anec-label">La démocratie athénienne</div><p>La démocratie athénienne (~508 av. J.-C.) est directe, pas représentative. Les citoyens votent eux-mêmes les lois. Mais attention : "<strong>citoyens</strong>" exclut les femmes, les esclaves (40% de la population) et les étrangers. En réalité, seuls ~10% des habitants d'Athènes participent à la "démocratie".</p></div>`},
+  {nom:'Empire romain',dates:'27 av. J.-C. – 476 ap. J.-C.',color:'#e05030',
+   desc:'D\'Auguste à Romulus Augustule, 500 ans d\'empire. Rome, légions, routes, droit, Colisée, christianisme. La plus grande influence sur l\'Europe moderne.',
+   detail:`<p>L'<strong>Empire romain</strong> s'étend de l'Écosse à la Mésopotamie, de l'Allemagne à l'Afrique du nord. À son apogée sous <strong>Trajan</strong> (~117 ap. J.-C.), il compte 70 millions d'habitants — 21% de la population mondiale.</p><p>Son héritage est partout : <strong>langues romanes</strong> (français, espagnol, italien...), <strong>droit romain</strong> (base de la plupart des systèmes juridiques européens), <strong>architecture</strong>, <strong>urbanisme</strong>, le calendrier julien (ancêtre du nôtre).</p><ul class="fact-list"><li><strong>Jules César</strong> (100-44 av. J.-C.) — conquête de la Gaule, guerre civile, dictateur assassiné aux Ides de Mars</li><li><strong>Auguste</strong> (63 av. J.-C. - 14 ap.) — premier emperor, Pax Romana</li><li><strong>Néron, Caligula</strong> — les empereurs "fous" (souvent exagérés par la propagande)</li><li><strong>Marc Aurèle</strong> (121-180) — l'empereur-philosophe stoïcien</li></ul><div class="anec-box"><div class="anec-label">Les légions romaines</div><p>Une légion romaine comptait environ <strong>4 800 à 6 000 légionnaires</strong> + auxiliaires, soit ~6 000 à 8 000 hommes au total. Chaque légionnaire devait parcourir 30 km par jour en tenue de combat (30 kg d'équipement) et construire un camp fortifié chaque soir. Rome disposait de 25 à 33 légions selon les époques.</p></div>`},
+  {nom:'Perse achéménide',dates:'550 – 330 av. J.-C.',color:'#c060c0',
+   desc:'Le premier empire mondial : de la Turquie à l\'Inde. Cyrus le Grand, Darius, Xerxès. La tolérance religieuse comme politique d\'État.',
+   detail:`<p>L'<strong>empire perse achéménide</strong>, fondé par <strong>Cyrus le Grand</strong> (559-530 av. J.-C.), est le plus grand empire du monde à son époque : 5,5 millions de km², 50 millions d'habitants.</p><p>Cyrus est célèbre pour sa politique de <strong>tolérance religieuse</strong> : il libère les Juifs captifs à Babylone et leur permet de reconstruire leur Temple à Jérusalem. La Bible le salue comme un envoyé de Dieu.</p><p>L'empire est détruit par <strong>Alexandre le Grand</strong> entre 334 et 330 av. J.-C.</p><div class="anec-box"><div class="anec-label">Les Guerres médiques</div><p>À Marathon (490 av. J.-C.), 10 000 Grecs battent une armée perse de 25 000 hommes. Un coureur parcourt les ~40 km jusqu'à Athènes pour annoncer la victoire — puis meurt d'épuisement. C'est l'origine du <strong>marathon</strong> moderne.</p></div>`},
+  {nom:'Chine ancienne',dates:'~2100 – 221 av. J.-C.',color:'#40b060',
+   desc:'Les dynasties Xia, Shang, Zhou. Confucius, Lao-Tseu, Sun Tzu. L\'invention de la soie, des caractères chinois, de la poudre à canon — bien avant l\'Occident.',
+   detail:`<p>La <strong>Chine ancienne</strong> développe en parallèle de l'Occident une civilisation extraordinairement avancée. La <strong>Grande Muraille</strong> commence sous Qin Shi Huang (221 av. J.-C.), premier Empereur unifié.</p><p>Les <strong>inventions chinoises</strong> qui changeront le monde : papier (~105 ap. J.-C.), imprimerie (~868), poudre à canon (~9e siècle), boussole (~11e siècle) — toutes plusieurs siècles avant leur arrivée en Europe.</p><div class="anec-box"><div class="anec-label">L'Art de la guerre</div><p><strong>Sun Tzu</strong> écrit <em>L'Art de la guerre</em> vers 500 av. J.-C. Ce traité militaire de 13 chapitres est encore lu dans les académies militaires, les écoles de commerce et les cercles politiques du monde entier. Sa maxime la plus célèbre : "Tout l'art de la guerre repose sur la tromperie."</p></div>`},
+];
+
+function buildAntiquite(){
+  const container=document.getElementById('antiq-list');
+  container.innerHTML='';
+  antiqData.forEach((a,i)=>{
+    const div=document.createElement('div');
+    div.className='antiq-card';
+    div.style.setProperty('--card-color',a.color);
+    div.style.borderColor='transparent';
+    div.onclick=()=>openModal(a.nom,a.dates,a.detail);
+    div.innerHTML=`
+      <div style="display:flex;align-items:center;gap:0.5rem;margin-bottom:0.5rem">
+        <div style="width:10px;height:10px;border-radius:50%;background:${a.color}"></div>
+        <h3 style="color:${a.color};margin:0">${a.nom}</h3>
+      </div>
+      <div class="antiq-dates">${a.dates}</div>
+      <p>${a.desc}</p>
+      <div style="margin-top:1rem;font-size:0.75rem;color:${a.color};opacity:0.7">Cliquer pour en savoir plus →</div>`;
+    div.addEventListener('mouseenter',()=>div.style.borderColor=a.color);
+    div.addEventListener('mouseleave',()=>div.style.borderColor='transparent');
+    container.appendChild(div);
+  });
+}
+
+// ===================== GRANDES FIGURES DATA =====================
+const figuresData=[
+  {
+    emoji:'⚔️',
+    nom:'Alexandre le Grand',
+    dates:'356 – 323 av. J.-C.',
+    role:'Roi de Macédoine, conquérant de l\'Asie',
+    categorie:'conquerant',
+    accentColor:'#4a9eff',
+    desc:'En 13 ans, Alexandre conquiert un empire de la Grèce à l\'Inde — le plus grand de l\'Antiquité. Il ne perd jamais une bataille.',
+    detail:`<p><strong>Alexandre III de Macédoine</strong>, élève d'Aristote, devient roi à 20 ans et consacre les 13 années suivantes à une conquête sans égale dans l'histoire. Il bat l'empire perse (le plus grand du monde), conquiert l'Égypte, la Perse, la Bactriane (Afghanistan) et atteint les rives de l'Indus.</p>
+    <p>Sa stratégie militaire est révolutionnaire : il mène ses troupes au combat en première ligne, sa cavalerie des Compagnons frappe toujours au point décisif. Il ne perd aucune bataille rangée en 13 ans de campagnes.</p>
+    <h4>Ses conquêtes en chiffres</h4>
+    <ul class="fact-list">
+      <li>Empire couvrant <strong>5,2 millions de km²</strong> — de la Grèce à l'Inde</li>
+      <li>Plus de <strong>70 villes fondées</strong>, dont Alexandrie (Égypte)</li>
+      <li>Mort à <strong>32 ans</strong>, à Babylone, sans avoir désigné de successeur</li>
+      <li>Son empire se fracture immédiatement en royaumes "diadoques"</li>
+    </ul>
+    <div class="anec-box"><div class="anec-label">Le nœud gordien</div><p>À Gordion (Turquie), un oracle annonçait que celui qui dénouerait un nœud légendaire inextricable régnerait sur l'Asie. Alexandre étudie le nœud quelques secondes... et le tranche d'un coup d'épée. "Peu importe la méthode", aurait-il dit. L'expression "trancher le nœud gordien" est restée dans la langue française.</p></div>
+    <div class="anec-box"><div class="anec-label">Le saviez-vous ?</div><p>Alexandre dormait en tenant sous son oreiller <strong>deux choses</strong> : l'<em>Iliade</em> d'Homère (annoté par Aristote) et un poignard. Achille était son modèle absolu — il s'arrêtait à Troie pour rendre hommage à sa tombe avant d'entrer en Asie.</p></div>`
+  },
+  {
+    emoji:'🏛️',
+    nom:'Jules César',
+    dates:'100 – 44 av. J.-C.',
+    role:'Général, dictateur de Rome',
+    categorie:'conquerant',
+    accentColor:'#e05030',
+    desc:'Stratège militaire de génie, orateur hors pair, réformateur politique — César conquiert la Gaule, traverse le Rubicon et devient dictateur avant d\'être assassiné aux Ides de Mars.',
+    detail:`<p><strong>Gaius Julius Caesar</strong> est l'une des figures les plus complexes de l'Antiquité : général brillant, politique calculateur, orateur réputé et écrivain (ses <em>Commentaires sur la Guerre des Gaules</em> sont encore lus).</p>
+    <p>En <strong>58-50 av. J.-C.</strong>, il conquiert toute la Gaule (actuelle France + Belgique), traversant même la Manche pour atteindre la Bretagne. En <strong>49 av. J.-C.</strong>, il franchit le Rubicon avec son armée — un acte illégal qui déclenche la guerre civile. Il bat Pompée et ses alliés et devient dictateur perpétuel.</p>
+    <h4>Son héritage durable</h4>
+    <ul class="fact-list">
+      <li>Le <strong>calendrier julien</strong> — en usage jusqu'en 1582 (et encore dans certaines Églises orthodoxes)</li>
+      <li>Le titre de "<strong>César</strong>" — Kaiser (allemand), Tsar (russe) en sont dérivés</li>
+      <li>Le mois de <strong>juillet (Julius)</strong> porte son nom</li>
+      <li>La <strong>césarienne</strong> — le terme lui est associé par la légende</li>
+    </ul>
+    <div class="anec-box"><div class="anec-label">Les Ides de Mars</div><p>Le 15 mars 44 av. J.-C., Jules César est poignardé 23 fois par un groupe de sénateurs emmenés par Brutus et Cassius. Les médecins romains concluront que seule une des 23 blessures était mortelle. Ses derniers mots à Brutus — "Tu quoque, mi fili ?" ("Toi aussi, mon fils ?") — sont peut-être une invention de Shakespeare, mais ils illustrent la trahison de son protégé.</p></div>
+    <div class="anec-box"><div class="anec-label">Le saviez-vous ?</div><p>César était épileptique — il souffrait de crises qui l'embarrassaient profondément. Il était aussi <strong>chauve</strong> et en souffrait : il peignait ses rares cheveux en avant (la coiffure est visible sur ses bustes) et portait volontiers une couronne de laurier... qui avait l'avantage pratique de cacher son crâne dégarni.</p></div>`
+  },
+  {
+    emoji:'🌍',
+    nom:'Gengis Khan',
+    dates:'v. 1162 – 1227',
+    role:'Grand Khan des Mongols',
+    categorie:'conquerant',
+    accentColor:'#e53170',
+    desc:'De chef de tribu nomade à maître du plus grand empire terrestre jamais vu. Gengis Khan unifie les Mongols et conquiert de la Chine à la Perse.',
+    detail:`<p><strong>Temüjin</strong>, futur Gengis Khan ("Souverain universel"), naît dans une tribu misérable, est réduit en esclavage enfant, et s'élève pour unifier toutes les tribus mongoles en 1206. Il crée ensuite la plus grande machine de guerre du monde médiéval.</p>
+    <p>Ses innovations militaires sont révolutionnaires : mobilité extrême (cavaliers pouvant parcourir 100 km par jour), fausses retraites pour attirer l'ennemi, renseignement perfectionné, et utilisation des ingénieurs des peuples conquis pour les sièges.</p>
+    <h4>L'empire mongol en chiffres</h4>
+    <ul class="fact-list">
+      <li><strong>24 millions de km²</strong> à son apogée — 22% des terres émergées</li>
+      <li>Conquête de la Chine, de la Perse, de l'Asie centrale, de la Russie, de la Pologne</li>
+      <li>Estimé <strong>40 millions de morts</strong> dans les conquêtes — 10% de la population mondiale</li>
+      <li>Son empire dure un siècle avant de se fragmenter en khanats</li>
+    </ul>
+    <div class="anec-box"><div class="anec-label">Le saviez-vous ?</div><p>Gengis Khan est l'un des ancêtres biologiques les plus prolifiques de l'histoire : une étude génétique de 2003 estime que <strong>~16 millions d'hommes</strong> en Asie centrale (soit 0,5% de la population mondiale masculine) descendent directement de lui par la lignée paternelle. Ce taux exceptionnel s'explique par le fait qu'il avait des centaines de femmes et enfants dans chaque territoire conquis.</p></div>
+    <div class="anec-box"><div class="anec-label">Tolérance religieuse</div><p>Contrairement à son image de destructeur, Gengis Khan applique une politique de <strong>tolérance religieuse</strong> totale dans son empire : musulmans, chrétiens, bouddhistes, chamans cohabitent. Il exempte d'impôts les religieux de toutes confessions. Cette pragmatisme lui permet de gouverner des peuples extrêmement divers.</p></div>`
+  },
+  {
+    emoji:'👸',
+    nom:'Cléopâtre VII',
+    dates:'69 – 30 av. J.-C.',
+    role:'Reine d\'Égypte',
+    categorie:'dirigeant',
+    accentColor:'#f0c040',
+    desc:'La dernière reine d\'Égypte, alliée de César puis de Marc Antoine. Brillante politique, polyglotte, stratège — et victime d\'une légende qui a effacé son intelligence au profit de son image.',
+    detail:`<p><strong>Cléopâtre VII Philopator</strong> est la dernière pharaonne d'Égypte et l'une des femmes les plus mal comprises de l'histoire. La tradition l'a réduite à sa beauté et à ses liaisons ; la réalité est bien plus fascinante.</p>
+    <p>Elle parle <strong>9 langues</strong> (dont l'égyptien — première de sa dynastie ptolémaïque à apprendre la langue de ses sujets !), est versée en mathématiques, philosophie, astronomie et médecine. Elle dirige l'Égypte d'une main de fer tout en naviguant brillamment entre les puissances romaines rivales.</p>
+    <h4>Sa vie politique</h4>
+    <ul class="fact-list">
+      <li>Alliance avec <strong>Jules César</strong> (48-44 av. J.-C.) — elle lui donne un fils, Césarion</li>
+      <li>Alliance avec <strong>Marc Antoine</strong> — ils forment un couple politique puissant contre Octave</li>
+      <li>Défaite à <strong>Actium</strong> (31 av. J.-C.) — Octave annexe l'Égypte</li>
+      <li>Suicide à <strong>39 ans</strong> — refusant d'être exhibée dans le triomphe d'Octave à Rome</li>
+    </ul>
+    <div class="anec-box"><div class="anec-label">Le saviez-vous ?</div><p>Cléopâtre n'était probablement <strong>pas "belle"</strong> au sens hollywoodien du terme. Les pièces de monnaie à son effigie la montrent avec un nez proéminent et des traits forts. Plutarque écrit que c'est sa <strong>voix, son intelligence et son magnétisme</strong> qui envoûtaient — "sa présence était irrésistible, et l'attrait de sa personne, ajouté à la persuasion de son discours, quelque chose de stimulant".</p></div>
+    <div class="anec-box"><div class="anec-label">La mort de Cléopâtre</div><p>La légende dit qu'elle s'est fait mordre par un aspic (cobra) caché dans une corbeille de figues. Les historiens modernes penchent plutôt pour un <strong>poison bu</strong>. Dans tous les cas, c'est un suicide délibéré et calculé — pour ne pas être humiliée lors du triomphe romain. Elle avait 39 ans.</p></div>`
+  },
+  {
+    emoji:'⚜️',
+    nom:'Napoléon Bonaparte',
+    dates:'1769 – 1821',
+    role:'Général, Premier Consul, Empereur des Français',
+    categorie:'dirigeant',
+    accentColor:'#c9a227',
+    desc:'De la Corse à Sainte-Hélène, en passant par Austerlitz et Moscou — Napoléon réorganise la France, conquiert l\'Europe et laisse un héritage juridique mondial.',
+    detail:`<p>Voir aussi la fiche complète dans <em>Histoire de France</em>. Voici ce qui distingue Napoléon comme figure mondiale :</p>
+    <p>Napoléon est à la fois le <strong>plus grand général de son époque</strong> et un réformateur civil dont l'œuvre surpasse ses conquêtes militaires. Le Code civil napoléonien est encore en vigueur dans une forme proche en France, en Belgique, au Québec, en Louisiane, et a influencé les codes civils de dizaines de pays.</p>
+    <h4>Ses réformes qui durent</h4>
+    <ul class="fact-list">
+      <li>Le <strong>Code civil (1804)</strong> — égalité devant la loi, propriété privée, contrats</li>
+      <li>Le <strong>Baccalauréat</strong> et les lycées — créés en 1802</li>
+      <li>La <strong>Banque de France</strong> et le franc germinal (monnaie stable)</li>
+      <li>La <strong>Légion d'honneur</strong> — récompense méritocratique, non héréditaire</li>
+      <li>Le <strong>Concordat</strong> (1801) — réconciliation avec l'Église catholique</li>
+    </ul>
+    <div class="anec-box"><div class="anec-label">Napoléon stratège</div><p>Napoléon remporte <strong>60 batailles sur 70</strong> grandes batailles livrées. Sa méthode : concentration rapide de forces supérieures au point décisif, corps d'armée autonomes capables de combattre seuls, poursuite acharnée après la victoire. Austerlitz (1805) est considérée comme sa masterpiece : 65 000 Français battent 90 000 Austro-Russes en une journée.</p></div>
+    <div class="anec-box"><div class="anec-label">L'exil de Sainte-Hélène</div><p>Déporté sur l'île de Sainte-Hélène dans l'Atlantique Sud après Waterloo, Napoléon passe ses 6 dernières années à dicter ses <em>Mémoires</em> — créant consciemment sa propre légende. Il meurt en 1821, probablement d'un cancer de l'estomac, peut-être aidé par l'arsenic des peintures de sa chambre humide. Il avait 51 ans.</p></div>`
+  },
+  {
+    emoji:'📜',
+    nom:'Socrate',
+    dates:'470 – 399 av. J.-C.',
+    role:'Philosophe grec',
+    categorie:'penseur',
+    accentColor:'#4a9eff',
+    desc:'Il n\'a rien écrit. Il questionnait tout le monde dans les rues d\'Athènes. Il a été condamné à mort pour ses idées. Et il a changé l\'histoire de la pensée humaine pour toujours.',
+    detail:`<p><strong>Socrate</strong> ne fonde pas d'école, n'écrit aucun livre. Tout ce que nous savons de lui vient de ses disciples, principalement <strong>Platon</strong>. Il passe sa vie dans les rues, gymnases et marchés d'Athènes à interroger les gens — généraux, politiques, artisans — sur ce qu'ils croient savoir.</p>
+    <p>Sa méthode, la <strong>maïeutique</strong> ("accouchement des esprits"), consiste à poser des questions qui poussent l'interlocuteur à découvrir lui-même ses propres contradictions. "Je sais que je ne sais rien" — l'humilité intellectuelle comme point de départ de toute connaissance.</p>
+    <h4>Son influence philosophique</h4>
+    <ul class="fact-list">
+      <li>Son disciple <strong>Platon</strong> fonde l'Académie — première université d'Occident</li>
+      <li>Platon forme <strong>Aristote</strong>, qui forme <strong>Alexandre le Grand</strong></li>
+      <li>Ses idées traversent le stoïcisme, le christianisme, l'humanisme, les Lumières</li>
+      <li>La philosophie occidentale est une "série de notes en marge de Platon" (Whitehead)</li>
+    </ul>
+    <div class="anec-box"><div class="anec-label">Le procès de Socrate</div><p>En 399 av. J.-C., Socrate est jugé pour "impiété" et "corruption de la jeunesse". Il aurait pu s'échapper (ses amis avaient tout arrangé) ou plaider coupable. Il refuse les deux. Sa défense au procès est une provocation : il propose qu'on lui offre un repas gratuit à vie en récompense de son utilité à la cité. Le jury, vexé, vote sa condamnation à mort à une plus grande majorité qu'au verdict de culpabilité.</p></div>
+    <div class="anec-box"><div class="anec-label">La mort de Socrate</div><p>Socrate boit la ciguë, poison qui paralyse progressivement le corps en remontant vers le cœur, avec une <strong>sérénité totale</strong>. Il continue à philosopher avec ses amis jusqu'à la fin. Sa mort — décrite par Platon dans le <em>Phédon</em> — devient un modèle de mort philosophique et influencera la représentation chrétienne du martyre.</p></div>`
+  },
+  {
+    emoji:'🌟',
+    nom:'Léonard de Vinci',
+    dates:'1452 – 1519',
+    role:'Peintre, sculpteur, ingénieur, anatomiste, musicien',
+    categorie:'penseur',
+    accentColor:'#60a0ff',
+    desc:'Le génie le plus universel de l\'histoire. La Joconde, La Cène, des machines volantes, des études anatomiques révolutionnaires — 500 ans d\'avance sur son temps.',
+    detail:`<p><strong>Leonardo da Vinci</strong> est souvent cité comme l'être humain aux talents les plus vastes de l'histoire. Fils illégitime d'un notaire florentin, autodidacte, il devient simultanément le meilleur peintre, l'ingénieur le plus inventif et l'anatomiste le plus précis de son temps.</p>
+    <p>Il laisse environ <strong>13 000 pages de carnets</strong> sur la peinture, l'anatomie, l'hydraulique, la mécanique, l'architecture, la géologie, la botanique, la musique... Beaucoup en écriture <em>miroir</em> (de droite à gauche), peut-être pour se protéger des copieurs.</p>
+    <h4>Quelques inventions esquissées par Léonard</h4>
+    <ul class="fact-list">
+      <li>Le <strong>parachute</strong>, le <strong>planeur</strong>, l'<strong>hélicoptère</strong> (principe)</li>
+      <li>Le <strong>char d'assaut</strong> blindé</li>
+      <li>La <strong>machine à calculer</strong> et l'odométre</li>
+      <li>Des <strong>écluses</strong> hydrauliques — réalisées à Milan</li>
+    </ul>
+    <div class="anec-box"><div class="anec-label">La Joconde</div><p>La <em>Joconde</em> (vers 1503-1519) est le tableau le plus célèbre du monde. Léonard ne s'en sépare jamais — il la retouche pendant 16 ans, jusqu'à sa mort. C'est pourquoi elle finit en France : il l'avait avec lui au Clos Lucé. François Ier l'achète à sa mort. Elle entre au Louvre en 1797 et devient "la plus célèbre" après son <strong>vol en 1911</strong>, qui la rend mondialement connue.</p></div>
+    <div class="anec-box"><div class="anec-label">Le saviez-vous ?</div><p>Léonard était <strong>végétarien</strong> et achetait des oiseaux en cage sur les marchés pour les libérer. Il était gaucher, ambidextre pour certains travaux, et dormait par <strong>tranches de 20 minutes</strong> plusieurs fois par jour (sommeil polyphasique) — ce qui lui permettrait, selon ses biographes, de travailler quasi-continuellement.</p></div>`
+  },
+  {
+    emoji:'🌺',
+    nom:'Jeanne d\'Arc',
+    dates:'1412 – 1431',
+    role:'Guerrière, sainte, symbole national français',
+    categorie:'resistant',
+    accentColor:'#2ea043',
+    desc:'Paysanne lorraine de 17 ans qui convainc un roi, libère une ville, fait sacrer Charles VII — puis est brûlée vive. En deux ans, elle change le cours de la Guerre de Cent Ans.',
+    detail:`<p><strong>Jehanne la Pucelle</strong> est l'une des figures les plus extraordinaires de l'histoire. Née vers 1412 à Domrémy (Lorraine), fille de paysans, elle affirme entendre les voix de saints qui lui enjoignent de chasser les Anglais de France.</p>
+    <p>En 1429, elle se présente à <strong>Charles VII</strong> — le dauphin qui n'ose pas se faire couronner, refoulé à Bourges pendant que les Anglais contrôlent Paris et le nord du pays. Elle le convainc de lui confier une armée. En 9 jours, elle lève le <strong>siège d'Orléans</strong>. En juillet 1429, Charles VII est sacré roi à Reims.</p>
+    <h4>Son procès et sa réhabilitation</h4>
+    <ul class="fact-list">
+      <li>Capturée par les Bourguignons en mai 1430, vendue aux Anglais</li>
+      <li>Jugée à Rouen par un tribunal ecclésiastique pro-anglais</li>
+      <li>Condamnée pour <strong>hérésie et port du vêtement masculin</strong></li>
+      <li>Brûlée vive le <strong>30 mai 1431</strong>, à 19 ans</li>
+      <li><strong>Réhabilitée en 1456</strong> — 25 ans après sa mort</li>
+      <li><strong>Canonisée en 1920</strong> — 489 ans après son exécution</li>
+    </ul>
+    <div class="anec-box"><div class="anec-label">Le saviez-vous ?</div><p>Jeanne est jugée par des ecclésiastiques <strong>français</strong> — pas anglais. Le procès est en latin, elle n'en comprend pas un mot, et les actes sont rédigés après-coup pour la piéger. Malgré tout, ses réponses lors du procès sont d'une intelligence et d'une présence d'esprit remarquables : quand on lui demande si elle est en état de grâce (piège théologique), elle répond <em>"Si je n'y suis, Dieu m'y mette ; si j'y suis, Dieu m'y garde."</em></p></div>
+    <div class="anec-box"><div class="anec-label">Son héritage politique</div><p>Jeanne d'Arc a été récupérée par tous les courants politiques français : les royalistes, les républicains, les catholiques, les laïcs, Napoléon, de Gaulle, et plus récemment l'extrême droite. Cette capacité à être <em>appropriée</em> par tous montre à quel point elle est devenue un <strong>mythe national</strong> autant qu'une personne historique.</p></div>`
+  },
+  {
+    emoji:'🌙',
+    nom:'Mahomet',
+    dates:'v. 570 – 632',
+    role:'Fondateur de l\'islam, prophète',
+    categorie:'revolutionnaire',
+    accentColor:'#60c060',
+    desc:'Marchand mecquois illettré qui reçoit des révélations à 40 ans et fonde l\'une des trois grandes religions monothéistes — en transformant radicalement l\'Arabie en moins de 20 ans.',
+    detail:`<p><strong>Muhammad ibn Abdallah</strong> naît vers 570 à La Mecque dans une famille noble mais modeste. Marchand réputé pour son honnêteté (surnommé "Al-Amin" — le Digne de confiance), il reçoit ses premières révélations vers 610 dans la grotte d'Hira. Effrayé, il confie cela à sa femme Khadija, qui devient la première croyante.</p>
+    <p>Sa prédication commence discrètement, puis publiquement. Les élites mecquoises, menacées dans leurs intérêts économiques (le pèlerinage polythéiste), le persécutent. En 622, l'<strong>Hégire</strong> : il fuit à Médine. Cette date marque le début du calendrier islamique.</p>
+    <h4>La transformation de l'Arabie</h4>
+    <ul class="fact-list">
+      <li>Unification politique et religieuse de toute la péninsule arabique</li>
+      <li>Abolition de l'infanticide féminin, limitation de l'esclavage</li>
+      <li>Droits successoraux accordés aux femmes — révolutionnaire pour l'époque</li>
+      <li>En 632, à sa mort : presque toute l'Arabie est unifiée sous l'islam</li>
+    </ul>
+    <div class="anec-box"><div class="anec-label">Le saviez-vous ?</div><p>Mahomet était <strong>illettré</strong> — ou du moins, c'est la tradition islamique. Le Coran lui a été révélé oralement. Ses compagnons (les <em>Sahabas</em>) mémorisaient et transcrivaient les versets. Le Coran est compilé en livre unifié sous le calife Uthman, <strong>20 ans après</strong> la mort du Prophète. Cette compilation met fin à des variantes régionales.</p></div>
+    <div class="anec-box"><div class="anec-label">L'expansion fulgurante</div><p>En un siècle après la mort de Mahomet, l'islam s'étend de l'Espagne à l'Inde. Cette expansion est partiellement militaire, mais aussi commerciale, intellectuelle et spirituelle. Les premiers califes maintiennent souvent des <strong>droits aux populations conquises</strong> (liberté de culte moyennant impôt), rendant la conversion progressive plutôt que forcée dans la majorité des cas.</p></div>`
+  },
+  {
+    emoji:'✊',
+    nom:'Nelson Mandela',
+    dates:'1918 – 2013',
+    role:'Militant anti-apartheid, Président de l\'Afrique du Sud',
+    categorie:'resistant',
+    accentColor:'#2ea043',
+    desc:'27 ans de prison pour ses convictions. Libéré, il choisit la réconciliation plutôt que la vengeance et préside à la transition pacifique d\'un pays déchiré par l\'apartheid.',
+    detail:`<p><strong>Nelson Rolihlahla Mandela</strong> rejoint l'ANC (Congrès national africain) dans les années 1940 et lutte contre l'apartheid — le système légal de ségrégation raciale imposé en Afrique du Sud depuis 1948. Arrêté en 1964, il est condamné à la prison à vie pour sabotage et complot.</p>
+    <p>Il passe <strong>27 ans à Robben Island</strong> et dans d'autres prisons, refusant plusieurs offres de libération conditionnelle qui l'auraient contraint à renoncer à la lutte armée. Sa liberté devient le symbole mondial du combat contre l'apartheid.</p>
+    <h4>La réconciliation plutôt que la vengeance</h4>
+    <ul class="fact-list">
+      <li>Libéré le <strong>11 février 1990</strong> par le président De Klerk</li>
+      <li>Négocie la transition vers la démocratie sans guerre civile</li>
+      <li>Élu <strong>premier président noir d'Afrique du Sud</strong> en 1994</li>
+      <li>Crée la <strong>Commission Vérité et Réconciliation</strong> — modèle mondial</li>
+      <li>Prix Nobel de la Paix <strong>1993</strong>, partagé avec De Klerk</li>
+    </ul>
+    <div class="anec-box"><div class="anec-label">Le saviez-vous ?</div><p>Mandela avait étudié le <strong>droit</strong> et ouvre avec Oliver Tambo le premier cabinet juridique noir d'Afrique du Sud. Pendant son procès de 1964, il prononce un discours de 3 heures qui se termine par : <em>"C'est un idéal pour lequel je suis prêt à mourir."</em> Le tribunal le condamne à vie au lieu de la peine de mort — en partie sous la pression internationale.</p></div>
+    <div class="anec-box"><div class="anec-label">Madiba et le rugby</div><p>En 1995, Mandela apparaît au Championnat du monde de rugby, portant le maillot des <strong>Springboks</strong> — ancien symbole de la suprématie blanche. Ce geste de réconciliation extraordinaire est raconté dans le film <em>Invictus</em>. L'Afrique du Sud remporte le titre ce jour-là. Mandela a compris le pouvoir du sport comme outil de réconciliation nationale.</p></div>`
+  },
+  {
+    emoji:'🍎',
+    nom:'Isaac Newton',
+    dates:'1643 – 1727',
+    role:'Physicien, mathématicien, astronome',
+    categorie:'penseur',
+    accentColor:'#4a9eff',
+    desc:'La gravitation universelle, le calcul infinitésimal, la décomposition de la lumière blanche — Newton invente la physique moderne et explique les mouvements des planètes avec les mêmes lois que la chute d\'une pomme.',
+    detail:`<p><strong>Isaac Newton</strong> est souvent cité comme le plus grand scientifique de l'histoire. Né prématurément en 1643, étudiant discret à Cambridge, il doit rentrer chez lui en 1665 à cause d'une épidémie de peste. Ce sont ces <strong>18 mois forcés à la campagne</strong> — "l'année de la merveille" — qui voient naître ses découvertes fondamentales.</p>
+    <p>En deux ans, il développe le calcul différentiel et intégral, les lois de la mécanique, la théorie de la gravitation universelle et sa théorie de la lumière et des couleurs. Il ne publie rien pendant 20 ans — par peur des critiques et des polémiques.</p>
+    <h4>Ses contributions à la science</h4>
+    <ul class="fact-list">
+      <li>Les <strong>3 lois du mouvement</strong> — base de la mécanique classique</li>
+      <li>La <strong>loi de la gravitation universelle</strong> — les mêmes lois pour la Terre et les étoiles</li>
+      <li>Le <strong>calcul infinitésimal</strong> — en parallèle avec Leibniz (polémique célèbre)</li>
+      <li>La <strong>décomposition de la lumière</strong> avec un prisme</li>
+      <li>L'invention du <strong>télescope à réflexion</strong></li>
+    </ul>
+    <div class="anec-box"><div class="anec-label">La pomme — vrai ou faux ?</div><p>L'histoire de la pomme qui tombe sur la tête de Newton n'est probablement pas entièrement inventée. Newton lui-même la racontait à la fin de sa vie. Mais il ne s'agit pas d'un éclair de génie soudain : voir une pomme tomber l'a amené à <strong>se demander pourquoi elle tombe vers le bas et non de côté</strong> — et cette question l'a occupé pendant 20 ans avant de déboucher sur la gravitation universelle.</p></div>
+    <div class="anec-box"><div class="anec-label">Le saviez-vous ?</div><p>Newton a consacré plus de temps à l'<strong>alchimie et à la théologie</strong> qu'à la physique. Il possédait la plus grande bibliothèque alchimique privée d'Angleterre et écrivait que la vraie mission de sa vie était de déchiffrer les <em>prophéties bibliques</em>. Ces travaux-là sont restés inédits de son vivant — et ont été redécouverts par des historiens des sciences au XXe siècle.</p></div>`
+  },
+  {
+    emoji:'🌊',
+    nom:'Christophe Colomb',
+    dates:'1451 – 1506',
+    role:'Navigateur, explorateur',
+    categorie:'explorateur',
+    accentColor:'#c060c0',
+    desc:'En voulant atteindre l\'Asie par l\'ouest, il "découvre" les Amériques — un continent inconnu des Européens. Un voyage qui change l\'histoire du monde, pour le meilleur et le pire.',
+    detail:`<p><strong>Cristoforo Colombo</strong> (Gênes, vers 1451) est convaincu qu'on peut atteindre les Indes par l'ouest. Ses calculs sont en réalité <strong>faux</strong> — il sous-estime énormément la taille de la Terre. Si les Amériques n'étaient pas là, il n'aurait jamais atteint l'Asie avec ses réserves.</p>
+    <p>Après des années de refus (Portugal, Castille), la reine Isabelle de Castille finance l'expédition. Le <strong>3 août 1492</strong>, trois caravelles quittent Palos. Le <strong>12 octobre 1492</strong>, la terre est aperçue — une île des Bahamas. Colomb croit être arrivé en Asie jusqu'à sa mort.</p>
+    <h4>L'impact du "Nouveau Monde"</h4>
+    <ul class="fact-list">
+      <li>L'<strong>Échange colombien</strong> : tomates, pommes de terre, maïs, cacao vers l'Europe</li>
+      <li>Chevaux, vaches, blé, maladies (variole, rougeole) vers les Amériques</li>
+      <li>La variole tue <strong>50 à 90%</strong> des populations amérindiennes en un siècle</li>
+      <li>L'or et l'argent américains révolutionnent l'économie mondiale</li>
+    </ul>
+    <div class="anec-box"><div class="anec-label">Le saviez-vous ?</div><p>Colomb est mort en 1506 en croyant avoir atteint l'Asie. C'est <strong>Amerigo Vespucci</strong> (1499-1502) qui comprend le premier qu'il s'agit d'un "Nouveau Monde" inconnu des anciens. Le cartographe Waldseemüller baptise le continent "America" en son honneur en 1507 — et le nom reste, injustement au détriment de Colomb.</p></div>
+    <div class="anec-box"><div class="anec-label">Un héritage controversé</div><p>Colomb, en tant que gouverneur des îles caribéennes, instaure un système d'<strong>esclavage brutal</strong> des populations taïnos, avec des quotas d'or à rendre sous peine de mutilation. Il est arrêté et ramené en Espagne en chaînes en 1500 pour sa mauvaise gestion. Les conquistadors qui lui succèdent aggravent encore la situation. Sa statue a été retirée ou déboulonnée dans de nombreuses villes ces dernières années.</p></div>`
+  },
+];
+
+function filterFigures(cat,btn){
+  document.querySelectorAll('.fig-filter-btn').forEach(b=>b.classList.remove('active'));
+  btn.classList.add('active');
+  document.querySelectorAll('.figure-card').forEach(card=>{
+    if(cat==='all'||card.dataset.cat===cat){card.style.display='block';}
+    else{card.style.display='none';}
+  });
+}
+
+function buildFigures(){
+  const grid=document.getElementById('figures-grid');
+  grid.innerHTML='';
+  figuresData.forEach((f,i)=>{
+    const card=document.createElement('div');
+    card.className='figure-card';
+    card.dataset.cat=f.categorie;
+    card.style.setProperty('--fig-color',f.accentColor);
+    card.onclick=()=>openModal(f.nom,f.dates,f.detail);
+    card.innerHTML=`
+      <style scoped>.figure-card[data-cat="${f.categorie}"]:hover{border-color:${f.accentColor}!important;}</style>
+      <div style="position:absolute;top:0;left:0;right:0;height:3px;background:linear-gradient(90deg,${f.accentColor},transparent)"></div>
+      <span class="fig-emoji">${f.emoji}</span>
+      <div class="fig-dates" style="color:${f.accentColor}">${f.dates}</div>
+      <h3>${f.nom}</h3>
+      <div class="fig-role">${f.role}</div>
+      <div class="fig-desc">${f.desc}</div>
+      <span class="fig-tag ${f.categorie}">${f.categorie==='conquerant'?'⚔️ Conquérant':f.categorie==='dirigeant'?'👑 Dirigeant':f.categorie==='penseur'?'🧠 Penseur':f.categorie==='resistant'?'✊ Résistant':f.categorie==='explorateur'?'🌊 Explorateur':'🔥 Révolutionnaire'}</span>`;
+    card.addEventListener('mouseenter',()=>card.style.borderColor=f.accentColor);
+    card.addEventListener('mouseleave',()=>card.style.borderColor='var(--border)');
+    grid.appendChild(card);
+  });
+}
+
+// ===================== MONDE DATA =====================
+const mondePeriodes=[
+  {era:'prehistoire',eraLabel:'Préhistoire (−300 000 – −3500 av. J.-C.)',items:[
+    {dates:'v. −300 000 – −60 000',titre:'L\'émergence d\'Homo sapiens',subtitle:'Afrique orientale et australe',major:true,
+     resume:'Il y a 300 000 ans en Afrique de l\'Est apparaissent les premiers Homo sapiens. Dotés d\'un cerveau plus grand et d\'un langage complexe, ils vont progressivement remplacer toutes les autres espèces humaines et coloniser la planète entière.',
+     detail:`<p>Les plus anciens fossiles d'<strong>Homo sapiens</strong> ont été découverts au Maroc (Jebel Irhoud, ~315 000 ans) et en Éthiopie (Omo Kibish, ~195 000 ans). Notre espèce se distingue des autres hominidés par son crâne arrondi, son menton proéminent, et surtout par sa capacité cognitive sans égale.</p>
+     <p>Il y a ~70 000 ans, une crise majeure : l'éruption du supervolcan <strong>Toba</strong> (Indonésie) provoque un hiver volcanique de plusieurs années. La population humaine mondiale est peut-être réduite à quelques milliers d'individus — le "goulot d'étranglement génétique". L'humanité frôle l'extinction.</p>
+     <h4>La grande dispersion (~70 000 – 10 000 av. J.-C.)</h4>
+     <ul class="fact-list">
+       <li>~<strong>65 000 av.</strong> — Arrivée en Australie (traversée de l'Océanie en bateau)</li>
+       <li>~<strong>45 000 av.</strong> — Arrivée en Europe, rencontre avec Néandertal</li>
+       <li>~<strong>30 000 av.</strong> — Extinction de Néandertal (hybridation partielle)</li>
+       <li>~<strong>15 000 av.</strong> — Arrivée en Amérique via le détroit de Béring</li>
+     </ul>
+     <div class="anec-box"><div class="anec-label">Néandertal en nous</div><p>Les séquençages génétiques modernes ont révélé que les humains non-africains portent entre <strong>1 et 4% d'ADN néandertalien</strong>. Homo sapiens et Néandertal ont coexisté pendant 5 000 à 10 000 ans en Europe. Certains gènes néandertaliens nous aident encore — notamment pour la résistance au froid et certaines défenses immunitaires.</p></div>
+     <div class="anec-box"><div class="anec-label">Les premières œuvres d'art</div><p>Les peintures rupestres de <strong>Chauvet</strong> (France, ~36 000 av.) montrent une maîtrise artistique étonnante dès le Paléolithique supérieur. Les figurines de Vénus (~25 000 av.) sont parmi les premières sculptures humaines. L'art, le rite funéraire et la parure témoignent d'une vie symbolique complexe bien avant l'écriture.</p></div>`},
+    {dates:'v. −12 000 – −3500',titre:'La révolution néolithique',subtitle:'Agriculture, élevage et premières villes',major:true,
+     resume:'La transition de la chasse-cueillette à l\'agriculture est la plus grande transformation de l\'histoire humaine. Elle permet une explosion démographique, la spécialisation du travail, et l\'émergence des premières cités.',
+     detail:`<p>Il y a ~12 000 ans, dans le <strong>Croissant fertile</strong> (Proche-Orient), des populations commencent à cultiver systématiquement certaines plantes sauvages — blé, orge, lentilles — et à domestiquer des animaux : chèvres, moutons, puis bovins et porcs.</p>
+     <p>Ce n'est pas un événement unique mais un processus progressif, survenu <strong>indépendamment</strong> dans plusieurs régions du monde :</p>
+     <ul class="fact-list">
+       <li><strong>Proche-Orient</strong> (~10 000 av.) — blé, orge, chèvres, moutons</li>
+       <li><strong>Chine</strong> (~8 000 av.) — riz (Yangtsé), mil (fleuve Jaune)</li>
+       <li><strong>Mexique</strong> (~7 000 av.) — maïs, courges, haricots</li>
+       <li><strong>Andes</strong> (~5 500 av.) — pommes de terre, quinoa, lamas</li>
+     </ul>
+     <p>La sédentarisation entraîne les premières villes : <strong>Çatalhöyük</strong> (Turquie, ~7 400 av.) abrite jusqu'à 10 000 habitants. <strong>Jéricho</strong> est habitée en continu depuis ~9 000 av. — l'une des plus vieilles villes du monde.</p>
+     <div class="anec-box"><div class="anec-label">Une révolution ambiguë</div><p>L'agriculture n'est pas qu'un progrès. Les squelettes du Néolithique montrent que les premiers agriculteurs étaient en <strong>moins bonne santé</strong> que les chasseurs-cueilleurs : taille plus petite, dents abîmées, maladies infectieuses liées à la promiscuité avec les animaux. L'agriculture a permis de nourrir plus de monde — mais pas forcément de mieux vivre. Elle a aussi engendré les inégalités sociales et la propriété privée.</p></div>
+     <div class="anec-box"><div class="anec-label">Göbekli Tepe</div><p>Découvert en Turquie en 1994, le site de <strong>Göbekli Tepe</strong> (~9 500 av. J.-C.) renverse nos certitudes : c'est un complexe de temples monumentaux construit par des <em>chasseurs-cueilleurs</em>, avant l'agriculture. Il suggère que ce sont les besoins rituels et religieux — pas seulement économiques — qui ont poussé à la sédentarisation.</p></div>`},
+  ]},
+
+  {era:'antiquite',eraLabel:'Premières civilisations (−3500 – −500 av. J.-C.)',items:[
+    {dates:'v. −3500 – −2000',titre:'L\'invention de l\'écriture et des premières cités',subtitle:'Mésopotamie, Égypte, Indus, Chine',major:true,
+     resume:'En 1 500 ans, quatre civilisations distinctes inventent indépendamment l\'écriture, la ville, l\'État et la loi. L\'humanité entre dans l\'Histoire.',
+     detail:`<p>Vers <strong>3 500 av. J.-C.</strong>, une convergence extraordinaire se produit dans quatre régions du monde :</p>
+     <ul class="fact-list">
+       <li><strong>Mésopotamie</strong> (~3 500) — Sumériens : écriture cunéiforme, premières cités-États (Ur, Uruk), roue, charrue</li>
+       <li><strong>Égypte</strong> (~3 100) — Narmer unifie la Haute et Basse Égypte, hiéroglyphes, pharaon dieu-roi</li>
+       <li><strong>Vallée de l'Indus</strong> (~2 600) — civilisation d'Harappa : villes planifiées, égouts, poids standardisés</li>
+       <li><strong>Chine</strong> (~2 100) — dynasties Xia et Shang : écriture chinoise, bronze, soie</li>
+     </ul>
+     <p>Ces civilisations inventent aussi la <strong>bureaucratie</strong>, la <strong>comptabilité</strong>, le <strong>droit</strong> et les premières <strong>armées professionnelles</strong>. L'écriture naît non pas pour la littérature, mais pour la comptabilité : noter les stocks de bière et de grain dans les temples.</p>
+     <div class="anec-box"><div class="anec-label">La civilisation de l'Indus oubliée</div><p>La <strong>civilisation de l'Indus</strong> (~2 600-1 900 av. J.-C.) était la plus étendue des quatre : 1 million de km², des villes de 40 000 habitants avec des rues en quadrillage et des systèmes d'égouts plus sophistiqués que ceux de Rome... 2 500 ans plus tard. Son écriture reste <strong>non déchiffrée</strong> à ce jour.</p></div>
+     <div class="anec-box"><div class="anec-label">L'épopée de Gilgamesh</div><p>Le premier chef-d'œuvre littéraire de l'humanité (~2 100 av. J.-C.) raconte un roi qui part en quête de l'immortalité. Cette quête du sens face à la mort — des thèmes universels il y a <strong>4 000 ans</strong>. Le texte contient un récit de déluge universel, 1 500 ans avant la Bible.</p></div>`},
+    {dates:'v. −1200 – −800',titre:'L\'effondrement de l\'Âge du Bronze',subtitle:'La première "fin du monde" de l\'histoire',major:false,
+     resume:'Vers 1200 av. J.-C., en quelques décennies, presque toutes les grandes civilisations méditerranéennes s\'effondrent simultanément. L\'un des mystères les plus fascinants de l\'archéologie.',
+     detail:`<p>Vers <strong>1 200-1 150 av. J.-C.</strong>, l'un des effondrements civilisationnels les plus mystérieux de l'histoire se produit : en moins de 50 ans, l'empire hittite, les palais mycéniens, Ugarit, et des dizaines de cités de la Méditerranée orientale disparaissent ou s'effondrent.</p>
+     <p>L'Égypte survit, mais affaiblie. L'écriture mycénienne (Linéaire B) disparaît. La Grèce entre dans un <strong>"âge sombre"</strong> de 400 ans.</p>
+     <h4>Les causes probables (débat entre historiens)</h4>
+     <ul class="fact-list">
+       <li>Les "<strong>Peuples de la Mer</strong>" — migrations/invasions mystérieuses</li>
+       <li>Une <strong>sécheresse sévère</strong> de 300 ans (confirmée par carottes glaciaires)</li>
+       <li>Des tremblements de terre en série</li>
+       <li>L'effondrement du commerce et des interdépendances économiques</li>
+     </ul>
+     <div class="anec-box"><div class="anec-label">Le saviez-vous ?</div><p>Des tablettes retrouvées à Ugarit (Syrie actuelle) montrent une correspondance désespérée juste avant sa destruction : des lettres demandant de l'aide contre des attaquants inconnus. La dernière lettre n'a <strong>jamais été envoyée</strong> — elle était encore dans le four quand la cité a brûlé.</p></div>`},
+    {dates:'v. −800 – −200',titre:'L\'Âge Axial — le grand éveil spirituel',subtitle:'Bouddha, Confucius, les Prophètes, Socrate',major:true,
+     resume:'Entre 800 et 200 av. J.-C., une explosion intellectuelle et spirituelle se produit simultanément en Grèce, en Inde, en Chine et au Proche-Orient — sans contact entre ces régions. Le philosophe Karl Jaspers l\'appelle "l\'Âge Axial".',
+     detail:`<p>Le philosophe <strong>Karl Jaspers</strong> (1949) remarque un phénomène extraordinaire : entre ~800 et ~200 av. J.-C., dans quatre régions distinctes sans contact entre elles, émergent simultanément les grandes pensées religieuses et philosophiques qui structurent encore l'humanité :</p>
+     <ul class="fact-list">
+       <li><strong>Grèce</strong> (~600-400 av.) — Thalès, Pythagore, Socrate, Platon, Aristote</li>
+       <li><strong>Inde</strong> (~800-500 av.) — les Upanishads, Bouddha (~563-483 av.), le jaïnisme</li>
+       <li><strong>Chine</strong> (~600-200 av.) — Confucius (~551-479 av.), Laozi (taoïsme), Sun Tzu</li>
+       <li><strong>Proche-Orient</strong> (~800-400 av.) — les Prophètes hébreux (Isaïe, Jérémie...), le zoroastrisme</li>
+     </ul>
+     <p>Ces penseurs posent pour la première fois des questions universelles : Qu'est-ce que le bien ? Comment vivre ? Quel est le sens de la souffrance ? Les réponses qu'ils donnent fondent encore les grandes traditions philosophiques et religieuses du monde.</p>
+     <div class="anec-box"><div class="anec-label">Pourquoi à ce moment-là ?</div><p>Plusieurs hypothèses : l'essor du commerce crée une classe qui peut financer des penseurs ; l'invention de la monnaie (~600 av.) rend l'échange abstrait possible ; les empires créent une insécurité qui pousse à chercher du sens. Aucune explication n'est totalement satisfaisante. La <strong>simultanéité reste mystérieuse</strong>.</p></div>`},
+  ]},
+
+  {era:'classique',eraLabel:'Antiquité classique (−500 av. – 500 ap. J.-C.)',items:[
+    {dates:'v. −500 – −323',titre:'La Grèce classique et l\'hellénisme',subtitle:'Démocratie, philosophie, Alexandre',major:false,
+     resume:'Le Ve siècle athénien produit une concentration de génies sans équivalent dans l\'histoire. Alexandre le Grand répand ensuite la culture grecque de la Méditerranée à l\'Inde.',
+     detail:`<p>Le <strong>siècle de Périclès</strong> (~460-429 av. J.-C.) est peut-être la période la plus intellectuellement dense de l'histoire humaine. En une génération à Athènes : Sophocle, Euripide (théâtre), Hérodote, Thucydide (histoire), Hippocrate (médecine), Socrate (philosophie), Phidias (Parthénon).</p>
+     <p>La <strong>démocratie athénienne</strong> (~508 av.) est la première du monde — bien qu'imparfaite (exclut femmes, esclaves, étrangers). Elle invente des concepts durables : vote, débat public, égalité devant la loi, jury populaire.</p>
+     <p>La conquête d'<strong>Alexandre le Grand</strong> (334-323 av.) crée une zone culturelle commune de la Méditerranée à l'Inde : l'<strong>hellénisme</strong>. Le grec devient la <em>lingua franca</em> du monde savant pendant 500 ans.</p>
+     <div class="anec-box"><div class="anec-label">La Bibliothèque d'Alexandrie</div><p>La Bibliothèque d'Alexandrie (~280 av. J.-C.) ambitionne de rassembler <strong>tout le savoir humain</strong>. Elle oblige les navires accostant à Alexandrie à déposer leurs rouleaux, qui sont copiés. Elle atteint peut-être 700 000 rouleaux. Sa destruction progressive reste l'une des plus grandes pertes culturelles de l'histoire.</p></div>`},
+    {dates:'27 av. J.-C. – 180 ap. J.-C.',titre:'La Pax Romana',subtitle:'L\'apogée de l\'Empire romain',major:true,
+     resume:'200 ans de paix relative dans un empire de 70 millions d\'habitants — le plus long épisode de stabilité qu\'ait jamais connu l\'Europe occidentale. Un héritage juridique, linguistique et culturel qui dure encore.',
+     detail:`<p>La <strong>Pax Romana</strong> commence avec Auguste (27 av.) et se termine à la mort de Marc Aurèle (180 ap.). C'est la période la plus stable de l'histoire européenne : les routes sont sûres, le commerce florissant, les arts développés.</p>
+     <p>À son apogée sous <strong>Trajan</strong> (~117 ap.), l'empire couvre 5 millions de km² et 70 millions d'habitants — 21% de la population mondiale.</p>
+     <ul class="fact-list">
+       <li><strong>80 000 km de routes</strong> pavées connectant l'empire</li>
+       <li>Des <strong>aqueducs</strong> apportant 1 million de m³ d'eau par jour à Rome</li>
+       <li>Une armée professionnelle de <strong>300 000 soldats</strong> permanents</li>
+       <li>Rome au Ier siècle : <strong>800 000 à 1 million d'habitants</strong> — taille que Paris n'atteindra qu'au XIXe s.</li>
+     </ul>
+     <div class="anec-box"><div class="anec-label">Marc Aurèle et le stoïcisme</div><p><strong>Marc Aurèle</strong> (121-180) est le dernier des "Cinq bons empereurs". Son journal intime, les <em>Pensées</em>, est un chef-d'œuvre stoïcien : réflexions sur l'humilité, le devoir, la mort, l'impermanence. Écrites pour lui seul par <strong>l'homme le plus puissant du monde</strong>, elles restent l'un des textes les plus lus de l'Antiquité.</p></div>
+     <div class="anec-box"><div class="anec-label">L'héritage durable</div><p>Le droit romain est la base de la plupart des systèmes juridiques européens. Les <strong>langues romanes</strong> (français, espagnol, portugais, italien, roumain) descendent du latin. Le calendrier julien (ancêtre du nôtre), les mois de l'année, les jours de la semaine : partout, Rome.</p></div>`},
+    {dates:'200 – 476',titre:'La chute de l\'Empire romain d\'Occident',subtitle:'Déclin, invasions, mutations',major:false,
+     resume:'La chute de Rome n\'est pas un événement brutal mais un processus de 300 ans. L\'empire d\'Orient (Byzance) survivra encore 1 000 ans — et ses succursales culturelles façonnent encore l\'Europe.',
+     detail:`<p>L'Empire romain d'Occident ne s'effondre pas du jour au lendemain. C'est un <strong>processus lent et complexe</strong> sur trois siècles :</p>
+     <ul class="fact-list">
+       <li><strong>Crise du IIIe siècle</strong> (235-284) — 50 ans de guerres civiles, 26 empereurs en 50 ans</li>
+       <li>La <strong>pression des peuples germaniques</strong> (Wisigoths, Vandales, Huns) aux frontières</li>
+       <li>Les <strong>épidémies</strong> (Antonine, Cyprien) : −25 à −30% de population</li>
+       <li>La <strong>dévaluation monétaire</strong> et la crise économique</li>
+       <li><strong>476</strong> — Romulus Augustule déposé par Odoacre : date symbolique, pas catastrophique</li>
+     </ul>
+     <p>L'Empire d'Orient (<strong>Byzance</strong>) survit jusqu'en 1453 — soit 1 000 ans de plus. Constantinople reste la plus grande ville d'Europe jusqu'au XIe siècle.</p>
+     <div class="anec-box"><div class="anec-label">Le saviez-vous ?</div><p>Edward Gibbon, dans son chef-d'œuvre <em>Déclin et chute de l'Empire romain</em> (1776), blâme notamment le christianisme pour avoir détourné les énergies de la défense militaire. Cette thèse controversée illustre que la "chute de Rome" est souvent utilisée comme <strong>miroir pour des angoisses contemporaines</strong> — et que les historiens en débattent encore.</p></div>`},
+  ]},
+
+  {era:'medieval',eraLabel:'Moyen Âge mondial (500 – 1450)',items:[
+    {dates:'622 – 750',titre:'L\'essor de l\'Islam',subtitle:'De la révélation à l\'empire',major:true,
+     resume:'En 130 ans, l\'islam passe d\'une révélation privée à La Mecque à un empire s\'étendant de l\'Espagne à l\'Inde. Une des expansions les plus rapides de l\'histoire humaine.',
+     detail:`<p>En <strong>622</strong>, Mahomet fuit La Mecque pour Médine (l'Hégire) avec une petite communauté. Il mourra en <strong>632</strong>, ayant unifié toute la péninsule arabique. La dynamique est lancée.</p>
+     <p>En 100 ans, les califes conquièrent :</p>
+     <ul class="fact-list">
+       <li><strong>638</strong> — Jérusalem et la Syrie</li>
+       <li><strong>641</strong> — L'Égypte et la Perse (fin de l'empire sassanide millénaire)</li>
+       <li><strong>670</strong> — L'Afrique du Nord</li>
+       <li><strong>711</strong> — L'Espagne (Al-Andalus)</li>
+       <li><strong>732</strong> — Stoppés à Poitiers par Charles Martel</li>
+     </ul>
+     <div class="anec-box"><div class="anec-label">L'Âge d'or islamique</div><p>Sous le califat abbasside (750-1258), Bagdad devient la capitale intellectuelle du monde. La <strong>Bayt al-Hikma</strong> (Maison de la Sagesse) traduit et développe la philosophie grecque, les mathématiques indiennes, la médecine persane. Al-Khwarizmi invente l'<em>algèbre</em>. Ibn Sina (Avicenne) écrit le <em>Canon de la médecine</em>, utilisé en Europe jusqu'au XVIIe siècle.</p></div>`},
+    {dates:'1206 – 1368',titre:'L\'Empire mongol',subtitle:'La conquête du monde',major:true,
+     resume:'En 60 ans, Gengis Khan et ses successeurs créent le plus grand empire terrestre de l\'histoire. Destruction massive d\'un côté, échanges culturels sans précédent de l\'autre.',
+     detail:`<p>En 1206, <strong>Temüjin</strong> est proclamé "Gengis Khan" (Souverain universel). En 20 ans, il conquiert la Chine du Nord, l'Asie centrale et la Perse. Ses successeurs continuent : Russie (1237), Pologne, Hongrie (1241), Chine du Sud (1279), Bagdad (1258).</p>
+     <p>La destruction est colossale : Bagdad — capitale intellectuelle du monde islamique depuis 500 ans — est rasée, ses habitants massacrés, ses livres jetés dans le Tigre. C'est la fin de l'Âge d'or islamique.</p>
+     <p>Mais l'empire mongol crée aussi la <strong>Pax Mongolica</strong> — 100 ans de sécurité des routes de la Chine à l'Europe. C'est Marco Polo, c'est la diffusion de la poudre à canon, de l'imprimerie, du papier vers l'Occident.</p>
+     <div class="anec-box"><div class="anec-label">Le bilan humain</div><p>Les conquêtes mongoles ont causé la mort estimée de <strong>30 à 40 millions de personnes</strong> — peut-être 10% de la population mondiale. La Perse perd 50 à 75% de sa population. La Chine du Nord passe de 90 à 60 millions d'habitants. Des régions entières ne se repeupleront qu'un ou deux siècles plus tard.</p></div>
+     <div class="anec-box"><div class="anec-label">La Peste et les Mongols</div><p>La Peste Noire (1347) est liée aux Mongols : la route commerciale mongole a permis à la <em>Yersinia pestis</em> de voyager d'Asie centrale en Europe. Lors du siège de Caffa (Crimée, 1346), les Mongols catapultent leurs morts pesteux par-dessus les remparts — peut-être le premier acte de <strong>guerre biologique</strong> de l'histoire.</p></div>`},
+    {dates:'1347 – 1353',titre:'La Peste Noire',subtitle:'Un tiers de l\'Europe emporté',major:true,
+     resume:'La Peste Noire tue entre 30 et 50% de la population européenne en 6 ans. Le plus grand désastre démographique de l\'histoire humaine. Elle transforme en profondeur l\'économie, la religion et la société médiévale.',
+     detail:`<p>La <strong>Yersinia pestis</strong> arrive à Messine (Sicile) en octobre 1347, transportée par des bateaux génois venant de Caffa (Crimée). Elle se propage à une vitesse terrifiante : France, Espagne, Angleterre, Allemagne en 2-3 ans.</p>
+     <h4>Les chiffres de la catastrophe</h4>
+     <ul class="fact-list">
+       <li>Europe : <strong>25 à 50 millions de morts</strong> sur ~75 millions d'habitants</li>
+       <li>Proche-Orient et Afrique du Nord : <strong>30 à 40%</strong> de mortalité</li>
+       <li>Chine : estimée à <strong>30 millions</strong> de morts</li>
+       <li>L'Europe n'atteint à nouveau sa population pré-Peste qu'au <strong>XVIe siècle</strong></li>
+     </ul>
+     <div class="anec-box"><div class="anec-label">Les conséquences sociales</div><p>La Peste Noire a paradoxalement <strong>libéré les survivants</strong> : la main-d'œuvre devenant rare, les serfs peuvent négocier de meilleures conditions. Le féodalisme s'affaiblit. L'Église, incapable d'expliquer la catastrophe, perd en autorité. Les Juifs sont accusés d'empoisonner les puits — des milliers sont massacrés dans des pogroms.</p></div>
+     <div class="anec-box"><div class="anec-label">Le masque du médecin de la Peste</div><p>Les médecins portaient un masque au bec recourbé, rempli de plantes aromatiques censées filtrer le "mauvais air". Ce masque emblématique ne servait à rien contre la bactérie — mais il aidait peut-être contre les puces, vectrices de la maladie. Il est devenu l'un des symboles les plus reconnaissables de la culture médiévale.</p></div>`},
+  ]},
+
+  {era:'moderne',eraLabel:'Époque des découvertes (1450 – 1800)',items:[
+    {dates:'1415 – 1600',titre:'Les Grandes Découvertes',subtitle:'Europe, Afrique, Amériques, Asie : le monde se connecte',major:true,
+     resume:'En moins de 200 ans, les Portugais et les Espagnols cartographient la quasi-totalité du globe. L\'humanité entre dans l\'ère de la mondialisation — avec ses beautés et ses horreurs.',
+     detail:`<p>La <strong>révolution nautique</strong> du XVe siècle permet aux Européens de naviguer hors de vue des côtes : caravelle, boussole, astrolabe, cartes précises. Les motivations sont commerciales (contourner les intermédiaires arabes pour l'épice) et religieuses.</p>
+     <ul class="fact-list">
+       <li><strong>1488</strong> — Bartolomeu Dias double le cap de Bonne-Espérance</li>
+       <li><strong>1492</strong> — Christophe Colomb "découvre" les Amériques</li>
+       <li><strong>1498</strong> — Vasco de Gama atteint l'Inde par mer</li>
+       <li><strong>1519-1522</strong> — Magellan/Elcano : premier tour du monde</li>
+       <li><strong>1519-1521</strong> — Cortés conquiert le Mexique aztèque</li>
+       <li><strong>1532</strong> — Pizarro conquiert l'empire inca</li>
+     </ul>
+     <div class="anec-box"><div class="anec-label">L'échange colombien</div><p>Le contact entre Ancien et Nouveau Monde crée le plus grand <strong>échange biologique</strong> de l'histoire : tomates, pommes de terre, maïs, cacao arrivent en Europe. Chevaux, blé, sucre, et surtout <strong>maladies</strong> (variole, rougeole) vont vers les Amériques. La variole tue 50 à 90% des populations amérindiennes — une catastrophe démographique sans précédent, mais non intentionnelle.</p></div>`},
+    {dates:'1500 – 1888',titre:'La traite atlantique et le colonialisme',subtitle:'12 millions de personnes arrachées à l\'Afrique',major:true,
+     resume:'La traite transatlantique est l\'un des plus grands crimes de l\'histoire : 12,5 millions d\'Africains réduits en esclavage pour enrichir les empires européens. Ses conséquences marquent encore le monde.',
+     detail:`<p>La <strong>traite négrière atlantique</strong> (XVe – XIXe siècle) est un crime d'ampleur industrielle. Des négriers européens (portugais, espagnols, néerlandais, britanniques, français) achètent ou capturent des Africains, les transportent dans des conditions atroces vers les Amériques pour y travailler dans les plantations.</p>
+     <p>Le "commerce triangulaire" : marchandises Europe → Afrique, esclaves Afrique → Amériques, sucre/coton/tabac Amériques → Europe.</p>
+     <h4>En chiffres</h4>
+     <ul class="fact-list">
+       <li>~<strong>12,5 millions</strong> d'Africains déportés (chiffre minimal connu)</li>
+       <li>~<strong>1,8 million</strong> morts pendant la traversée (<em>Middle Passage</em>)</li>
+       <li>Abolitions : <strong>1807</strong> (Royaume-Uni), <strong>1848</strong> (France), <strong>1865</strong> (États-Unis), <strong>1888</strong> (Brésil)</li>
+     </ul>
+     <div class="anec-box"><div class="anec-label">Le Middle Passage</div><p>Sur les bateaux négriers, les esclaves étaient entassés à même la cale, enchaînés, allongés sur des planches. Les conditions rendaient la traversée de 3 à 8 semaines mortelle pour 15 à 20% des captifs. Les archives de la Lloyd's of London montrent que les négriers assuraient leur "cargaison" comme n'importe quelle <strong>marchandise</strong>.</p></div>
+     <div class="anec-box"><div class="anec-label">Les conséquences à long terme</div><p>La traite a engendré un enrichissement massif de l'Europe et un appauvrissement structurel de l'Afrique. Des études montrent que les régions africaines les plus touchées par la traite ont encore aujourd'hui des indicateurs de développement, de confiance sociale et de gouvernance <strong>plus faibles</strong> que les régions épargnées.</p></div>`},
+    {dates:'1543 – 1800',titre:'La révolution scientifique et les Lumières',subtitle:'Copernic, Newton, Voltaire : la conquête de la raison',major:true,
+     resume:'En 250 ans, l\'humanité transforme sa façon de comprendre le monde. La science expérimentale remplace la foi comme autorité intellectuelle. Les Lumières repensent la politique, la liberté et les droits humains.',
+     detail:`<p>La <strong>révolution scientifique</strong> commence avec <strong>Copernic</strong> (1543 : la Terre tourne autour du Soleil) et atteint son apogée avec <strong>Newton</strong> (1687 : gravitation universelle). Entre eux : Galilée (lunette, mécanique), Kepler (orbites elliptiques), Harvey (circulation sanguine), Vésale (anatomie).</p>
+     <p>La méthode change tout : <strong>expérimentation, mesure, réfutation</strong> remplacent l'autorité d'Aristote et de la Bible. Galilée est condamné par l'Inquisition (1633) mais ses idées triomphent.</p>
+     <p>Au XVIIIe siècle, les <strong>Lumières</strong> (Voltaire, Rousseau, Montesquieu, Locke, Hume, Kant) appliquent la raison au politique : séparation des pouvoirs, droits naturels, liberté de presse, tolérance religieuse. Ces idées nourrissent les révolutions américaine (1776) et française (1789).</p>
+     <div class="anec-box"><div class="anec-label">L'Encyclopédie</div><p>L'<em>Encyclopédie</em> de Diderot et d'Alembert (1751-1772) est le projet symbolique des Lumières : rassembler et diffuser tout le savoir humain. En 28 volumes, 72 000 articles, elle rend le savoir accessible à tous — une provocation pour les autorités religieuses et monarchiques. Censurée, elle continue d'être publiée <strong>clandestinement</strong> et change les esprits de l'Europe entière.</p></div>`},
+  ]},
+
+  {era:'industriel',eraLabel:'Révolutions & guerres mondiales (1760 – 1945)',items:[
+    {dates:'1760 – 1850',titre:'La révolution industrielle',subtitle:'La vapeur, l\'acier et le charbon transforment l\'humanité',major:true,
+     resume:'Née en Angleterre, la révolution industrielle est la plus grande transformation des conditions de vie humaines depuis le Néolithique. Elle crée le monde moderne — avec ses promesses et ses inégalités.',
+     detail:`<p>La <strong>révolution industrielle</strong> commence dans les Midlands anglais vers 1760 : la machine à vapeur de Watt (1769), les filatures mécaniques, les hauts fourneaux à coke. En 100 ans, la production est multipliée par 10, puis par 100.</p>
+     <p>Elle se diffuse : France et Belgique (~1800-1830), Allemagne (~1840-1870), États-Unis (~1870-1900), Japon (~1870-1900).</p>
+     <h4>Les transformations majeures</h4>
+     <ul class="fact-list">
+       <li>Exode rural massif : naissance des <strong>villes industrielles</strong> (Manchester, Birmingham, Essen)</li>
+       <li>Chemins de fer (1825 — Stephenson), bateaux à vapeur, télégraphe</li>
+       <li>Explosion démographique : l'Europe passe de 140M à 400M de 1750 à 1900</li>
+       <li>Naissance du <strong>prolétariat</strong> et des mouvements ouvriers (Marx, <em>Le Manifeste</em>, 1848)</li>
+     </ul>
+     <div class="anec-box"><div class="anec-label">Les conditions ouvrières</div><p>Les premières usines sont infernales : 14 à 16h de travail par jour, travail des enfants dès 5-6 ans dans les mines. En Angleterre, les lois limitant le travail des enfants à <strong>12h par jour</strong> pour les moins de 12 ans étaient considérées comme un progrès en 1833. Charles Dickens, Victor Hugo et Zola décriront cette misère.</p></div>
+     <div class="anec-box"><div class="anec-label">Le charbon et le CO₂</div><p>La révolution industrielle commence l'accumulation de CO₂ dans l'atmosphère. Les concentrations stables à 280 ppm pendant 10 000 ans commencent à monter vers 1850. En 2024, elles dépassent <strong>420 ppm</strong>. Le lien entre révolution industrielle et réchauffement climatique est direct et mesurable dans les carottes de glace.</p></div>`},
+    {dates:'1914 – 1945',titre:'Les deux guerres mondiales',subtitle:'Un suicide civilisationnel européen',major:true,
+     resume:'En 30 ans, deux guerres mondiales tuent 80 à 100 millions de personnes. La Shoah extermine 6 millions de Juifs. L\'Europe perd sa domination sur le monde. Les États-Unis et l\'URSS émergent comme superpuissances.',
+     detail:`<p>La <strong>Première Guerre mondiale</strong> (1914-1918) trahit toutes les promesses du progrès : la chimie donne le gaz moutarde, l'industrie donne les obus qui pulvérisent les corps. ~20 millions de morts.</p>
+     <p>La <strong>Seconde Guerre mondiale</strong> (1939-1945) est encore pire : 70 à 85 millions de morts, dont la majorité sont des civils. L'<strong>URSS perd 27 millions</strong> — une saignée dont elle ne se remet jamais complètement.</p>
+     <p>La <strong>Shoah</strong> : 6 millions de Juifs, 2 millions de Roms, des centaines de milliers d'handicapés, homosexuels, opposants politiques, systématiquement exterminés dans une bureaucratie industrielle de la mort. Hannah Arendt parlera de la "banalité du mal".</p>
+     <div class="anec-box"><div class="anec-label">Hiroshima et Nagasaki</div><p>Les 6 et 9 août 1945, les États-Unis larguent deux bombes atomiques sur le Japon. <strong>Hiroshima</strong> : 70 000 à 80 000 morts instantanés, 200 000 au total avec les suites. L'humanité entre dans l'ère nucléaire — et dans l'ère où la civilisation peut s'autodétruire. Oppenheimer, voyant la première explosion, pense à la Bhagavad-Gita : <em>"Je suis devenu la Mort, le destructeur des mondes."</em></p></div>
+     <div class="anec-box"><div class="anec-label">La révolution russe (1917)</div><p>Entre les deux guerres, la <strong>révolution bolchévique</strong> de 1917 crée la première tentative d'État communiste. Staline tue entre 6 et 20 millions de Soviétiques (Goulag, Holodomor — famine organisée en Ukraine). Cette expérience totalitaire façonnera la Guerre froide et la politique du XXe siècle.</p></div>`},
+    {dates:'1945 – 1991',titre:'La décolonisation et la Guerre froide',subtitle:'Un monde bipolaire en mutation',major:false,
+     resume:'Après 1945, les empires coloniaux européens se désintègrent. Le monde se divise entre blocs américain et soviétique. La décolonisation libère des peuples mais crée des nations aux frontières héritées du colonialisme.',
+     detail:`<p>La <strong>décolonisation</strong> est le phénomène politique majeur du XXe siècle : entre 1945 et 1975, la quasi-totalité des empires coloniaux disparaissent. Inde (1947), Indochine (1954), Afrique noire (1960s), Algérie (1962), Mozambique-Angola (1975).</p>
+     <p>La <strong>Guerre froide</strong> (1947-1991) structure ce monde décolonisé : USA et URSS se disputent l'influence sans s'affronter directement. Corée (1950-1953), Cuba (1962), Vietnam (1955-1975), Afghanistan (1979-1989). La course aux armements nucléaires crée la "destruction mutuelle assurée" (MAD).</p>
+     <div class="anec-box"><div class="anec-label">La crise de Cuba (1962)</div><p>En octobre 1962, 13 jours au bord de la guerre nucléaire : des missiles soviétiques découverts à Cuba. Kennedy impose un blocus. Khrouchtchev menace. Ce qui a sauvé l'humanité : les deux leaders ont choisi de reculer plutôt que d'escalader — et un officier soviétique, <strong>Vasili Arkhipov</strong>, a refusé de valider le tir d'une torpille nucléaire depuis son sous-marin. Un seul homme.</p></div>`},
+  ]},
+
+  {era:'contemporain',eraLabel:'Monde contemporain (1991 – aujourd\'hui)',items:[
+    {dates:'1991 – 2008',titre:'La mondialisation et l\'hyperpuissance américaine',subtitle:'La fin de l\'histoire ?',major:false,
+     resume:'La chute de l\'URSS laisse les États-Unis seule superpuissance. La mondialisation économique atteint son apogée. Internet relie l\'humanité. Francis Fukuyama annonce la "fin de l\'histoire" — prématurément.',
+     detail:`<p>La chute du <strong>mur de Berlin</strong> (1989) et la dissolution de l'<strong>URSS</strong> (1991) laissent les États-Unis comme seule superpuissance mondiale. La démocratie libérale et l'économie de marché semblent avoir triomphé.</p>
+     <p>La <strong>mondialisation</strong> s'accélère : l'OMC (1995), l'euro (1999), la Chine rejoint l'OMC en 2001. Des centaines de millions de personnes sortent de la pauvreté — principalement en Asie (Chine, Inde, Corée du Sud, Taiwan).</p>
+     <p>Le <strong>11 septembre 2001</strong> brise l'illusion d'un monde pacifié. L'Occident entre dans les guerres d'Afghanistan (2001) et d'Irak (2003) — qui s'avèrent des désastres stratégiques durables.</p>
+     <div class="anec-box"><div class="anec-label">La révolution numérique</div><p>Internet grand public (1995), Google (1998), Wikipedia (2001), Facebook (2004), YouTube (2005), iPhone (2007). En 15 ans, la façon dont l'humanité communique, s'informe, travaille et socialise est bouleversée. Jamais dans l'histoire une transformation aussi profonde n'a été aussi <strong>rapide</strong>. Ses conséquences sur la démocratie, la santé mentale, le travail et la vie privée sont encore en cours d'évaluation.</p></div>`},
+    {dates:'2008 – aujourd\'hui',titre:'Le monde en crises multiples',subtitle:'Financière, climatique, pandémique, géopolitique',major:true,
+     resume:'Depuis 2008, le monde fait face à une cascade de crises : financière, climatique, pandémie (2020), retour de la guerre en Europe (2022), essor de l\'IA. L\'ordre mondial post-1945 est en mutation profonde.',
+     detail:`<p>La <strong>crise financière de 2008</strong> (effondrement de Lehman Brothers) révèle les fragilités du système mondial et nourrit les populismes dans les démocraties occidentales.</p>
+     <p>La <strong>pandémie de COVID-19</strong> (2020-2022) : plus de 7 millions de morts officiels (20 millions en comptant l'excès de mortalité). La plus grande crise sanitaire mondiale depuis la grippe de 1918. Elle accélère le télétravail, le commerce en ligne, et révèle la fragilité des chaînes d'approvisionnement mondiales.</p>
+     <p>Le retour de la <strong>guerre en Europe</strong> : l'invasion russe de l'Ukraine (24 février 2022) est la plus grande guerre en Europe depuis 1945. Elle remet en question l'ordre post-Guerre froide.</p>
+     <p>L'<strong>intelligence artificielle générative</strong> (GPT-4, 2023) : une rupture technologique comparable à l'imprimerie ou à la machine à vapeur. Ses implications — sur le travail, la démocratie, la création, la guerre — restent ouvertes.</p>
+     <div class="anec-box"><div class="anec-label">Le défi climatique</div><p>Le changement climatique menace les bases de la civilisation (agriculture, eau, côtes). En 2024, nous avons franchi pour la première fois une année entière à <strong>+1,5°C</strong> au-dessus des températures préindustrielles — le seuil fixé par l'accord de Paris. Les 10 années les plus chaudes jamais enregistrées sont toutes dans les 10 dernières années.</p></div>
+     <div class="anec-box"><div class="anec-label">La montée de la Chine</div><p>La Chine est devenue la 2e économie mondiale (2010). Depuis 1979, elle a sorti <strong>800 millions de personnes</strong> de la pauvreté — la plus grande réduction de pauvreté de l'histoire humaine en si peu de temps. Ce modèle autoritaire-capitaliste remet en question la thèse que démocratie et développement économique sont indissociables.</p></div>`},
+  ]},
+];
+
+function buildMonde(){
+  const container=document.getElementById('monde-timeline');
+  container.innerHTML='';
+  mondePeriodes.forEach(periode=>{
+    const eraDiv=document.createElement('div');
+    eraDiv.className='timeline-era';
+    eraDiv.dataset.era=periode.era;
+    eraDiv.innerHTML=`<div class="era-title">${periode.eraLabel}</div>`;
+    periode.items.forEach((item,i)=>{
+      const div=document.createElement('div');
+      div.className='timeline-item';
+      div.innerHTML=`
+        <div class="timeline-dot ${item.major?'major':''}"></div>
+        <div class="timeline-card" onclick="toggleCard(this)">
+          <div class="tc-header">
+            <div>
+              <div class="tc-title">${item.titre}</div>
+              <div class="tc-subtitle">${item.subtitle}</div>
+            </div>
+            <div style="display:flex;flex-direction:column;align-items:flex-end;gap:4px">
+              <div class="tc-dates">${item.dates}</div>
+              <div class="tc-expand">▼</div>
+            </div>
+          </div>
+          <div class="tc-body">
+            <p>${item.resume}</p>
+            <button onclick="event.stopPropagation();openMondeModal(${i},${JSON.stringify(periode.era)})" style="background:rgba(201,162,39,0.15);border:1px solid var(--gold);color:var(--gold);padding:0.4rem 1rem;border-radius:6px;cursor:pointer;font-size:0.8rem;margin-top:0.5rem;">En savoir plus →</button>
+          </div>
+        </div>`;
+      eraDiv.appendChild(div);
+    });
+    container.appendChild(eraDiv);
+  });
+}
+
+function openMondeModal(itemIndex,eraKey){
+  const periode=mondePeriodes.find(p=>p.era===eraKey);
+  const item=periode.items[itemIndex];
+  openModal(item.titre,item.dates,item.detail);
+}
+
+function filterMondeEra(era,btn){
+  document.querySelectorAll('#monde .era-btn').forEach(b=>b.classList.remove('active'));
+  btn.classList.add('active');
+  document.querySelectorAll('#monde-timeline .timeline-era').forEach(e=>{
+    if(era==='all'||e.dataset.era===era)e.style.display='block';
+    else e.style.display='none';
+  });
+}
+
+// ===================== INIT =====================
+buildFranceTimeline();
+buildGuerres();
+buildReligions();
+buildAntiquite();
+buildFigures();
+buildMonde();
+</script>
+</body>
+</html>
