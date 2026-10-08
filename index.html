@@ -13,39 +13,17 @@
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="apple-mobile-web-app-title" content="Historia">
 <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;0,900;1,400&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="css/styles.css?v=31">
+<link rel="stylesheet" href="css/styles.css?v=33">
 </head>
 <body>
 <header>
   <div class="header-inner">
+    <button class="sb-toggle" onclick="toggleSidebar()" aria-label="Ouvrir ou fermer le sommaire" title="Sommaire">☰</button>
     <div class="logo" onclick="showSection('home')">HISTO<span>RIA</span></div>
-    <nav>
-      <button onclick="showSection('home')" id="nav-home" class="active">Accueil</button>
-      <button onclick="showSection('france')" id="nav-france">🇫🇷 Histoire de France</button>
-      <button onclick="showSection('frisefrance')" id="nav-frisefrance">🏰 Frise de France</button>
-      <button onclick="showSection('guerres')" id="nav-guerres">⚔️ Guerres</button>
-      <button onclick="showSection('religions')" id="nav-religions">✝️ Religions</button>
-      <button onclick="showSection('christianisme')" id="nav-christianisme">✝️ Christianisme</button>
-      <button onclick="showSection('islam')" id="nav-islam">☪️ Islam</button>
-      <button onclick="showSection('judaisme')" id="nav-judaisme">✡️ Judaïsme</button>
-      <button onclick="showSection('bouddhisme')" id="nav-bouddhisme">☸️ Bouddhisme</button>
-      <button onclick="showSection('hindouisme')" id="nav-hindouisme">🕉️ Hindouisme</button>
-      <button onclick="showSection('figuresfr')" id="nav-figuresfr">🇫🇷 Figures françaises</button>
-      <button onclick="showSection('antiquite')" id="nav-antiquite">🏛️ Antiquité</button>
-      <button onclick="showSection('figures')" id="nav-figures">👑 Grandes Figures</button>
-      <button onclick="showSection('monde')" id="nav-monde">🌍 Histoire du Monde</button>
-      <button onclick="showSection('frisemonde')" id="nav-frisemonde">🌐 Frise du Monde</button>
-      <button onclick="showSection('art')" id="nav-art">🎨 Art</button>
-      <button onclick="showSection('litterature')" id="nav-litterature">📖 Littérature</button>
-      <button onclick="showSection('presidents')" id="nav-presidents">🎖️ Présidents</button>
-      <button onclick="showSection('partis')" id="nav-partis">🗳️ Partis</button>
-      <button onclick="showSection('politique')" id="nav-politique">🏛️ Politique</button>
-      <button onclick="showSection('faitsdivers')" id="nav-faitsdivers">🔎 Faits divers</button>
-      <button onclick="showSection('evenements')" id="nav-evenements">⚡ Grands faits</button>
-      <button onclick="showSection('geographie')" id="nav-geographie">🗺️ Géographie</button>
-    </nav>
   </div>
 </header>
+<aside id="sidebar" aria-label="Sommaire"></aside>
+<div id="sb-backdrop" onclick="toggleSidebar(false)"></div>
 
 <!-- =================== HOME =================== -->
 <section id="home" class="active">
@@ -710,34 +688,34 @@
 </div>
 
 <!-- Données (un fichier par thème, faciles à enrichir) -->
-<script src="data/francePeriodes.js?v=31"></script>
-<script src="data/friseFrData.js?v=31"></script>
-<script src="data/guerresData.js?v=31"></script>
-<script src="data/relData.js?v=31"></script>
-<script src="data/antiqData.js?v=31"></script>
-<script src="data/figuresData.js?v=31"></script>
-<script src="data/mondePeriodes.js?v=31"></script>
-<script src="data/friseMondeData.js?v=31"></script>
-<script src="data/artData.js?v=31"></script>
-<script src="data/artistesData.js?v=31"></script>
-<script src="data/littData.js?v=31"></script>
-<script src="data/politiqueData.js?v=31"></script>
-<script src="data/evenementsData.js?v=31"></script>
-<script src="data/christData.js?v=31"></script>
-<script src="data/islamData.js?v=31"></script>
-<script src="data/judData.js?v=31"></script>
-<script src="data/boudData.js?v=31"></script>
-<script src="data/hindData.js?v=31"></script>
-<script src="data/figFrData.js?v=31"></script>
-<script src="data/faitsDiversData.js?v=31"></script>
-<script src="data/presidentsData.js?v=31"></script>
-<script src="data/partisData.js?v=31"></script>
-<script src="data/dossiersData.js?v=31"></script>
-<script src="data/geoData.js?v=31"></script>
-<script src="data/geoFranceData.js?v=31"></script>
-<script src="data/geoRegionsData.js?v=31"></script>
+<script src="data/francePeriodes.js?v=33"></script>
+<script src="data/friseFrData.js?v=33"></script>
+<script src="data/guerresData.js?v=33"></script>
+<script src="data/relData.js?v=33"></script>
+<script src="data/antiqData.js?v=33"></script>
+<script src="data/figuresData.js?v=33"></script>
+<script src="data/mondePeriodes.js?v=33"></script>
+<script src="data/friseMondeData.js?v=33"></script>
+<script src="data/artData.js?v=33"></script>
+<script src="data/artistesData.js?v=33"></script>
+<script src="data/littData.js?v=33"></script>
+<script src="data/politiqueData.js?v=33"></script>
+<script src="data/evenementsData.js?v=33"></script>
+<script src="data/christData.js?v=33"></script>
+<script src="data/islamData.js?v=33"></script>
+<script src="data/judData.js?v=33"></script>
+<script src="data/boudData.js?v=33"></script>
+<script src="data/hindData.js?v=33"></script>
+<script src="data/figFrData.js?v=33"></script>
+<script src="data/faitsDiversData.js?v=33"></script>
+<script src="data/presidentsData.js?v=33"></script>
+<script src="data/partisData.js?v=33"></script>
+<script src="data/dossiersData.js?v=33"></script>
+<script src="data/geoData.js?v=33"></script>
+<script src="data/geoFranceData.js?v=33"></script>
+<script src="data/geoRegionsData.js?v=33"></script>
 <!-- Logique de l'application -->
-<script src="js/app.js?v=31"></script>
+<script src="js/app.js?v=33"></script>
 <!-- Enregistrement du service worker (mode hors ligne / installation) -->
 <script>
 if('serviceWorker' in navigator){

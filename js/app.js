@@ -4,10 +4,11 @@ function showSection(id,fromPop){
   if(!fromPop)_saveScroll();
   if(id!=='article')_curSection=id;
   document.querySelectorAll('section').forEach(s=>s.classList.remove('active'));
-  document.querySelectorAll('nav button').forEach(b=>b.classList.remove('active'));
+  document.querySelectorAll('#sidebar .sb-item').forEach(b=>b.classList.remove('active'));
   document.getElementById(id).classList.add('active');
   const nb=document.getElementById('nav-'+id);
-  if(nb)nb.classList.add('active');
+  if(nb){nb.classList.add('active');const g=nb.closest('.sb-group');if(g)g.classList.add('open');}
+  if(window.innerWidth<1100)toggleSidebar(false);
   window.scrollTo(0,0);
   if(!_built[id]){
     _built[id]=true;
@@ -67,7 +68,7 @@ function openDossier(id){
 function _renderArticle(n){
   const a=_arts[n];if(!a)return;
   document.querySelectorAll('section').forEach(s=>s.classList.remove('active'));
-  document.querySelectorAll('nav button').forEach(b=>b.classList.remove('active'));
+  document.querySelectorAll('#sidebar .sb-item').forEach(b=>b.classList.remove('active'));
   document.getElementById('article').classList.add('active');
   document.getElementById('art-title').textContent=a.title;
   document.getElementById('art-dates').textContent=a.dates||'';
@@ -635,7 +636,7 @@ function _loadScript(src){
 }
 function loadMapLibs(){
   if(!_mapLibsPromise){
-    const V='?v=31';
+    const V='?v=33';
     _mapLibsPromise=Promise.all([
       typeof d3!=='undefined'?null:_loadScript('https://cdn.jsdelivr.net/npm/d3@7/dist/d3.min.js'),
       typeof WORLD_TOPO!=='undefined'?null:_loadScript('data/worldTopo.js'+V),
@@ -716,10 +717,45 @@ function _fillHomeCounts(){
   });
 }
 
+
+// ===================== SOMMAIRE LATÉRAL =====================
+const SIDEBAR=[
+  ['🏠','Accueil',[['home','Accueil']]],
+  ['📜','Histoire',[['dossiers','📚 Grands dossiers'],['france','Histoire de France'],['monde','Histoire du Monde'],['antiquite','Antiquité'],['guerres','Guerres & conflits'],['evenements','Grands faits du monde'],['faitsdivers','Faits divers']]],
+  ['⏳','Chronologies',[['frisefrance','Frise de France'],['frisemonde','Frise du Monde']]],
+  ['🕊️','Religions',[['religions','Histoire des religions'],['christianisme','Christianisme'],['islam','Islam'],['judaisme','Judaïsme'],['bouddhisme','Bouddhisme'],['hindouisme','Hindouisme']]],
+  ['👤','Personnages',[['figures','Grandes figures'],['figuresfr','Figures françaises']]],
+  ['🏛️','Politique',[['presidents','Présidents de la République'],['partis','Partis politiques'],['politique','Hommes politiques']]],
+  ['🎨','Arts & lettres',[['art','Art & artistes'],['litterature','Littérature']]],
+  ['🗺️','Géographie',[['geographie','Géographie & carte']]]
+];
+function _sbStore(k,v){try{if(v===undefined)return localStorage.getItem(k);localStorage.setItem(k,v);}catch(_){return null;}}
+function buildSidebar(){
+  const sb=document.getElementById('sidebar');if(!sb)return;
+  let closed={};try{closed=JSON.parse(_sbStore('sb-closed')||'{}');}catch(_){}
+  sb.innerHTML=SIDEBAR.map(([ic,lab,items],gi)=>{
+    if(items.length===1&&items[0][0]==='home')return '<button class="sb-item sb-home" id="nav-home" onclick="showSection(\'home\')"><span class="sb-ic">'+ic+'</span>'+lab+'</button>';
+    return '<div class="sb-group'+(closed[gi]?'':' open')+'" data-g="'+gi+'"><button class="sb-head" onclick="toggleSbGroup(this)"><span class="sb-ic">'+ic+'</span><span class="sb-lab">'+lab+'</span><span class="sb-chev">›</span></button>'
+      +'<div class="sb-items">'+items.map(([id,l])=>'<button class="sb-item" id="nav-'+id+'" onclick="showSection(\''+id+'\')">'+l+'</button>').join('')+'</div></div>';
+  }).join('')+'<div class="sb-foot" id="sb-version"></div>';
+  const h=document.getElementById('nav-'+(_curSection||'home'));if(h)h.classList.add('active');
+}
+function toggleSbGroup(btn){
+  const g=btn.parentElement;g.classList.toggle('open');
+  let closed={};try{closed=JSON.parse(_sbStore('sb-closed')||'{}');}catch(_){}
+  closed[g.dataset.g]=!g.classList.contains('open');_sbStore('sb-closed',JSON.stringify(closed));
+}
+function toggleSidebar(force){
+  const open=(force===undefined)?!document.body.classList.contains('sb-open'):!!force;
+  document.body.classList.toggle('sb-open',open);
+  if(window.innerWidth>=1100)_sbStore('sb-pinned',open?'1':'0');
+}
 // Numéro de version affiché sur l'accueil (à changer à chaque mise à jour, comme CACHE_VERSION dans sw.js)
-const APP_VERSION='31',APP_DATE='9 octobre 2026';
+const APP_VERSION='33',APP_DATE='9 octobre 2026';
 // ===================== INIT =====================
 _built['home']=true;
 try{history.replaceState({sec:'home'},'');}catch(_){}
 _fillHomeCounts();
-(function(){const v=document.getElementById('app-version');if(v)v.textContent='Version '+APP_VERSION+' · '+APP_DATE;})();
+buildSidebar();
+if(window.innerWidth>=1100&&_sbStore('sb-pinned')!=='0')document.body.classList.add('sb-open');
+(function(){const v=document.getElementById('app-version');if(v)v.textContent='Version '+APP_VERSION+' · '+APP_DATE;const f=document.getElementById('sb-version');if(f)f.textContent='Historia · version '+APP_VERSION;})();
