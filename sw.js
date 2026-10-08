@@ -1,6 +1,6 @@
 /* Historia — service worker (mode hors ligne + installation)
    Pense a incrementer CACHE_VERSION a chaque mise a jour du contenu. */
-const CACHE_VERSION = 'historia-v30';
+const CACHE_VERSION = 'historia-v31';
 const IMG_CACHE = 'historia-images-v23';
 
 const CORE_ASSETS = [
@@ -164,6 +164,21 @@ self.addEventListener('fetch', (e) => {
   const req = e.request;
   if (req.method !== 'GET') return;
   const url = new URL(req.url);
+  // Fichiers du site (pages, scripts, styles, données) : réseau d'abord, pour voir
+  // immédiatement chaque nouvelle version ; copie en cache pour le mode hors ligne.
+  if (url.origin === self.location.origin) {
+    e.respondWith(
+      fetch(req).then((res) => {
+        if (res && res.status === 200) {
+          const copy = res.clone();
+          caches.open(CACHE_VERSION).then((c) => c.put(req, copy));
+        }
+        return res;
+      }).catch(() => caches.match(req, { ignoreSearch: false }).then((m) => m || caches.match(req, { ignoreSearch: true })))
+    );
+    return;
+  }
+  // Images, polices, bibliothèques : cache d'abord (elles ne changent pas).
   const isImg = url.hostname.includes('wikimedia.org');
   const cacheName = isImg ? IMG_CACHE : CACHE_VERSION;
   e.respondWith(
@@ -171,8 +186,7 @@ self.addEventListener('fetch', (e) => {
       if (cached) return cached;
       return fetch(req).then((res) => {
         const cacheable = res && (res.status === 200 || res.type === 'opaque') &&
-          (url.origin === self.location.origin ||
-           url.hostname.includes('fonts.googleapis.com') ||
+          (url.hostname.includes('fonts.googleapis.com') ||
            url.hostname.includes('fonts.gstatic.com') ||
            url.hostname.includes('cdn.jsdelivr.net') ||
            url.hostname.includes('wikimedia.org'));

@@ -343,3 +343,6 @@ nav::-webkit-scrollbar{display:none;}
 .art-dates:empty{display:none;}
 .article-body{background:var(--bg2);border:1px solid var(--border);border-radius:18px;padding:1.8rem 2rem !important;box-shadow:var(--shadow);}
 @media(max-width:700px){.art-header{padding:1.2rem 1.2rem;}.article-body{padding:1.2rem 1.1rem !important;}#article{padding-left:.8rem;padding-right:.8rem;}}
+
+/* Menu : une seule ligne, défilement horizontal */
+nav button{white-space:nowrap;flex-shrink:0;}
