@@ -336,3 +336,10 @@ nav::-webkit-scrollbar{display:none;}
 @media(max-width:700px){.art-header h1{font-size:1.75rem;}.article-body h3{font-size:1.3rem;}.art-nav{grid-template-columns:1fr;}}
 
 .app-version{display:inline-block;margin-top:-1.8rem;margin-bottom:2.5rem;font-size:.75rem;color:var(--muted);border:1px solid var(--border);border-radius:20px;padding:.2rem .8rem;background:var(--bg2);}
+/* Page de lecture : finitions */
+.art-header{background:var(--bg2);border:1px solid var(--border);border-radius:18px;padding:1.6rem 1.8rem;margin:1rem 0 1.5rem;box-shadow:var(--shadow);position:relative;overflow:hidden;}
+.art-header::before{content:'';position:absolute;top:0;left:0;right:0;height:4px;background:linear-gradient(90deg,#1e3a6e,#2563eb,#0ea5e9);}
+.art-dates{display:inline-block;margin-top:.7rem;padding:.2rem .8rem;border-radius:20px;background:rgba(37,99,235,.08);border:1px solid rgba(37,99,235,.2);font-size:.85rem;}
+.art-dates:empty{display:none;}
+.article-body{background:var(--bg2);border:1px solid var(--border);border-radius:18px;padding:1.8rem 2rem !important;box-shadow:var(--shadow);}
+@media(max-width:700px){.art-header{padding:1.2rem 1.2rem;}.article-body{padding:1.2rem 1.1rem !important;}#article{padding-left:.8rem;padding-right:.8rem;}}
