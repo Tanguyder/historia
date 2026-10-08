@@ -1,6 +1,6 @@
 /* Historia — service worker (mode hors ligne + installation)
    Pense a incrementer CACHE_VERSION a chaque mise a jour du contenu. */
-const CACHE_VERSION = 'historia-v34';
+const CACHE_VERSION = 'historia-v35';
 const IMG_CACHE = 'historia-images-v23';
 
 const CORE_ASSETS = [
