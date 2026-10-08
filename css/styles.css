@@ -334,3 +334,5 @@ nav::-webkit-scrollbar{display:none;}
 .dossier-banner small{opacity:.85;font-size:.8rem;}
 .dossier-banner .db-arrow{font-size:1.4rem;}
 @media(max-width:700px){.art-header h1{font-size:1.75rem;}.article-body h3{font-size:1.3rem;}.art-nav{grid-template-columns:1fr;}}
+
+.app-version{display:inline-block;margin-top:-1.8rem;margin-bottom:2.5rem;font-size:.75rem;color:var(--muted);border:1px solid var(--border);border-radius:20px;padding:.2rem .8rem;background:var(--bg2);}
