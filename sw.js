@@ -1,6 +1,6 @@
 /* Historia — service worker (mode hors ligne + installation)
    Pense a incrementer CACHE_VERSION a chaque mise a jour du contenu. */
-const CACHE_VERSION = 'historia-v33';
+const CACHE_VERSION = 'historia-v34';
 const IMG_CACHE = 'historia-images-v23';
 
 const CORE_ASSETS = [
@@ -168,7 +168,9 @@ self.addEventListener('fetch', (e) => {
   // immédiatement chaque nouvelle version ; copie en cache pour le mode hors ligne.
   if (url.origin === self.location.origin) {
     e.respondWith(
-      fetch(req).then((res) => {
+      // cache:'no-cache' : on revalide toujours auprès de GitHub (sinon le navigateur
+      // peut resservir une copie de moins de 10 minutes).
+      fetch(req.url, { cache: 'no-cache', credentials: 'same-origin' }).then((res) => {
         if (res && res.status === 200) {
           const copy = res.clone();
           caches.open(CACHE_VERSION).then((c) => c.put(req, copy));

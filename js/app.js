@@ -636,7 +636,7 @@ function _loadScript(src){
 }
 function loadMapLibs(){
   if(!_mapLibsPromise){
-    const V='?v=33';
+    const V='?v=34';
     _mapLibsPromise=Promise.all([
       typeof d3!=='undefined'?null:_loadScript('https://cdn.jsdelivr.net/npm/d3@7/dist/d3.min.js'),
       typeof WORLD_TOPO!=='undefined'?null:_loadScript('data/worldTopo.js'+V),
@@ -751,7 +751,7 @@ function toggleSidebar(force){
   if(window.innerWidth>=1100)_sbStore('sb-pinned',open?'1':'0');
 }
 // Numéro de version affiché sur l'accueil (à changer à chaque mise à jour, comme CACHE_VERSION dans sw.js)
-const APP_VERSION='33',APP_DATE='9 octobre 2026';
+const APP_VERSION='34',APP_DATE='9 octobre 2026';
 // ===================== INIT =====================
 _built['home']=true;
 try{history.replaceState({sec:'home'},'');}catch(_){}
