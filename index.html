@@ -1,0 +1,713 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>Historia, encyclopédie de culture</title>
+<meta name="description" content="Historia, une encyclopédie interactive d'histoire, d'art, de religions, de littérature et de politique">
+<meta name="theme-color" content="#1a2845">
+<link rel="manifest" href="manifest.json">
+<link rel="icon" href="icons/icon-192.png">
+<link rel="apple-touch-icon" href="icons/icon-192.png">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Historia">
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;0,900;1,400&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/styles.css?v=26">
+</head>
+<body>
+<header>
+  <div class="header-inner">
+    <div class="logo" onclick="showSection('home')">HISTO<span>RIA</span></div>
+    <nav>
+      <button onclick="showSection('home')" id="nav-home" class="active">Accueil</button>
+      <button onclick="showSection('france')" id="nav-france">🇫🇷 Histoire de France</button>
+      <button onclick="showSection('frisefrance')" id="nav-frisefrance">🏰 Frise de France</button>
+      <button onclick="showSection('guerres')" id="nav-guerres">⚔️ Guerres</button>
+      <button onclick="showSection('religions')" id="nav-religions">✝️ Religions</button>
+      <button onclick="showSection('christianisme')" id="nav-christianisme">✝️ Christianisme</button>
+      <button onclick="showSection('islam')" id="nav-islam">☪️ Islam</button>
+      <button onclick="showSection('judaisme')" id="nav-judaisme">✡️ Judaïsme</button>
+      <button onclick="showSection('bouddhisme')" id="nav-bouddhisme">☸️ Bouddhisme</button>
+      <button onclick="showSection('hindouisme')" id="nav-hindouisme">🕉️ Hindouisme</button>
+      <button onclick="showSection('figuresfr')" id="nav-figuresfr">🇫🇷 Figures françaises</button>
+      <button onclick="showSection('antiquite')" id="nav-antiquite">🏛️ Antiquité</button>
+      <button onclick="showSection('figures')" id="nav-figures">👑 Grandes Figures</button>
+      <button onclick="showSection('monde')" id="nav-monde">🌍 Histoire du Monde</button>
+      <button onclick="showSection('frisemonde')" id="nav-frisemonde">🌐 Frise du Monde</button>
+      <button onclick="showSection('art')" id="nav-art">🎨 Art</button>
+      <button onclick="showSection('litterature')" id="nav-litterature">📖 Littérature</button>
+      <button onclick="showSection('presidents')" id="nav-presidents">🎖️ Présidents</button>
+      <button onclick="showSection('partis')" id="nav-partis">🗳️ Partis</button>
+      <button onclick="showSection('politique')" id="nav-politique">🏛️ Politique</button>
+      <button onclick="showSection('faitsdivers')" id="nav-faitsdivers">🔎 Faits divers</button>
+      <button onclick="showSection('evenements')" id="nav-evenements">⚡ Grands faits</button>
+      <button onclick="showSection('geographie')" id="nav-geographie">🗺️ Géographie</button>
+    </nav>
+  </div>
+</header>
+
+<!-- =================== HOME =================== -->
+<section id="home" class="active">
+  <div class="container">
+    <div class="hero">
+      <h1>Explorez<br><em>l'Histoire</em> du Monde</h1>
+      <p>Une encyclopédie interactive pour voyager à travers les siècles, les civilisations et les grandes épopées humaines.</p>
+    </div>
+    <div class="home-search">
+      <input type="search" id="global-search" placeholder="Rechercher un personnage, un événement, un lieu…" autocomplete="off" oninput="globalSearch(this.value)" aria-label="Recherche dans toute l'encyclopédie">
+      <div id="search-results" class="search-results"></div>
+    </div>
+    <h2 class="home-group">Histoire</h2>
+    <div class="categories">
+      <div class="cat-card" onclick="showSection('france')">
+        <span class="cat-icon">🇫🇷</span>
+        <h3>Histoire de France</h3>
+        <p>De la Gaule romaine à la Ve République, 2000 ans d'histoire sur une frise chronologique interactive.</p>
+        <span class="cat-tag">Frise interactive</span>
+      </div>
+      <div class="cat-card" onclick="showSection('monde')">
+        <span class="cat-icon">🌍</span>
+        <h3>Histoire du Monde</h3>
+        <p>Vue globale de l'histoire mondiale, des premières migrations humaines à nos jours.</p>
+        <span class="cat-tag">Chronologie mondiale</span>
+      </div>
+      <div class="cat-card" onclick="showSection('antiquite')">
+        <span class="cat-icon">🏛️</span>
+        <h3>Antiquité</h3>
+        <p>Égypte, Grèce, Rome, Perse, Chine... les grandes civilisations du monde antique.</p>
+        <span class="cat-tag">Civilisations</span>
+      </div>
+      <div class="cat-card" onclick="showSection('guerres')">
+        <span class="cat-icon">⚔️</span>
+        <h3>Guerres & Conflits</h3>
+        <p>Des guerres puniques aux conflits modernes, explorez les grandes batailles qui ont façonné le monde.</p>
+        <span class="cat-tag" data-count="guerresData"></span>
+      </div>
+      <div class="cat-card" onclick="showSection('evenements')">
+        <span class="cat-icon">⚡</span>
+        <h3>Grands faits du monde</h3>
+        <p>Les événements pivots qui ont fait basculer l'histoire de l'humanité.</p>
+        <span class="cat-tag" data-count="evenementsData"></span>
+      </div>
+      <div class="cat-card" onclick="showSection('faitsdivers')">
+        <span class="cat-icon">🔎</span>
+        <h3>Faits divers</h3>
+        <p>Crimes célèbres, casses, énigmes et erreurs judiciaires, du Masque de fer au casse du Louvre.</p>
+        <span class="cat-tag" data-count="faitsDiversData" data-suffix=" fiches"></span>
+      </div>
+    </div>
+    <h2 class="home-group">Chronologies</h2>
+    <div class="categories">
+      <div class="cat-card" onclick="showSection('frisefrance')">
+        <span class="cat-icon">🏰</span>
+        <h3>Frise de France</h3>
+        <p>La chronologie des rois, des régimes et des grands événements, de la Gaule à aujourd'hui.</p>
+        <span class="cat-tag">Frise cliquable</span>
+      </div>
+      <div class="cat-card" onclick="showSection('frisemonde')">
+        <span class="cat-icon">🌐</span>
+        <h3>Frise du Monde</h3>
+        <p>La grande chronologie mondiale : empires, révolutions, guerres et catastrophes, de la préhistoire à l'IA.</p>
+        <span class="cat-tag">Frise cliquable</span>
+      </div>
+    </div>
+    <h2 class="home-group">Religions</h2>
+    <div class="categories">
+      <div class="cat-card" onclick="showSection('religions')">
+        <span class="cat-icon">🕌</span>
+        <h3>Histoire des Religions</h3>
+        <p>Animisme, polythéisme, monothéisme : suivez l'évolution des croyances humaines sur 5000 ans.</p>
+        <span class="cat-tag">Chronologie</span>
+      </div>
+      <div class="cat-card" onclick="showSection('christianisme')">
+        <span class="cat-icon">✝️</span>
+        <h3>Christianisme</h3>
+        <p>Histoire complète de la Chrétienté : branches, schismes, grands papes, saints majeurs et fêtes du calendrier.</p>
+        <span class="cat-tag" data-count="christData"></span>
+      </div>
+      <div class="cat-card" onclick="showSection('islam')">
+        <span class="cat-icon">☪️</span>
+        <h3>Islam</h3>
+        <p>La deuxième religion du monde : ses branches, son histoire, ses grandes figures et ses fêtes.</p>
+        <span class="cat-tag" data-count="islamData"></span>
+      </div>
+      <div class="cat-card" onclick="showSection('judaisme')">
+        <span class="cat-icon">✡️</span>
+        <h3>Judaïsme</h3>
+        <p>La plus ancienne des religions monothéistes : d'Abraham à Israël, ses figures et son calendrier.</p>
+        <span class="cat-tag" data-count="judData"></span>
+      </div>
+      <div class="cat-card" onclick="showSection('bouddhisme')">
+        <span class="cat-icon">☸️</span>
+        <h3>Bouddhisme</h3>
+        <p>La voie de l'Éveil : ses branches, le Bouddha, ses grands maîtres et ses concepts clés.</p>
+        <span class="cat-tag" data-count="boudData"></span>
+      </div>
+      <div class="cat-card" onclick="showSection('hindouisme')">
+        <span class="cat-icon">🕉️</span>
+        <h3>Hindouisme</h3>
+        <p>La plus ancienne grande religion vivante : ses dieux, ses textes, ses fêtes et sa sagesse.</p>
+        <span class="cat-tag" data-count="hindData"></span>
+      </div>
+    </div>
+    <h2 class="home-group">Personnages</h2>
+    <div class="categories">
+      <div class="cat-card" onclick="showSection('figures')">
+        <span class="cat-icon">👑</span>
+        <h3>Grandes Figures</h3>
+        <p>César, Napoléon, Cléopâtre, Alexandre... les personnages qui ont changé le cours de l'Histoire.</p>
+        <span class="cat-tag" data-count="figuresData"></span>
+      </div>
+      <div class="cat-card" onclick="showSection('figuresfr')">
+        <span class="cat-icon">🇫🇷</span>
+        <h3>Figures françaises</h3>
+        <p>Les grands noms de la France : écrivains, savants, dirigeants, artistes et penseurs.</p>
+        <span class="cat-tag" data-count="figFrData"></span>
+      </div>
+    </div>
+    <h2 class="home-group">Politique</h2>
+    <div class="categories">
+      <div class="cat-card" onclick="showSection('presidents')">
+        <span class="cat-icon">🎖️</span>
+        <h3>Présidents de la République</h3>
+        <p>De Louis-Napoléon Bonaparte à Emmanuel Macron : les présidents et leurs grandes réformes.</p>
+        <span class="cat-tag" data-count="presidentsData" data-suffix=" présidents"></span>
+      </div>
+      <div class="cat-card" onclick="showSection('partis')">
+        <span class="cat-icon">🗳️</span>
+        <h3>Partis politiques</h3>
+        <p>L'histoire des grandes familles politiques françaises, de 1789 à aujourd'hui.</p>
+        <span class="cat-tag" data-count="partisData" data-suffix=" fiches"></span>
+      </div>
+      <div class="cat-card" onclick="showSection('politique')">
+        <span class="cat-icon">🏛️</span>
+        <h3>Hommes politiques</h3>
+        <p>Les grandes figures du pouvoir à travers le monde et les siècles.</p>
+        <span class="cat-tag" data-count="politiqueData"></span>
+      </div>
+    </div>
+    <h2 class="home-group">Arts & lettres</h2>
+    <div class="categories">
+      <div class="cat-card" onclick="showSection('art')">
+        <span class="cat-icon">🎨</span>
+        <h3>Art</h3>
+        <p>Les grands courants artistiques et plus de 60 artistes, de Giotto à Soulages, avec leurs œuvres et leurs anecdotes.</p>
+        <span class="cat-tag" data-count="artistesData" data-suffix=" artistes"></span>
+      </div>
+      <div class="cat-card" onclick="showSection('litterature')">
+        <span class="cat-icon">📖</span>
+        <h3>Littérature</h3>
+        <p>Les écrivains et les mouvements qui ont façonné la pensée, d'Homère à nos jours.</p>
+        <span class="cat-tag" data-count="littData"></span>
+      </div>
+    </div>
+    <h2 class="home-group">Géographie</h2>
+    <div class="categories">
+      <div class="cat-card" onclick="showSection('geographie')">
+        <span class="cat-icon">🗺️</span>
+        <h3>Géographie</h3>
+        <p>Fleuves, montagnes, mers, océans et détroits : les grands repères de la planète.</p>
+        <span class="cat-tag" data-count="geoData"></span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- =================== FRANCE =================== -->
+<section id="france">
+  <div class="container">
+    <button class="back-btn" onclick="showSection('home')">← Accueil</button>
+    <div class="section-header">
+      <h2>Histoire de France</h2>
+      <p>2000 ans d'histoire — de la Gaule romaine à la République moderne. Cliquez sur chaque période pour en savoir plus.</p>
+    </div>
+    <div class="timeline-controls">
+      <button class="era-btn active" onclick="filterEra('all',this)">Toutes les périodes</button>
+      <button class="era-btn" onclick="filterEra('antiquite',this)">Antiquité</button>
+      <button class="era-btn" onclick="filterEra('medieval',this)">Moyen Âge</button>
+      <button class="era-btn" onclick="filterEra('moderne',this)">Époque moderne</button>
+      <button class="era-btn" onclick="filterEra('contemporain',this)">Époque contemporaine</button>
+    </div>
+    <div class="timeline" id="france-timeline"></div>
+  </div>
+</section>
+
+<!-- =================== GUERRES =================== -->
+<section id="guerres">
+  <div class="container">
+    <button class="back-btn" onclick="showSection('home')">← Accueil</button>
+    <div class="section-header">
+      <h2>Guerres & Conflits</h2>
+      <p>Les grands conflits qui ont redessiné la carte du monde.</p>
+    </div>
+    <div class="wars-grid" id="wars-list"></div>
+  </div>
+</section>
+
+<!-- =================== RELIGIONS =================== -->
+<section id="religions">
+  <div class="container">
+    <button class="back-btn" onclick="showSection('home')">← Accueil</button>
+    <div class="section-header">
+      <h2>Histoire des Religions</h2>
+      <p>5000 ans de spiritualité humaine — des premières croyances animistes aux grands monothéismes.</p>
+    </div>
+    <div class="religion-timeline" id="religion-list"></div>
+  </div>
+</section>
+
+<!-- =================== ANTIQUITE =================== -->
+<section id="antiquite">
+  <div class="container">
+    <button class="back-btn" onclick="showSection('home')">← Accueil</button>
+    <div class="section-header">
+      <h2>Antiquité</h2>
+      <p>Les grandes civilisations du monde antique, de -3000 à 476 ap. J.-C.</p>
+    </div>
+    <div class="antiq-grid" id="antiq-list"></div>
+  </div>
+</section>
+
+<!-- =================== GRANDES FIGURES =================== -->
+<section id="figures">
+  <div class="container">
+    <button class="back-btn" onclick="showSection('home')">← Accueil</button>
+    <div class="section-header">
+      <h2>Grandes Figures</h2>
+      <p>Les hommes et femmes qui ont changé le cours de l'Histoire — conquérants, penseurs, révolutionnaires.</p>
+    </div>
+    <div class="figures-filters">
+      <button class="fig-filter-btn active" onclick="filterFigures('all',this)">Tous</button>
+      <button class="fig-filter-btn" onclick="filterFigures('conquerant',this)">⚔️ Conquérants</button>
+      <button class="fig-filter-btn" onclick="filterFigures('dirigeant',this)">👑 Dirigeants</button>
+      <button class="fig-filter-btn" onclick="filterFigures('penseur',this)">🧠 Penseurs</button>
+      <button class="fig-filter-btn" onclick="filterFigures('revolutionnaire',this)">🔥 Révolutionnaires</button>
+      <button class="fig-filter-btn" onclick="filterFigures('resistant',this)">✊ Résistants</button>
+      <button class="fig-filter-btn" onclick="filterFigures('roi',this)">👑 Rois</button>
+      <button class="fig-filter-btn" onclick="filterFigures('ecrivain',this)">✒️ Écrivains</button>
+      <button class="fig-filter-btn" onclick="filterFigures('scientifique',this)">🔬 Scientifiques</button>
+      <button class="fig-filter-btn" onclick="filterFigures('artiste',this)">🎨 Artistes</button>
+    </div>
+    <div class="figures-grid" id="figures-grid"></div>
+  </div>
+</section>
+
+<!-- =================== HISTOIRE DU MONDE =================== -->
+<section id="monde">
+  <div class="container">
+    <button class="back-btn" onclick="showSection('home')">← Accueil</button>
+    <div class="section-header">
+      <h2>Histoire du Monde</h2>
+      <p>Des premières migrations humaines à nos jours — 300 000 ans d'aventure humaine sur tous les continents.</p>
+    </div>
+    <div class="timeline-controls">
+      <button class="era-btn active" onclick="filterMondeEra('all',this)">Toutes les périodes</button>
+      <button class="era-btn" onclick="filterMondeEra('prehistoire',this)">🌿 Préhistoire</button>
+      <button class="era-btn" onclick="filterMondeEra('antiquite',this)">🏺 Premières civilisations</button>
+      <button class="era-btn" onclick="filterMondeEra('classique',this)">🏛️ Antiquité classique</button>
+      <button class="era-btn" onclick="filterMondeEra('medieval',this)">⚔️ Moyen Âge mondial</button>
+      <button class="era-btn" onclick="filterMondeEra('moderne',this)">🌊 Grandes découvertes</button>
+      <button class="era-btn" onclick="filterMondeEra('industriel',this)">🏭 Révolutions & guerres</button>
+      <button class="era-btn" onclick="filterMondeEra('contemporain',this)">🌐 Monde contemporain</button>
+    </div>
+    <div class="timeline" id="monde-timeline"></div>
+  </div>
+</section>
+
+
+<!-- =================== ART =================== -->
+<section id="art">
+  <div class="container">
+    <button class="back-btn" onclick="showSection('home')">← Accueil</button>
+    <div class="section-header">
+      <h2>Art</h2>
+      <p>Les grands courants artistiques du Moyen Âge à l'art contemporain, puis les artistes qui les ont incarnés.</p>
+      <button class="jump-btn" onclick="document.getElementById('artistes').scrollIntoView({behavior:'smooth'})">Voir les grands artistes ↓</button>
+    </div>
+    <div class="figures-filters">
+      <button class="fig-filter-btn active" onclick="filterEncGrid('art-grid','all',this)">Tous</button>
+      <button class="fig-filter-btn" onclick="filterEncGrid('art-grid','medieval',this)">Médiéval</button>
+      <button class="fig-filter-btn" onclick="filterEncGrid('art-grid','renaissance',this)">Renaissance</button>
+      <button class="fig-filter-btn" onclick="filterEncGrid('art-grid','baroque',this)">Baroque & Classique</button>
+      <button class="fig-filter-btn" onclick="filterEncGrid('art-grid','xixe',this)">XIXᵉ siècle</button>
+      <button class="fig-filter-btn" onclick="filterEncGrid('art-grid','moderne',this)">Moderne & Contemporain</button>
+    </div>
+    <div class="enc-grid" id="art-grid"></div>
+
+    <div class="section-header sub-header" id="artistes">
+      <h2>Les grands artistes</h2>
+      <p>Peintres et sculpteurs, de Giotto à Soulages : dates, courant, œuvres phares et anecdotes.</p>
+    </div>
+    <div class="figures-filters">
+      <button class="fig-filter-btn active" onclick="filterEncGrid('artistes-grid','all',this)">Tous</button>
+      <button class="fig-filter-btn" onclick="filterEncGrid('artistes-grid','fr',this)">🇫🇷 Français</button>
+      <button class="fig-filter-btn" onclick="filterEncGrid('artistes-grid','renaissance',this)">Renaissance</button>
+      <button class="fig-filter-btn" onclick="filterEncGrid('artistes-grid','classique',this)">XVIIᵉ – XVIIIᵉ</button>
+      <button class="fig-filter-btn" onclick="filterEncGrid('artistes-grid','xixe',this)">XIXᵉ siècle</button>
+      <button class="fig-filter-btn" onclick="filterEncGrid('artistes-grid','moderne',this)">XXᵉ siècle</button>
+    </div>
+    <div class="enc-grid" id="artistes-grid"></div>
+  </div>
+</section>
+
+<!-- =================== LITTERATURE =================== -->
+<section id="litterature">
+  <div class="container">
+    <button class="back-btn" onclick="showSection('home')">← Accueil</button>
+    <div class="section-header">
+      <h2>Littérature</h2>
+      <p>Les écrivains et mouvements qui ont marqué la littérature mondiale.</p>
+    </div>
+    <div class="figures-filters">
+      <button class="fig-filter-btn active" onclick="filterEncGrid('litt-grid','all',this)">Tous</button>
+      <button class="fig-filter-btn" onclick="filterEncGrid('litt-grid','antiquite',this)">Antiquité</button>
+      <button class="fig-filter-btn" onclick="filterEncGrid('litt-grid','medieval',this)">Moyen Âge</button>
+      <button class="fig-filter-btn" onclick="filterEncGrid('litt-grid','classique',this)">Époque classique</button>
+      <button class="fig-filter-btn" onclick="filterEncGrid('litt-grid','xixe',this)">XIXᵉ siècle</button>
+      <button class="fig-filter-btn" onclick="filterEncGrid('litt-grid','moderne',this)">XXᵉ – XXIᵉ</button>
+    </div>
+    <div class="enc-grid" id="litt-grid"></div>
+  </div>
+</section>
+
+<!-- =================== POLITIQUE =================== -->
+<section id="politique">
+  <div class="container">
+    <button class="back-btn" onclick="showSection('home')">← Accueil</button>
+    <div class="section-header">
+      <h2>Hommes politiques</h2>
+      <p>Les grandes figures du pouvoir à travers le monde et les siècles.</p>
+    </div>
+    <div class="figures-filters">
+      <button class="fig-filter-btn active" onclick="filterEncGrid('politique-grid','all',this)">Tous</button>
+      <button class="fig-filter-btn" onclick="filterEncGrid('politique-grid','antiquite',this)">Antiquité & Moyen Âge</button>
+      <button class="fig-filter-btn" onclick="filterEncGrid('politique-grid','moderne',this)">Époque moderne</button>
+      <button class="fig-filter-btn" onclick="filterEncGrid('politique-grid','xixe',this)">XIXᵉ siècle</button>
+      <button class="fig-filter-btn" onclick="filterEncGrid('politique-grid','contemporain',this)">XXᵉ – XXIᵉ</button>
+    </div>
+    <div class="enc-grid" id="politique-grid"></div>
+  </div>
+</section>
+
+<!-- =================== EVENEMENTS =================== -->
+<section id="evenements">
+  <div class="container">
+    <button class="back-btn" onclick="showSection('home')">← Accueil</button>
+    <div class="section-header">
+      <h2>Grands faits du monde</h2>
+      <p>Les événements pivots qui ont fait basculer l'histoire de l'humanité.</p>
+    </div>
+    <div class="figures-filters">
+      <button class="fig-filter-btn active" onclick="filterEncGrid('evenements-grid','all',this)">Tous</button>
+      <button class="fig-filter-btn" onclick="filterEncGrid('evenements-grid','antiquite',this)">Antiquité</button>
+      <button class="fig-filter-btn" onclick="filterEncGrid('evenements-grid','medieval',this)">Moyen Âge</button>
+      <button class="fig-filter-btn" onclick="filterEncGrid('evenements-grid','moderne',this)">Époque moderne</button>
+      <button class="fig-filter-btn" onclick="filterEncGrid('evenements-grid','contemporain',this)">Époque contemporaine</button>
+    </div>
+    <div class="enc-grid" id="evenements-grid"></div>
+  </div>
+</section>
+
+<!-- =================== GEOGRAPHIE =================== -->
+<section id="geographie">
+  <div class="container">
+    <button class="back-btn" onclick="showSection('home')">← Accueil</button>
+    <div class="section-header">
+      <h2>Géographie</h2>
+      <p>Les grands repères physiques de la planète : fleuves, montagnes, mers, océans, détroits.</p>
+    </div>
+    <div class="figures-filters">
+      <button class="fig-filter-btn active" onclick="filterGeo('all',this)">Tous</button>
+      <button class="fig-filter-btn" onclick="filterGeo('fleuve',this)">Fleuves</button>
+      <button class="fig-filter-btn" onclick="filterGeo('montagne',this)">Montagnes</button>
+      <button class="fig-filter-btn" onclick="filterGeo('mer',this)">Mers</button>
+      <button class="fig-filter-btn" onclick="filterGeo('ocean',this)">Océans</button>
+      <button class="fig-filter-btn" onclick="filterGeo('detroit',this)">Détroits</button>
+      <button class="fig-filter-btn" onclick="filterGeo('desert',this)">Déserts</button>
+    </div>
+    <div class="geo-views">
+      <button class="geo-view-btn active" onclick="setGeoView('liste',this)">📋 Liste</button>
+      <button class="geo-view-btn" onclick="setGeoView('carte',this)">🗺️ Carte</button>
+    </div>
+    <div class="enc-grid" id="geo-grid"></div>
+    <div id="geo-map-wrap" style="display:none">
+      <div class="geo-regions">
+        <button class="geo-region-btn active" onclick="focusGeoRegion('monde',this)">🌍 Monde</button>
+        <button class="geo-region-btn" onclick="focusGeoRegion('europe',this)">Europe</button>
+        <button class="geo-region-btn" onclick="focusGeoRegion('afrique',this)">Afrique</button>
+        <button class="geo-region-btn" onclick="focusGeoRegion('asie',this)">Asie</button>
+        <button class="geo-region-btn" onclick="focusGeoRegion('ameriques',this)">Amériques</button>
+        <button class="geo-region-btn" onclick="focusGeoRegion('oceanie',this)">Océanie</button>
+        <button class="geo-region-btn" onclick="focusGeoRegion('france',this)">🇫🇷 France</button>
+        <button class="geo-region-btn" onclick="focusGeoRegion('regions',this)">📍 Régions</button>
+      </div>
+      <svg id="geo-map" viewBox="0 0 1000 500" preserveAspectRatio="xMidYMid meet" xmlns="http://www.w3.org/2000/svg">
+        <rect id="geo-ocean" x="0" y="0" width="1000" height="500"/>
+        <g id="geo-zoom">
+          <g id="geo-countries"></g>
+          <g id="geo-regions-layer"></g>
+          <g id="geo-markers"></g>
+        </g>
+      </svg>
+      <button id="geo-reset" onclick="resetGeoZoom()" title="Revenir à la vue globale" aria-label="Vue globale">↺</button>
+      <div class="geo-map-hint">Pince ou molette pour zoomer, glisse pour te déplacer. Les boutons ci-dessus cadrent sur une zone. Touche une bulle pour ouvrir la fiche.</div>
+    </div>
+  </div>
+</section>
+
+
+<!-- =================== CHRISTIANISME =================== -->
+<section id="christianisme">
+  <div class="container">
+    <button class="back-btn" onclick="showSection('home')">← Accueil</button>
+    <div class="section-header">
+      <h2>Christianisme</h2>
+      <p>Deux mille ans d'histoire de la Chrétienté : ses branches, ses schismes, ses grands papes, ses saints et son calendrier.</p>
+    </div>
+    <div class="figures-filters">
+      <button class="fig-filter-btn active" onclick="filterEncGrid('christ-grid','all',this)">Tous</button>
+      <button class="fig-filter-btn" onclick="filterEncGrid('christ-grid','courants',this)">Branches</button>
+      <button class="fig-filter-btn" onclick="filterEncGrid('christ-grid','histoire',this)">Histoire & schismes</button>
+      <button class="fig-filter-btn" onclick="filterEncGrid('christ-grid','papes',this)">Grands papes</button>
+      <button class="fig-filter-btn" onclick="filterEncGrid('christ-grid','saints',this)">Saints</button>
+      <button class="fig-filter-btn" onclick="filterEncGrid('christ-grid','calendrier',this)">Calendrier</button>
+    </div>
+    <div class="enc-grid" id="christ-grid"></div>
+  </div>
+</section>
+
+
+<!-- =================== ISLAM =================== -->
+<section id="islam">
+  <div class="container">
+    <button class="back-btn" onclick="showSection('home')">← Accueil</button>
+    <div class="section-header">
+      <h2>Islam</h2>
+      <p>La deuxième religion du monde : branches, histoire, grandes figures et calendrier.</p>
+    </div>
+    <div class="figures-filters">
+      <button class="fig-filter-btn active" onclick="filterEncGrid('islam-grid','all',this)">Tous</button>
+      <button class="fig-filter-btn" onclick="filterEncGrid('islam-grid','courants',this)">Branches</button>
+      <button class="fig-filter-btn" onclick="filterEncGrid('islam-grid','histoire',this)">Histoire</button>
+      <button class="fig-filter-btn" onclick="filterEncGrid('islam-grid','figures',this)">Figures</button>
+      <button class="fig-filter-btn" onclick="filterEncGrid('islam-grid','calendrier',this)">Calendrier</button>
+    </div>
+    <div class="enc-grid" id="islam-grid"></div>
+  </div>
+</section>
+
+<!-- =================== JUDAISME =================== -->
+<section id="judaisme">
+  <div class="container">
+    <button class="back-btn" onclick="showSection('home')">← Accueil</button>
+    <div class="section-header">
+      <h2>Judaïsme</h2>
+      <p>La plus ancienne des religions monothéistes : d'Abraham à nos jours, figures et fêtes.</p>
+    </div>
+    <div class="figures-filters">
+      <button class="fig-filter-btn active" onclick="filterEncGrid('jud-grid','all',this)">Tous</button>
+      <button class="fig-filter-btn" onclick="filterEncGrid('jud-grid','courants',this)">Branches</button>
+      <button class="fig-filter-btn" onclick="filterEncGrid('jud-grid','histoire',this)">Histoire</button>
+      <button class="fig-filter-btn" onclick="filterEncGrid('jud-grid','figures',this)">Figures</button>
+      <button class="fig-filter-btn" onclick="filterEncGrid('jud-grid','calendrier',this)">Calendrier</button>
+    </div>
+    <div class="enc-grid" id="jud-grid"></div>
+  </div>
+</section>
+
+
+<!-- =================== BOUDDHISME =================== -->
+<section id="bouddhisme">
+  <div class="container">
+    <button class="back-btn" onclick="showSection('home')">← Accueil</button>
+    <div class="section-header"><h2>Bouddhisme</h2><p>La voie de l'Éveil : branches, histoire, grands maîtres et concepts.</p></div>
+    <div class="figures-filters">
+      <button class="fig-filter-btn active" onclick="filterEncGrid('boud-grid','all',this)">Tous</button>
+      <button class="fig-filter-btn" onclick="filterEncGrid('boud-grid','courants',this)">Branches</button>
+      <button class="fig-filter-btn" onclick="filterEncGrid('boud-grid','histoire',this)">Histoire</button>
+      <button class="fig-filter-btn" onclick="filterEncGrid('boud-grid','figures',this)">Figures</button>
+      <button class="fig-filter-btn" onclick="filterEncGrid('boud-grid','calendrier',this)">Concepts & fêtes</button>
+    </div>
+    <div class="enc-grid" id="boud-grid"></div>
+  </div>
+</section>
+
+<!-- =================== HINDOUISME =================== -->
+<section id="hindouisme">
+  <div class="container">
+    <button class="back-btn" onclick="showSection('home')">← Accueil</button>
+    <div class="section-header"><h2>Hindouisme</h2><p>Dieux, textes sacrés, concepts et grandes fêtes de l'hindouisme.</p></div>
+    <div class="figures-filters">
+      <button class="fig-filter-btn active" onclick="filterEncGrid('hind-grid','all',this)">Tous</button>
+      <button class="fig-filter-btn" onclick="filterEncGrid('hind-grid','courants',this)">Courants</button>
+      <button class="fig-filter-btn" onclick="filterEncGrid('hind-grid','histoire',this)">Histoire</button>
+      <button class="fig-filter-btn" onclick="filterEncGrid('hind-grid','figures',this)">Dieux & figures</button>
+      <button class="fig-filter-btn" onclick="filterEncGrid('hind-grid','calendrier',this)">Concepts & fêtes</button>
+    </div>
+    <div class="enc-grid" id="hind-grid"></div>
+  </div>
+</section>
+
+<!-- =================== FIGURESFR =================== -->
+<section id="figuresfr">
+  <div class="container">
+    <button class="back-btn" onclick="showSection('home')">← Accueil</button>
+    <div class="section-header"><h2>Figures françaises</h2><p>Les grands noms de la France, par domaine.</p></div>
+    <div class="figures-filters">
+      <button class="fig-filter-btn active" onclick="filterEncGrid('figfr-grid','all',this)">Tous</button>
+      <button class="fig-filter-btn" onclick="filterEncGrid('figfr-grid','ecrivains',this)">Écrivains</button>
+      <button class="fig-filter-btn" onclick="filterEncGrid('figfr-grid','sciences',this)">Sciences</button>
+      <button class="fig-filter-btn" onclick="filterEncGrid('figfr-grid','politique',this)">Politique & militaire</button>
+      <button class="fig-filter-btn" onclick="filterEncGrid('figfr-grid','arts',this)">Arts</button>
+      <button class="fig-filter-btn" onclick="filterEncGrid('figfr-grid','pensee',this)">Pensée</button>
+    </div>
+    <div class="enc-grid" id="figfr-grid"></div>
+  </div>
+</section>
+
+
+<!-- =================== FRISE DE FRANCE =================== -->
+<section id="frisefrance">
+  <div class="container">
+    <button class="back-btn" onclick="showSection('home')">← Accueil</button>
+    <div class="section-header">
+      <h2>Frise de France</h2>
+      <p>Rois, régimes et grands événements, de la Gaule à nos jours. Touchez une entrée pour en savoir plus.</p>
+    </div>
+    <div class="figures-filters">
+      <button class="fig-filter-btn active" onclick="filterFriseType('all',this)">Tous</button>
+      <button class="fig-filter-btn" onclick="filterFriseType('roi',this)">👑 Rois</button>
+      <button class="fig-filter-btn" onclick="filterFriseType('regime',this)">🏛️ Régimes</button>
+      <button class="fig-filter-btn" onclick="filterFriseType('evenement',this)">⚡ Événements</button>
+    </div>
+    <div class="timeline" id="frise-timeline"></div>
+  </div>
+</section>
+
+
+<!-- =================== FRISE DU MONDE =================== -->
+<section id="frisemonde">
+  <div class="container">
+    <button class="back-btn" onclick="showSection('home')">← Accueil</button>
+    <div class="section-header">
+      <h2>Frise du Monde</h2>
+      <p>Empires, révolutions, grandes guerres et catastrophes, de la préhistoire à nos jours. Touchez une entrée pour en savoir plus.</p>
+    </div>
+    <div class="figures-filters">
+      <button class="fig-filter-btn active" onclick="filterFriseMonde('all',this)">Tous</button>
+      <button class="fig-filter-btn" onclick="filterFriseMonde('empire',this)">🏛️ Empires</button>
+      <button class="fig-filter-btn" onclick="filterFriseMonde('revolution',this)">⚡ Révolutions</button>
+      <button class="fig-filter-btn" onclick="filterFriseMonde('evenement',this)">⚔️ Événements</button>
+      <button class="fig-filter-btn" onclick="filterFriseMonde('catastrophe',this)">☢️ Catastrophes</button>
+    </div>
+    <div class="timeline" id="frisemonde-timeline"></div>
+  </div>
+</section>
+
+<!-- =================== FAITS DIVERS =================== -->
+<section id="faitsdivers">
+  <div class="container">
+    <button class="back-btn" onclick="showSection('home')">← Accueil</button>
+    <div class="section-header">
+      <h2>Faits divers</h2>
+      <p>Crimes célèbres, vols spectaculaires, énigmes jamais résolues et grandes affaires judiciaires.</p>
+    </div>
+    <div class="figures-filters">
+      <button class="fig-filter-btn active" onclick="filterEncGrid('faitsdivers-grid','all',this)">Tous</button>
+      <button class="fig-filter-btn" onclick="filterEncGrid('faitsdivers-grid','crime',this)">🔪 Crimes</button>
+      <button class="fig-filter-btn" onclick="filterEncGrid('faitsdivers-grid','vol',this)">💰 Vols & escroqueries</button>
+      <button class="fig-filter-btn" onclick="filterEncGrid('faitsdivers-grid','enigme',this)">❓ Énigmes</button>
+      <button class="fig-filter-btn" onclick="filterEncGrid('faitsdivers-grid','justice',this)">⚖️ Affaires judiciaires</button>
+    </div>
+    <div class="enc-grid" id="faitsdivers-grid"></div>
+  </div>
+</section>
+
+<!-- =================== PRÉSIDENTS DE LA RÉPUBLIQUE =================== -->
+<section id="presidents">
+  <div class="container">
+    <button class="back-btn" onclick="showSection('home')">← Accueil</button>
+    <div class="section-header">
+      <h2>Présidents de la République</h2>
+      <p>Tous les présidents depuis 1848, et en détail ceux de la Ve République avec leurs principales réformes.</p>
+    </div>
+    <div class="figures-filters">
+      <button class="fig-filter-btn active" onclick="filterEncGrid('presidents-grid','all',this)">Tous</button>
+      <button class="fig-filter-btn" onclick="filterEncGrid('presidents-grid','ve',this)">Ve République</button>
+      <button class="fig-filter-btn" onclick="filterEncGrid('presidents-grid','ive',this)">IVe République</button>
+      <button class="fig-filter-btn" onclick="filterEncGrid('presidents-grid','iiie',this)">IIIe République</button>
+      <button class="fig-filter-btn" onclick="filterEncGrid('presidents-grid','iie',this)">IIe République</button>
+    </div>
+    <div class="enc-grid" id="presidents-grid"></div>
+  </div>
+</section>
+
+<!-- =================== PARTIS POLITIQUES =================== -->
+<section id="partis">
+  <div class="container">
+    <button class="back-btn" onclick="showSection('home')">← Accueil</button>
+    <div class="section-header">
+      <h2>Partis politiques</h2>
+      <p>Naissance et évolution des grandes familles politiques françaises.</p>
+    </div>
+    <div class="figures-filters">
+      <button class="fig-filter-btn active" onclick="filterEncGrid('partis-grid','all',this)">Tous</button>
+      <button class="fig-filter-btn" onclick="filterEncGrid('partis-grid','reperes',this)">📌 Repères</button>
+      <button class="fig-filter-btn" onclick="filterEncGrid('partis-grid','gauche',this)">Gauche</button>
+      <button class="fig-filter-btn" onclick="filterEncGrid('partis-grid','centre',this)">Centre</button>
+      <button class="fig-filter-btn" onclick="filterEncGrid('partis-grid','droite',this)">Droite</button>
+      <button class="fig-filter-btn" onclick="filterEncGrid('partis-grid','nationaliste',this)">Extrême droite</button>
+    </div>
+    <div class="enc-grid" id="partis-grid"></div>
+  </div>
+</section>
+
+<!-- =================== MODAL =================== -->
+<div class="modal-overlay" id="modal" onclick="closeModal(event)">
+  <div class="modal">
+    <div class="modal-header">
+      <h2 id="modal-title"></h2>
+      <div class="modal-dates" id="modal-dates"></div>
+      <button class="modal-close" onclick="closeModalBtn()">✕</button>
+    </div>
+    <div class="modal-body" id="modal-body"></div>
+  </div>
+</div>
+
+<!-- Données (un fichier par thème, faciles à enrichir) -->
+<script src="data/francePeriodes.js?v=26"></script>
+<script src="data/friseFrData.js?v=26"></script>
+<script src="data/guerresData.js?v=26"></script>
+<script src="data/relData.js?v=26"></script>
+<script src="data/antiqData.js?v=26"></script>
+<script src="data/figuresData.js?v=26"></script>
+<script src="data/mondePeriodes.js?v=26"></script>
+<script src="data/friseMondeData.js?v=26"></script>
+<script src="data/artData.js?v=26"></script>
+<script src="data/artistesData.js?v=26"></script>
+<script src="data/littData.js?v=26"></script>
+<script src="data/politiqueData.js?v=26"></script>
+<script src="data/evenementsData.js?v=26"></script>
+<script src="data/christData.js?v=26"></script>
+<script src="data/islamData.js?v=26"></script>
+<script src="data/judData.js?v=26"></script>
+<script src="data/boudData.js?v=26"></script>
+<script src="data/hindData.js?v=26"></script>
+<script src="data/figFrData.js?v=26"></script>
+<script src="data/faitsDiversData.js?v=26"></script>
+<script src="data/presidentsData.js?v=26"></script>
+<script src="data/partisData.js?v=26"></script>
+<script src="data/geoData.js?v=26"></script>
+<script src="data/geoFranceData.js?v=26"></script>
+<script src="data/geoRegionsData.js?v=26"></script>
+<!-- Logique de l'application -->
+<script src="js/app.js?v=26"></script>
+<!-- Enregistrement du service worker (mode hors ligne / installation) -->
+<script>
+if('serviceWorker' in navigator){
+  window.addEventListener('load',()=>navigator.serviceWorker.register('sw.js').catch(()=>{}));
+}
+</script>
+</body>
+</html>
