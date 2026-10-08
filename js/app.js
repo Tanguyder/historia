@@ -1,6 +1,8 @@
 // ===================== NAVIGATION =====================
 const _built={};
-function showSection(id){
+function showSection(id,fromPop){
+  if(!fromPop)_saveScroll();
+  if(id!=='article')_curSection=id;
   document.querySelectorAll('section').forEach(s=>s.classList.remove('active'));
   document.querySelectorAll('nav button').forEach(b=>b.classList.remove('active'));
   document.getElementById(id).classList.add('active');
@@ -31,19 +33,90 @@ function showSection(id){
     else if(id==='partis')buildEncGrid(typeof partisData!=='undefined'?partisData:null,'partis-grid');
     else if(id==='frisefrance')buildFrise();
     else if(id==='frisemonde')buildFriseMonde();
+    else if(id==='dossiers')buildEncGrid(typeof dossiersData!=='undefined'?dossiersData:null,'dossiers-grid');
   }
+  if(!fromPop){try{history.pushState({sec:id},'');}catch(_){}}
 }
 
 // ===================== MODAL =====================
-function openModal(title,dates,bodyHtml){
-  document.getElementById('modal-title').textContent=title;
-  document.getElementById('modal-dates').textContent=dates;
-  document.getElementById('modal-body').innerHTML=bodyHtml;
-  document.getElementById('modal').classList.add('open');
-  document.body.style.overflow='hidden';
+// Les fiches s'ouvrent désormais dans une page de lecture plein écran (section #article).
+let _arts=[],_curSection='home';
+function _saveScroll(){try{history.replaceState(Object.assign({},history.state||{sec:_curSection},{y:window.scrollY}),'');}catch(_){}}
+function _ctx(arr,i,tk,dk){return {n:arr.length,i:i,get:j=>({t:arr[j][tk],d:arr[j][dk]||'',b:arr[j].detail})};}
+function _ctxEras(eras,item){const L=eras.reduce((a,p)=>a.concat(p.items||[]),[]);return _ctx(L,L.indexOf(item),'titre','dates');}
+function openModal(title,dates,bodyHtml,ctx,replace){
+  const n=_arts.push({title:title,dates:dates,body:bodyHtml,ctx:ctx||null})-1;
+  try{
+    if(replace)history.replaceState({art:n},'');
+    else{_saveScroll();history.pushState({art:n},'');}
+  }catch(_){}
+  _renderArticle(n);
 }
-function closeModal(e){if(e.target===document.getElementById('modal'))closeModalBtn();}
-function closeModalBtn(){document.getElementById('modal').classList.remove('open');document.body.style.overflow='';}
+function closeModal(e){}
+function closeModalBtn(){history.back();}
+function articleBack(){if(history.state&&history.state.art!=null)history.back();else showSection(_curSection||'home');}
+function _findDossier(title){
+  if(typeof dossiersData==='undefined')return null;
+  const t=_norm(title).replace(/\s*\(.*\)$/,'').trim();
+  return dossiersData.find(d=>(d.aliases||[]).some(a=>t===a))||null;
+}
+function openDossier(id){
+  const d=(typeof dossiersData!=='undefined')&&dossiersData.find(x=>x.id===id);
+  if(d)openModal(d.nom,d.dates,d.detail);
+}
+function _renderArticle(n){
+  const a=_arts[n];if(!a)return;
+  document.querySelectorAll('section').forEach(s=>s.classList.remove('active'));
+  document.querySelectorAll('nav button').forEach(b=>b.classList.remove('active'));
+  document.getElementById('article').classList.add('active');
+  document.getElementById('art-title').textContent=a.title;
+  document.getElementById('art-dates').textContent=a.dates||'';
+  const body=document.getElementById('art-body');
+  let html=a.body||'';
+  const dos=_findDossier(a.title);
+  if(dos&&html!==dos.detail)html='<button class="dossier-banner" onclick="openDossier(\''+dos.id+'\')"><span class="db-icon">📚</span><span class="db-text"><strong>Lire le dossier complet</strong><small>'+dos.role+'</small></span><span class="db-arrow">→</span></button>'+html;
+  body.innerHTML=html;
+  // Sommaire automatique
+  let hs=[...body.querySelectorAll('h3')];if(hs.length<3)hs=[...body.querySelectorAll('h3,h4')];
+  const toc=document.getElementById('art-toc');
+  if(hs.length>=3){
+    hs.forEach((h,i)=>h.id='sec-'+i);
+    toc.innerHTML='<div class="toc-title">Sommaire</div>'+hs.map((h,i)=>'<a href="#" class="toc-'+h.tagName.toLowerCase()+'" onclick="document.getElementById(\'sec-'+i+'\').scrollIntoView({behavior:\'smooth\'});return false;">'+_esc(h.textContent)+'</a>').join('');
+    toc.style.display='';
+  }else{toc.innerHTML='';toc.style.display='none';}
+  _renderRelated(a);
+  // Précédent / suivant
+  const nav=document.getElementById('art-nav');nav.innerHTML='';
+  if(a.ctx&&a.ctx.i>=0){
+    const mk=(j,cls,lab)=>{if(j<0||j>=a.ctx.n)return '<span></span>';const it=a.ctx.get(j);return '<button class="art-step '+cls+'" onclick="_artStep('+n+','+j+')"><small>'+lab+'</small><span>'+_esc(it.t)+'</span></button>';};
+    nav.innerHTML=mk(a.ctx.i-1,'prev','← Précédent')+mk(a.ctx.i+1,'next','Suivant →');
+  }
+  window.scrollTo(0,0);
+}
+function _artStep(n,j){
+  const a=_arts[n];if(!a||!a.ctx)return;const it=a.ctx.get(j);
+  openModal(it.t,it.d,it.b,Object.assign({},a.ctx,{i:j}),true);
+}
+function _renderRelated(a){
+  const box=document.getElementById('art-related');box.innerHTML='';
+  if(!_searchIndex)_searchIndex=_buildSearchIndex();
+  const txt=' '+_norm(_strip(a.body))+' ',self=_norm(a.title),seen={},out=[];
+  _searchIndex.forEach((e,i)=>{
+    if(out.length>=12||e.nt===self||seen[e.nt])return;
+    const core=e.nt.replace(/\s*\(.*$/,'').replace(/^(le |la |les |l'|l’)/,'').trim();
+    if(core.length<6||/^Géographie/.test(e.label)||['francois','benoit','clement','gregoire'].includes(core))return;
+    let k=-1,ok=false;
+    while((k=txt.indexOf(core,k+1))>0){const pc=txt[k-1],nc=txt[k+core.length]||' ';if(!/[a-z0-9]/.test(pc)&&!/[a-z0-9]/.test(nc)){ok=true;break;}}
+    if(ok){seen[e.nt]=1;out.push(i);}
+  });
+  if(!out.length)return;
+  box.innerHTML='<div class="toc-title">Voir aussi</div><div class="related-list">'+out.map(i=>{const e=_searchIndex[i];return '<button class="related-chip" onclick="openSearchResult('+i+')">'+_esc(e.t)+'<small>'+_esc(e.label)+'</small></button>';}).join('')+'</div>';
+}
+window.addEventListener('popstate',e=>{
+  const st=e.state||{sec:'home'};
+  if(st.art!=null&&_arts[st.art])_renderArticle(st.art);
+  else{showSection(st.sec||'home',true);if(st.y)setTimeout(()=>window.scrollTo(0,st.y),0);}
+});
 
 // ===================== ANECDOTE =====================
 function anec(label,text){
@@ -111,7 +184,7 @@ function buildFranceTimeline(){
 function openItemModal(itemIndex, eraKey){
   const periode=francePeriodes.find(p=>p.era===eraKey);
   const item=periode.items[itemIndex];
-  openModal(item.titre, item.dates, item.detail);
+  openModal(item.titre, item.dates, item.detail, _ctxEras(francePeriodes,item));
 }
 
 // ===================== GUERRES DATA =====================
@@ -123,7 +196,7 @@ function buildGuerres(){
   guerresData.forEach((w,i)=>{
     const div=document.createElement('div');
     div.className='war-card';
-    div.onclick=()=>openModal(w.titre,w.year,w.detail);
+    div.onclick=()=>openModal(w.titre,w.year,w.detail,_ctx(guerresData,i,'titre','year'));
     const thumbHtml=w.img?`<div class="war-thumb"><img src="${w.img}" alt="${w.titre}" onerror="this.parentElement.style.display='none'" loading="lazy"></div>`:'';
     div.innerHTML=`
       <div class="war-period">
@@ -149,7 +222,7 @@ function buildReligions(){
   relData.forEach((r,i)=>{
     const div=document.createElement('div');
     div.className='rel-item';
-    div.onclick=()=>openModal(r.nom,r.year,r.detail);
+    div.onclick=()=>openModal(r.nom,r.year,r.detail,_ctx(relData,i,'nom','year'));
     const thumbHtml=r.img?`<div class="rel-thumb"><img src="${r.img}" alt="${r.nom}" onerror="this.parentElement.style.display='none'" loading="lazy"></div>`:'';
     div.innerHTML=`
       <div><div class="rel-year">${r.year}</div></div>
@@ -173,7 +246,7 @@ function buildAntiquite(){
     div.className='antiq-card';
     div.style.setProperty('--card-color',a.color);
     div.style.borderColor='transparent';
-    div.onclick=()=>openModal(a.nom,a.dates,a.detail);
+    div.onclick=()=>openModal(a.nom,a.dates,a.detail,_ctx(antiqData,i,'nom','dates'));
     const imgHtml=a.img?`<img class="antiq-card-img" src="${a.img}" alt="${a.nom}" onerror="this.style.display='none'" loading="lazy">`:'';
     div.innerHTML=`
       ${imgHtml}
@@ -210,7 +283,7 @@ function buildFigures(){
     card.className='figure-card';
     card.dataset.cat=f.categorie;
     card.style.setProperty('--fig-color',f.accentColor);
-    card.onclick=()=>openModal(f.nom,f.dates,f.detail);
+    card.onclick=()=>openModal(f.nom,f.dates,f.detail,_ctx(figuresData,i,'nom','dates'));
     const portraitHtml=f.img
       ?`<img class="fig-portrait" src="${f.img}" alt="${f.nom}" onerror="this.style.display='none';this.nextElementSibling.style.display='block'" loading="lazy"><span class="fig-emoji" style="display:none">${f.emoji}</span>`
       :`<span class="fig-emoji">${f.emoji}</span>`;
@@ -272,7 +345,7 @@ function buildMonde(){
 function openMondeModal(itemIndex,eraKey){
   const periode=mondePeriodes.find(p=>p.era===eraKey);
   const item=periode.items[itemIndex];
-  openModal(item.titre,item.dates,item.detail);
+  openModal(item.titre,item.dates,item.detail,_ctxEras(mondePeriodes,item));
 }
 
 function filterMondeEra(era,btn){
@@ -291,7 +364,7 @@ function buildEncGrid(data, containerId){
   const grid=document.getElementById(containerId);
   if(!grid||!data)return;
   grid.innerHTML='';
-  data.forEach(it=>{
+  data.forEach((it,idx)=>{
     const card=document.createElement('div');
     card.className='enc-card';
     card.dataset.cat=it.cat||'';
@@ -307,7 +380,7 @@ function buildEncGrid(data, containerId){
       <div class="enc-role">${it.role||''}</div>
       <div class="enc-desc">${it.resume||''}</div>
       ${it.catLabel?`<span class="enc-tag" style="border-color:${c};color:${c}">${it.catLabel}</span>`:''}`;
-    card.onclick=()=>openModal(it.nom, it.dates||'', it.detail);
+    card.onclick=()=>openModal(it.nom, it.dates||'', it.detail, _ctx(data,idx,'nom','dates'));
     card.addEventListener('mouseenter',()=>card.style.borderColor=c);
     card.addEventListener('mouseleave',()=>card.style.borderColor='var(--border)');
     grid.appendChild(card);
@@ -481,6 +554,7 @@ function buildFrise(){
   container.innerHTML='';
   const COL={roi:'#d4a72c',regime:'#2563eb',evenement:'#0ea5e9'};
   const LAB={roi:'👑 Roi',regime:'🏛️ Régime',evenement:'⚡ Événement'};
+  const FRISE_SRC=friseFr;
   friseFr.forEach(periode=>{
     const eraDiv=document.createElement('div');
     eraDiv.className='timeline-era';
@@ -499,7 +573,7 @@ function buildFrise(){
         +'</div><div style="display:flex;flex-direction:column;align-items:flex-end;gap:6px;flex-shrink:0">'
         +'<div class="tc-dates">'+it.dates+'</div></div>'+thumb+'</div>'
         +'<div class="tc-sub">'+it.resume+'</div></div>';
-      div.querySelector('.timeline-card').addEventListener('click',()=>openModal(it.titre,it.dates,it.detail));
+      div.querySelector('.timeline-card').addEventListener('click',()=>openModal(it.titre,it.dates,it.detail,_ctxEras(FRISE_SRC,it)));
       eraDiv.appendChild(div);
     });
     container.appendChild(eraDiv);
@@ -519,6 +593,7 @@ function buildFriseMonde(){
   container.innerHTML='';
   const COL={empire:'#d4a72c',revolution:'#0ea5e9',evenement:'#2563eb',catastrophe:'#c0493f'};
   const LAB={empire:'🏛️ Empire',revolution:'⚡ Révolution',evenement:'⚔️ Événement',catastrophe:'☢️ Catastrophe'};
+  const FRISE_SRC=friseMonde;
   friseMonde.forEach(periode=>{
     const eraDiv=document.createElement('div');
     eraDiv.className='timeline-era';
@@ -537,7 +612,7 @@ function buildFriseMonde(){
         +'</div><div style="display:flex;flex-direction:column;align-items:flex-end;gap:6px;flex-shrink:0">'
         +'<div class="tc-dates">'+it.dates+'</div></div>'+thumb+'</div>'
         +'<div class="tc-sub">'+it.resume+'</div></div>';
-      div.querySelector('.timeline-card').addEventListener('click',()=>openModal(it.titre,it.dates,it.detail));
+      div.querySelector('.timeline-card').addEventListener('click',()=>openModal(it.titre,it.dates,it.detail,_ctxEras(FRISE_SRC,it)));
       eraDiv.appendChild(div);
     });
     container.appendChild(eraDiv);
@@ -560,7 +635,7 @@ function _loadScript(src){
 }
 function loadMapLibs(){
   if(!_mapLibsPromise){
-    const V='?v=26';
+    const V='?v=28';
     _mapLibsPromise=Promise.all([
       typeof d3!=='undefined'?null:_loadScript('https://cdn.jsdelivr.net/npm/d3@7/dist/d3.min.js'),
       typeof WORLD_TOPO!=='undefined'?null:_loadScript('data/worldTopo.js'+V),
@@ -593,6 +668,7 @@ function _buildSearchIndex(){
     ['christData','christianisme','Christianisme'],['islamData','islam','Islam'],['judData','judaisme','Judaïsme'],['boudData','bouddhisme','Bouddhisme'],
     ['hindData','hindouisme','Hindouisme'],['figFrData','figuresfr','Figures françaises'],['geoData','geographie','Géographie']];
   enc.forEach(([n,sec,lab])=>add(g(n),sec,lab,o=>({t:o.nom,d:o.dates,s:o.role,b:o.detail})));
+  add(g('dossiersData'),'dossiers','Grand dossier',o=>({t:o.nom,d:o.dates,s:o.resume,b:o.detail}));
   add(g('geoFranceData'),'geographie','Géographie (France)',o=>({t:o.nom,d:'',s:o.resume,b:o.detail}));
   return idx;
 }
@@ -642,4 +718,5 @@ function _fillHomeCounts(){
 
 // ===================== INIT =====================
 _built['home']=true;
+try{history.replaceState({sec:'home'},'');}catch(_){}
 _fillHomeCounts();

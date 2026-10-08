@@ -13,7 +13,7 @@
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="apple-mobile-web-app-title" content="Historia">
 <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;0,900;1,400&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="css/styles.css?v=26">
+<link rel="stylesheet" href="css/styles.css?v=28">
 </head>
 <body>
 <header>
@@ -60,6 +60,12 @@
     </div>
     <h2 class="home-group">Histoire</h2>
     <div class="categories">
+      <div class="cat-card" onclick="showSection('dossiers')">
+        <span class="cat-icon">📚</span>
+        <h3>Grands dossiers</h3>
+        <p>Les grands sujets racontés en profondeur, chapitre par chapitre. Premier dossier : la Révolution française.</p>
+        <span class="cat-tag" data-count="dossiersData" data-suffix=" dossier(s)"></span>
+      </div>
       <div class="cat-card" onclick="showSection('france')">
         <span class="cat-icon">🇫🇷</span>
         <h3>Histoire de France</h3>
@@ -663,6 +669,33 @@
   </div>
 </section>
 
+<!-- =================== PAGE DE LECTURE =================== -->
+<section id="article">
+  <div class="container article-wrap">
+    <button class="back-btn" onclick="articleBack()">← Retour</button>
+    <header class="art-header">
+      <h1 id="art-title"></h1>
+      <div class="art-dates" id="art-dates"></div>
+    </header>
+    <nav class="art-toc" id="art-toc"></nav>
+    <div class="modal-body article-body" id="art-body"></div>
+    <div class="art-related" id="art-related"></div>
+    <div class="art-nav" id="art-nav"></div>
+  </div>
+</section>
+
+<!-- =================== GRANDS DOSSIERS =================== -->
+<section id="dossiers">
+  <div class="container">
+    <button class="back-btn" onclick="showSection('home')">← Accueil</button>
+    <div class="section-header">
+      <h2>Grands dossiers</h2>
+      <p>Les grands sujets racontés en profondeur, chapitre par chapitre.</p>
+    </div>
+    <div class="enc-grid" id="dossiers-grid"></div>
+  </div>
+</section>
+
 <!-- =================== MODAL =================== -->
 <div class="modal-overlay" id="modal" onclick="closeModal(event)">
   <div class="modal">
@@ -676,33 +709,34 @@
 </div>
 
 <!-- Données (un fichier par thème, faciles à enrichir) -->
-<script src="data/francePeriodes.js?v=26"></script>
-<script src="data/friseFrData.js?v=26"></script>
-<script src="data/guerresData.js?v=26"></script>
-<script src="data/relData.js?v=26"></script>
-<script src="data/antiqData.js?v=26"></script>
-<script src="data/figuresData.js?v=26"></script>
-<script src="data/mondePeriodes.js?v=26"></script>
-<script src="data/friseMondeData.js?v=26"></script>
-<script src="data/artData.js?v=26"></script>
-<script src="data/artistesData.js?v=26"></script>
-<script src="data/littData.js?v=26"></script>
-<script src="data/politiqueData.js?v=26"></script>
-<script src="data/evenementsData.js?v=26"></script>
-<script src="data/christData.js?v=26"></script>
-<script src="data/islamData.js?v=26"></script>
-<script src="data/judData.js?v=26"></script>
-<script src="data/boudData.js?v=26"></script>
-<script src="data/hindData.js?v=26"></script>
-<script src="data/figFrData.js?v=26"></script>
-<script src="data/faitsDiversData.js?v=26"></script>
-<script src="data/presidentsData.js?v=26"></script>
-<script src="data/partisData.js?v=26"></script>
-<script src="data/geoData.js?v=26"></script>
-<script src="data/geoFranceData.js?v=26"></script>
-<script src="data/geoRegionsData.js?v=26"></script>
+<script src="data/francePeriodes.js?v=28"></script>
+<script src="data/friseFrData.js?v=28"></script>
+<script src="data/guerresData.js?v=28"></script>
+<script src="data/relData.js?v=28"></script>
+<script src="data/antiqData.js?v=28"></script>
+<script src="data/figuresData.js?v=28"></script>
+<script src="data/mondePeriodes.js?v=28"></script>
+<script src="data/friseMondeData.js?v=28"></script>
+<script src="data/artData.js?v=28"></script>
+<script src="data/artistesData.js?v=28"></script>
+<script src="data/littData.js?v=28"></script>
+<script src="data/politiqueData.js?v=28"></script>
+<script src="data/evenementsData.js?v=28"></script>
+<script src="data/christData.js?v=28"></script>
+<script src="data/islamData.js?v=28"></script>
+<script src="data/judData.js?v=28"></script>
+<script src="data/boudData.js?v=28"></script>
+<script src="data/hindData.js?v=28"></script>
+<script src="data/figFrData.js?v=28"></script>
+<script src="data/faitsDiversData.js?v=28"></script>
+<script src="data/presidentsData.js?v=28"></script>
+<script src="data/partisData.js?v=28"></script>
+<script src="data/dossiersData.js?v=28"></script>
+<script src="data/geoData.js?v=28"></script>
+<script src="data/geoFranceData.js?v=28"></script>
+<script src="data/geoRegionsData.js?v=28"></script>
 <!-- Logique de l'application -->
-<script src="js/app.js?v=26"></script>
+<script src="js/app.js?v=28"></script>
 <!-- Enregistrement du service worker (mode hors ligne / installation) -->
 <script>
 if('serviceWorker' in navigator){
