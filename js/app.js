@@ -34,6 +34,7 @@ function showSection(id,fromPop){
     else if(id==='partis')buildEncGrid(typeof partisData!=='undefined'?partisData:null,'partis-grid');
     else if(id==='frisefrance')buildFrise();
     else if(id==='frisemonde')buildFriseMonde();
+    else if(id==='quiz')quizInit();
     else if(id==='dossiers')buildEncGrid(typeof dossiersData!=='undefined'?dossiersData:null,'dossiers-grid');
   }
   if(!fromPop){try{history.pushState({sec:id},'');}catch(_){}}
@@ -43,8 +44,13 @@ function showSection(id,fromPop){
 // Les fiches s'ouvrent désormais dans une page de lecture plein écran (section #article).
 let _arts=[],_curSection='home';
 function _saveScroll(){try{history.replaceState(Object.assign({},history.state||{sec:_curSection},{y:window.scrollY}),'');}catch(_){}}
-function _ctx(arr,i,tk,dk){return {n:arr.length,i:i,get:j=>({t:arr[j][tk],d:arr[j][dk]||'',b:arr[j].detail})};}
-function _ctxEras(eras,item){const L=eras.reduce((a,p)=>a.concat(p.items||[]),[]);return _ctx(L,L.indexOf(item),'titre','dates');}
+function _ctx(arr,i,tk,dk,title){return {n:arr.length,i:i,title:title||'',get:j=>({t:arr[j][tk],d:arr[j][dk]||'',b:arr[j].detail,k:arr[j].type||''})};}
+function _ctxEras(eras,item,title){
+  const L=[],groups=[];eras.forEach(p=>{groups.push({label:p.eraLabel,start:L.length});(p.items||[]).forEach(x=>L.push(x));});
+  const c=_ctx(L,L.indexOf(item),'titre','dates',title);c.groups=groups;return c;}
+function _gridTitle(el){
+  let n=el;while(n&&n.previousElementSibling){n=n.previousElementSibling;if(n.classList&&n.classList.contains('section-header')){const h=n.querySelector('h2');return h?h.textContent:'';}}
+  const s=el.closest('section');const h=s&&s.querySelector('.section-header h2');return h?h.textContent:'';}
 function openModal(title,dates,bodyHtml,ctx,replace){
   const n=_arts.push({title:title,dates:dates,body:bodyHtml,ctx:ctx||null})-1;
   try{
@@ -75,7 +81,7 @@ function _renderArticle(n){
   const body=document.getElementById('art-body');
   let html=a.body||'';
   const dos=_findDossier(a.title);
-  if(dos&&html!==dos.detail)html='<button class="dossier-banner" onclick="openDossier(\''+dos.id+'\')"><span class="db-icon">📚</span><span class="db-text"><strong>Lire le dossier complet</strong><small>'+dos.role+'</small></span><span class="db-arrow">→</span></button>'+html;
+  if(dos&&html!==dos.detail)html='<button class="dossier-banner" onclick="openDossier(\''+dos.id+'\')"><span class="db-icon">📚</span><span class="db-text"><strong>Lire le dossier : '+dos.nom+'</strong><small>'+dos.role+'</small></span><span class="db-arrow">→</span></button>'+html;
   body.innerHTML=html;
   // Sommaire automatique
   let hs=[...body.querySelectorAll('h3')];if(hs.length<3)hs=[...body.querySelectorAll('h3,h4')];
@@ -92,22 +98,44 @@ function _renderArticle(n){
     const mk=(j,cls,lab)=>{if(j<0||j>=a.ctx.n)return '<span></span>';const it=a.ctx.get(j);return '<button class="art-step '+cls+'" onclick="_artStep('+n+','+j+')"><small>'+lab+'</small><span>'+_esc(it.t)+'</span></button>';};
     nav.innerHTML=mk(a.ctx.i-1,'prev','← Précédent')+mk(a.ctx.i+1,'next','Suivant →');
   }
+  _renderSide(n);
   window.scrollTo(0,0);
 }
 function _artStep(n,j){
   const a=_arts[n];if(!a||!a.ctx)return;const it=a.ctx.get(j);
   openModal(it.t,it.d,it.b,Object.assign({},a.ctx,{i:j}),true);
 }
+function _renderSide(n){
+  const a=_arts[n],side=document.getElementById('art-side');if(!side)return;
+  const lay=document.getElementById('art-layout');
+  const wrap=document.querySelector('.article-wrap');
+  const hasSide=!!(a&&a.ctx&&a.ctx.i>=0&&a.ctx.n>=2);if(wrap)wrap.classList.toggle('has-side',hasSide);
+  if(!a||!a.ctx||a.ctx.i<0||a.ctx.n<2){side.innerHTML='';lay.classList.remove('with-side');return;}
+  lay.classList.add('with-side');
+  const starts={};(a.ctx.groups||[]).forEach(g=>{starts[g.start]=g.label;});
+  let h='<button class="side-title" onclick="this.parentElement.classList.toggle(\'collapsed\')"><span>'+_esc(a.ctx.title||'Dans cette rubrique')+'</span><span class="side-count">'+(a.ctx.i+1)+' / '+a.ctx.n+'</span></button><div class="side-list">';
+  for(let j=0;j<a.ctx.n;j++){
+    if(starts[j]!==undefined)h+='<div class="side-era">'+_esc(starts[j])+'</div>';
+    const it=a.ctx.get(j);
+    h+='<button class="side-item'+(j===a.ctx.i?' current':'')+(it.k?' k-'+it.k:'')+'" onclick="_artStep('+n+','+j+')"><span class="side-dot"></span><span class="side-txt"><span class="side-t">'+_esc(it.t)+'</span><span class="side-d">'+_esc(it.d)+'</span></span></button>';
+  }
+  side.innerHTML=h+'</div>';
+  if(window.innerWidth<1180)side.classList.add('collapsed');else side.classList.remove('collapsed');
+  const cur=side.querySelector('.side-item.current'),list=side.querySelector('.side-list');
+  if(cur&&list)list.scrollTop=Math.max(0,cur.offsetTop-list.offsetTop-list.clientHeight/3);
+}
 function _renderRelated(a){
   const box=document.getElementById('art-related');box.innerHTML='';
   if(!_searchIndex)_searchIndex=_buildSearchIndex();
-  const txt=' '+_norm(_strip(a.body))+' ',self=_norm(a.title),seen={},out=[];
+  const raw=_strip(a.body),txt=' '+_norm(raw)+' ',self=_norm(a.title),seen={},out=[];
   _searchIndex.forEach((e,i)=>{
     if(out.length>=12||e.nt===self||seen[e.nt])return;
     const core=e.nt.replace(/\s*\(.*$/,'').replace(/^(le |la |les |l'|l’)/,'').trim();
     if(core.length<6||/^Géographie/.test(e.label)||['francois','benoit','clement','gregoire'].includes(core))return;
     let k=-1,ok=false;
     while((k=txt.indexOf(core,k+1))>0){const pc=txt[k-1],nc=txt[k+core.length]||' ';if(!/[a-z0-9]/.test(pc)&&!/[a-z0-9]/.test(nc)){ok=true;break;}}
+    // le nom doit apparaître avec sa majuscule (évite « terreur », « horizons »…)
+    if(ok){const co=e.t.replace(/\s*\(.*$/,'').replace(/^(Le |La |Les |L'|L’)/,'').trim();if(!raw.includes(co))ok=false;}
     if(ok){seen[e.nt]=1;out.push(i);}
   });
   if(!out.length)return;
@@ -185,7 +213,7 @@ function buildFranceTimeline(){
 function openItemModal(itemIndex, eraKey){
   const periode=francePeriodes.find(p=>p.era===eraKey);
   const item=periode.items[itemIndex];
-  openModal(item.titre, item.dates, item.detail, _ctxEras(francePeriodes,item));
+  openModal(item.titre, item.dates, item.detail, _ctxEras(francePeriodes,item,'Histoire de France'));
 }
 
 // ===================== GUERRES DATA =====================
@@ -197,7 +225,7 @@ function buildGuerres(){
   guerresData.forEach((w,i)=>{
     const div=document.createElement('div');
     div.className='war-card';
-    div.onclick=()=>openModal(w.titre,w.year,w.detail,_ctx(guerresData,i,'titre','year'));
+    div.onclick=()=>openModal(w.titre,w.year,w.detail,_ctx(guerresData,i,'titre','year','Guerres & conflits'));
     const thumbHtml=w.img?`<div class="war-thumb"><img src="${w.img}" alt="${w.titre}" onerror="this.parentElement.style.display='none'" loading="lazy"></div>`:'';
     div.innerHTML=`
       <div class="war-period">
@@ -223,7 +251,7 @@ function buildReligions(){
   relData.forEach((r,i)=>{
     const div=document.createElement('div');
     div.className='rel-item';
-    div.onclick=()=>openModal(r.nom,r.year,r.detail,_ctx(relData,i,'nom','year'));
+    div.onclick=()=>openModal(r.nom,r.year,r.detail,_ctx(relData,i,'nom','year','Histoire des religions'));
     const thumbHtml=r.img?`<div class="rel-thumb"><img src="${r.img}" alt="${r.nom}" onerror="this.parentElement.style.display='none'" loading="lazy"></div>`:'';
     div.innerHTML=`
       <div><div class="rel-year">${r.year}</div></div>
@@ -247,7 +275,7 @@ function buildAntiquite(){
     div.className='antiq-card';
     div.style.setProperty('--card-color',a.color);
     div.style.borderColor='transparent';
-    div.onclick=()=>openModal(a.nom,a.dates,a.detail,_ctx(antiqData,i,'nom','dates'));
+    div.onclick=()=>openModal(a.nom,a.dates,a.detail,_ctx(antiqData,i,'nom','dates','Antiquité'));
     const imgHtml=a.img?`<img class="antiq-card-img" src="${a.img}" alt="${a.nom}" onerror="this.style.display='none'" loading="lazy">`:'';
     div.innerHTML=`
       ${imgHtml}
@@ -284,7 +312,7 @@ function buildFigures(){
     card.className='figure-card';
     card.dataset.cat=f.categorie;
     card.style.setProperty('--fig-color',f.accentColor);
-    card.onclick=()=>openModal(f.nom,f.dates,f.detail,_ctx(figuresData,i,'nom','dates'));
+    card.onclick=()=>openModal(f.nom,f.dates,f.detail,_ctx(figuresData,i,'nom','dates','Grandes figures'));
     const portraitHtml=f.img
       ?`<img class="fig-portrait" src="${f.img}" alt="${f.nom}" onerror="this.style.display='none';this.nextElementSibling.style.display='block'" loading="lazy"><span class="fig-emoji" style="display:none">${f.emoji}</span>`
       :`<span class="fig-emoji">${f.emoji}</span>`;
@@ -346,7 +374,7 @@ function buildMonde(){
 function openMondeModal(itemIndex,eraKey){
   const periode=mondePeriodes.find(p=>p.era===eraKey);
   const item=periode.items[itemIndex];
-  openModal(item.titre,item.dates,item.detail,_ctxEras(mondePeriodes,item));
+  openModal(item.titre,item.dates,item.detail,_ctxEras(mondePeriodes,item,'Histoire du Monde'));
 }
 
 function filterMondeEra(era,btn){
@@ -381,7 +409,7 @@ function buildEncGrid(data, containerId){
       <div class="enc-role">${it.role||''}</div>
       <div class="enc-desc">${it.resume||''}</div>
       ${it.catLabel?`<span class="enc-tag" style="border-color:${c};color:${c}">${it.catLabel}</span>`:''}`;
-    card.onclick=()=>openModal(it.nom, it.dates||'', it.detail, _ctx(data,idx,'nom','dates'));
+    card.onclick=()=>openModal(it.nom, it.dates||'', it.detail, _ctx(data,idx,'nom','dates',_gridTitle(grid)));
     card.addEventListener('mouseenter',()=>card.style.borderColor=c);
     card.addEventListener('mouseleave',()=>card.style.borderColor='var(--border)');
     grid.appendChild(card);
@@ -574,7 +602,7 @@ function buildFrise(){
         +'</div><div style="display:flex;flex-direction:column;align-items:flex-end;gap:6px;flex-shrink:0">'
         +'<div class="tc-dates">'+it.dates+'</div></div>'+thumb+'</div>'
         +'<div class="tc-sub">'+it.resume+'</div></div>';
-      div.querySelector('.timeline-card').addEventListener('click',()=>openModal(it.titre,it.dates,it.detail,_ctxEras(FRISE_SRC,it)));
+      div.querySelector('.timeline-card').addEventListener('click',()=>openModal(it.titre,it.dates,it.detail,_ctxEras(FRISE_SRC,it,FRISE_SRC===friseFr?'Frise de France':'Frise du Monde')));
       eraDiv.appendChild(div);
     });
     container.appendChild(eraDiv);
@@ -613,7 +641,7 @@ function buildFriseMonde(){
         +'</div><div style="display:flex;flex-direction:column;align-items:flex-end;gap:6px;flex-shrink:0">'
         +'<div class="tc-dates">'+it.dates+'</div></div>'+thumb+'</div>'
         +'<div class="tc-sub">'+it.resume+'</div></div>';
-      div.querySelector('.timeline-card').addEventListener('click',()=>openModal(it.titre,it.dates,it.detail,_ctxEras(FRISE_SRC,it)));
+      div.querySelector('.timeline-card').addEventListener('click',()=>openModal(it.titre,it.dates,it.detail,_ctxEras(FRISE_SRC,it,FRISE_SRC===friseFr?'Frise de France':'Frise du Monde')));
       eraDiv.appendChild(div);
     });
     container.appendChild(eraDiv);
@@ -636,7 +664,7 @@ function _loadScript(src){
 }
 function loadMapLibs(){
   if(!_mapLibsPromise){
-    const V='?v=35';
+    const V='?v=40';
     _mapLibsPromise=Promise.all([
       typeof d3!=='undefined'?null:_loadScript('https://cdn.jsdelivr.net/npm/d3@7/dist/d3.min.js'),
       typeof WORLD_TOPO!=='undefined'?null:_loadScript('data/worldTopo.js'+V),
@@ -727,7 +755,8 @@ const SIDEBAR=[
   ['👤','Personnages',[['figures','Grandes figures'],['figuresfr','Figures françaises']]],
   ['🏛️','Politique',[['presidents','Présidents de la République'],['partis','Partis politiques'],['politique','Hommes politiques']]],
   ['🎨','Arts & lettres',[['art','Art & artistes'],['litterature','Littérature']]],
-  ['🗺️','Géographie',[['geographie','Géographie & carte']]]
+  ['🗺️','Géographie',[['geographie','Géographie & carte']]],
+  ['❓','Jouer',[['quiz','Quiz de culture']]]
 ];
 function _sbStore(k,v){try{if(v===undefined)return localStorage.getItem(k);localStorage.setItem(k,v);}catch(_){return null;}}
 function buildSidebar(){
@@ -750,8 +779,57 @@ function toggleSidebar(force){
   document.body.classList.toggle('sb-open',open);
   if(window.innerWidth>=1100)_sbStore('sb-pinned',open?'1':'0');
 }
+
+// ===================== QUIZ =====================
+const QUIZ_THEMES=[['all','Tous'],['france','Histoire de France'],['monde','Monde'],['antiquite','Antiquité'],['religions','Religions'],['arts','Arts'],['litterature','Littérature'],['politique','Politique'],['geographie','Géographie']];
+const QUIZ_LEVELS=[['all','Tous niveaux'],['1','Facile'],['2','Moyen'],['3','Difficile']];
+let _qz={theme:'all',level:'all',list:[],i:0,score:0,answered:false};
+function quizInit(){
+  const mk=(arr,key,id)=>{document.getElementById(id).innerHTML=arr.map(([v,l])=>'<button class="fig-filter-btn'+(_qz[key]===v?' active':'')+'" onclick="_qz.'+key+'=\''+v+'\';quizInit()">'+l+'</button>').join('');};
+  mk(QUIZ_THEMES,'theme','quiz-themes');mk(QUIZ_LEVELS,'level','quiz-levels');
+  const n=_quizPool().length;
+  const best=_sbStore('quiz-best');
+  document.getElementById('quiz-best').textContent=n+' questions disponibles avec ces critères'+(best?' · Meilleur score : '+best+' / 10':'');
+  document.getElementById('quiz-setup').style.display='';document.getElementById('quiz-play').style.display='none';
+}
+function _quizPool(){return (typeof quizData!=='undefined'?quizData:[]).filter(x=>(_qz.theme==='all'||x.theme===_qz.theme)&&(_qz.level==='all'||String(x.niveau)===_qz.level));}
+function quizStart(){
+  const pool=_quizPool().slice();
+  for(let i=pool.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[pool[i],pool[j]]=[pool[j],pool[i]];}
+  _qz.list=pool.slice(0,10);_qz.i=0;_qz.score=0;
+  if(!_qz.list.length)return;
+  document.getElementById('quiz-setup').style.display='none';document.getElementById('quiz-play').style.display='';
+  _quizShow();
+}
+function _quizShow(){
+  const x=_qz.list[_qz.i];_qz.answered=false;
+  const lv=['','Facile','Moyen','Difficile'][x.niveau]||'';
+  document.getElementById('quiz-play').innerHTML='<div class="quiz-progress"><span>Question '+(_qz.i+1)+' / '+_qz.list.length+'</span><span>Score : '+_qz.score+'</span></div>'
+    +'<div class="quiz-bar"><div style="width:'+(100*_qz.i/_qz.list.length)+'%"></div></div>'
+    +'<div class="quiz-card"><div class="quiz-meta">'+_esc((QUIZ_THEMES.find(t=>t[0]===x.theme)||['',''])[1])+' · '+lv+'</div><h3 class="quiz-q">'+_esc(x.q)+'</h3>'
+    +'<div class="quiz-choices">'+x.choix.map((c,k)=>'<button class="quiz-choice" onclick="quizAnswer('+k+')">'+_esc(c)+'</button>').join('')+'</div><div id="quiz-feedback"></div></div>';
+  window.scrollTo(0,0);
+}
+function quizAnswer(k){
+  if(_qz.answered)return;_qz.answered=true;
+  const x=_qz.list[_qz.i],ok=k===x.r;if(ok)_qz.score++;
+  document.querySelectorAll('.quiz-choice').forEach((b,j)=>{b.disabled=true;if(j===x.r)b.classList.add('good');else if(j===k)b.classList.add('bad');});
+  let link='';
+  if(x.lien){if(!_searchIndex)_searchIndex=_buildSearchIndex();const i=_searchIndex.findIndex(e=>e.t===x.lien);if(i>=0)link='<button class="quiz-link" onclick="openSearchResult('+i+')">📖 Lire la fiche : '+_esc(x.lien)+'</button>';}
+  const last=_qz.i>=_qz.list.length-1;
+  document.getElementById('quiz-feedback').innerHTML='<div class="quiz-exp '+(ok?'ok':'ko')+'"><strong>'+(ok?'Bonne réponse !':'Raté : la réponse était « '+_esc(x.choix[x.r])+' ».')+'</strong><p>'+_esc(x.exp)+'</p>'+link+'</div>'
+    +'<button class="quiz-start" onclick="'+(last?'quizEnd()':'_qz.i++;_quizShow()')+'">'+(last?'Voir mon score':'Question suivante →')+'</button>';
+  document.querySelector('.quiz-progress span:last-child').textContent='Score : '+_qz.score;
+}
+function quizEnd(){
+  const s=_qz.score,n=_qz.list.length;
+  const prev=parseInt(_sbStore('quiz-best')||'0',10);if(n===10&&s>prev)_sbStore('quiz-best',String(s));
+  const msg=s===n?'Parfait, sans faute !':s>=n*0.7?'Très bien !':s>=n*0.4?'Pas mal, encore un effort.':'À vos fiches !';
+  document.getElementById('quiz-play').innerHTML='<div class="quiz-card quiz-end"><div class="quiz-score">'+s+' / '+n+'</div><p>'+msg+'</p><button class="quiz-start" onclick="quizStart()">Rejouer</button> <button class="quiz-start alt" onclick="quizInit()">Changer de thème</button></div>';
+  window.scrollTo(0,0);
+}
 // Numéro de version affiché sur l'accueil (à changer à chaque mise à jour, comme CACHE_VERSION dans sw.js)
-const APP_VERSION='35',APP_DATE='9 octobre 2026 · test de mise à jour';
+const APP_VERSION='40',APP_DATE='25 octobre 2026';
 // ===================== INIT =====================
 _built['home']=true;
 try{history.replaceState({sec:'home'},'');}catch(_){}

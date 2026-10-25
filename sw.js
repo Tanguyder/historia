@@ -1,6 +1,6 @@
 /* Historia — service worker (mode hors ligne + installation)
    Pense a incrementer CACHE_VERSION a chaque mise a jour du contenu. */
-const CACHE_VERSION = 'historia-v35';
+const CACHE_VERSION = 'historia-v40';
 const IMG_CACHE = 'historia-images-v23';
 
 const CORE_ASSETS = [
@@ -14,18 +14,22 @@ const CORE_ASSETS = [
   './icons/icon-maskable-512.png',
   './data/francePeriodes.js',
   './data/friseFrData.js',
+  './data/friseFrPages.js',
   './data/guerresData.js',
   './data/relData.js',
   './data/antiqData.js',
   './data/figuresData.js',
   './data/mondePeriodes.js',
   './data/friseMondeData.js',
+  './data/friseMondePages.js',
   './data/artData.js',
   './data/artistesData.js',
   './data/faitsDiversData.js',
   './data/presidentsData.js',
+  './data/presidentsPages.js',
   './data/partisData.js',
   './data/dossiersData.js',
+  './data/quizData.js',
   './data/littData.js',
   './data/politiqueData.js',
   './data/evenementsData.js',

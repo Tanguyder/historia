@@ -13,7 +13,7 @@
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="apple-mobile-web-app-title" content="Historia">
 <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;0,900;1,400&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="css/styles.css?v=35">
+<link rel="stylesheet" href="css/styles.css?v=40">
 </head>
 <body>
 <header>
@@ -42,7 +42,7 @@
       <div class="cat-card" onclick="showSection('dossiers')">
         <span class="cat-icon">📚</span>
         <h3>Grands dossiers</h3>
-        <p>Les grands sujets racontés en profondeur, chapitre par chapitre. Premier dossier : la Révolution française.</p>
+        <p>Les grands sujets racontés en profondeur, chapitre par chapitre : de l'Égypte ancienne à la guerre froide, en passant par Rome, la Révolution, Napoléon et la politique française.</p>
         <span class="cat-tag" data-count="dossiersData" data-suffix=" dossier(s)"></span>
       </div>
       <div class="cat-card" onclick="showSection('france')">
@@ -195,6 +195,15 @@
         <p>Fleuves, montagnes, mers, océans et détroits : les grands repères de la planète.</p>
         <span class="cat-tag" data-count="geoData"></span>
       </div>
+    <h2 class="home-group">Jouer</h2>
+    <div class="categories">
+      <div class="cat-card" onclick="showSection('quiz')">
+        <span class="cat-icon">❓</span>
+        <h3>Quiz de culture</h3>
+        <p>Testez vos connaissances : histoire, religions, arts, littérature, politique, géographie. Trois niveaux de difficulté.</p>
+        <span class="cat-tag" data-count="quizData" data-suffix=" questions"></span>
+      </div>
+    </div>
     </div>
   </div>
 </section>
@@ -656,10 +665,15 @@
       <h1 id="art-title"></h1>
       <div class="art-dates" id="art-dates"></div>
     </div>
-    <div class="art-toc" id="art-toc"></div>
-    <div class="modal-body article-body" id="art-body"></div>
-    <div class="art-related" id="art-related"></div>
-    <div class="art-nav" id="art-nav"></div>
+    <div class="art-layout" id="art-layout">
+      <div class="art-main">
+        <div class="art-toc" id="art-toc"></div>
+        <div class="modal-body article-body" id="art-body"></div>
+        <div class="art-related" id="art-related"></div>
+        <div class="art-nav" id="art-nav"></div>
+      </div>
+      <aside class="art-side" id="art-side"></aside>
+    </div>
   </div>
 </section>
 
@@ -672,6 +686,26 @@
       <p>Les grands sujets racontés en profondeur, chapitre par chapitre.</p>
     </div>
     <div class="enc-grid" id="dossiers-grid"></div>
+  </div>
+</section>
+
+<!-- =================== QUIZ =================== -->
+<section id="quiz">
+  <div class="container quiz-wrap">
+    <button class="back-btn" onclick="showSection('home')">← Accueil</button>
+    <div class="section-header">
+      <h2>Quiz de culture</h2>
+      <p>Dix questions tirées au hasard. Après chaque réponse, une explication et un lien vers la fiche.</p>
+    </div>
+    <div id="quiz-setup">
+      <div class="quiz-label">Thème</div>
+      <div class="figures-filters" id="quiz-themes"></div>
+      <div class="quiz-label">Difficulté</div>
+      <div class="figures-filters" id="quiz-levels"></div>
+      <button class="quiz-start" onclick="quizStart()">Commencer</button>
+      <div class="quiz-best" id="quiz-best"></div>
+    </div>
+    <div id="quiz-play" style="display:none"></div>
   </div>
 </section>
 
@@ -688,34 +722,38 @@
 </div>
 
 <!-- Données (un fichier par thème, faciles à enrichir) -->
-<script src="data/francePeriodes.js?v=35"></script>
-<script src="data/friseFrData.js?v=35"></script>
-<script src="data/guerresData.js?v=35"></script>
-<script src="data/relData.js?v=35"></script>
-<script src="data/antiqData.js?v=35"></script>
-<script src="data/figuresData.js?v=35"></script>
-<script src="data/mondePeriodes.js?v=35"></script>
-<script src="data/friseMondeData.js?v=35"></script>
-<script src="data/artData.js?v=35"></script>
-<script src="data/artistesData.js?v=35"></script>
-<script src="data/littData.js?v=35"></script>
-<script src="data/politiqueData.js?v=35"></script>
-<script src="data/evenementsData.js?v=35"></script>
-<script src="data/christData.js?v=35"></script>
-<script src="data/islamData.js?v=35"></script>
-<script src="data/judData.js?v=35"></script>
-<script src="data/boudData.js?v=35"></script>
-<script src="data/hindData.js?v=35"></script>
-<script src="data/figFrData.js?v=35"></script>
-<script src="data/faitsDiversData.js?v=35"></script>
-<script src="data/presidentsData.js?v=35"></script>
-<script src="data/partisData.js?v=35"></script>
-<script src="data/dossiersData.js?v=35"></script>
-<script src="data/geoData.js?v=35"></script>
-<script src="data/geoFranceData.js?v=35"></script>
-<script src="data/geoRegionsData.js?v=35"></script>
+<script src="data/francePeriodes.js?v=40"></script>
+<script src="data/friseFrData.js?v=40"></script>
+<script src="data/friseFrPages.js?v=40"></script>
+<script src="data/guerresData.js?v=40"></script>
+<script src="data/relData.js?v=40"></script>
+<script src="data/antiqData.js?v=40"></script>
+<script src="data/figuresData.js?v=40"></script>
+<script src="data/mondePeriodes.js?v=40"></script>
+<script src="data/friseMondeData.js?v=40"></script>
+<script src="data/friseMondePages.js?v=40"></script>
+<script src="data/artData.js?v=40"></script>
+<script src="data/artistesData.js?v=40"></script>
+<script src="data/littData.js?v=40"></script>
+<script src="data/politiqueData.js?v=40"></script>
+<script src="data/evenementsData.js?v=40"></script>
+<script src="data/christData.js?v=40"></script>
+<script src="data/islamData.js?v=40"></script>
+<script src="data/judData.js?v=40"></script>
+<script src="data/boudData.js?v=40"></script>
+<script src="data/hindData.js?v=40"></script>
+<script src="data/figFrData.js?v=40"></script>
+<script src="data/faitsDiversData.js?v=40"></script>
+<script src="data/presidentsData.js?v=40"></script>
+<script src="data/presidentsPages.js?v=40"></script>
+<script src="data/partisData.js?v=40"></script>
+<script src="data/dossiersData.js?v=40"></script>
+<script src="data/quizData.js?v=40"></script>
+<script src="data/geoData.js?v=40"></script>
+<script src="data/geoFranceData.js?v=40"></script>
+<script src="data/geoRegionsData.js?v=40"></script>
 <!-- Logique de l'application -->
-<script src="js/app.js?v=35"></script>
+<script src="js/app.js?v=40"></script>
 <!-- Enregistrement du service worker (mode hors ligne / installation) -->
 <script>
 if('serviceWorker' in navigator){
